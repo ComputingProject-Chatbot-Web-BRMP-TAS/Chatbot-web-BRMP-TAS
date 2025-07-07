@@ -22,16 +22,18 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
         .navbar .search-bar {
-            flex: 1;
+            flex: 0 0 400px;
             margin: 0 32px;
             position: relative;
+            max-width: 400px;
         }
         .navbar input[type="text"] {
             width: 100%;
-            padding: 10px 40px 10px 16px;
+            padding: 6px 36px 6px 12px;
             border-radius: 8px;
             border: 1px solid #e0e0e0;
-            font-size: 16px;
+            font-size: 15px;
+            height: 32px;
         }
         .navbar .fa-search {
             position: absolute;
@@ -193,14 +195,19 @@
             <i class="fas fa-search"></i>
         </div>
         <div class="user-section">
-            <div class="user">
-                <i class="fas fa-user-circle"></i>
-                <span>Hi, lala luthfiah</span>
-                <i class="fas fa-chevron-down" style="font-size:14px;"></i>
-            </div>
+            @auth
+                <div class="user">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Hi, {{ Auth::user()->name }}</span>
+                    <i class="fas fa-chevron-down" style="font-size:14px;"></i>
+                </div>
+                <button class="jual-btn">Jual</button>
+            @else
+                <a href="{{ route('register') }}" class="btn btn-success" style="margin-right: 10px;">Daftar</a>
+                <a href="{{ route('login') }}" class="btn btn-warning" style="color: #388E3C;">Masuk</a>
+            @endauth
             <i class="fas fa-comment-dots"></i>
             <i class="fas fa-shopping-cart"></i>
-            <button class="jual-btn">Jual</button>
         </div>
     </div>
     <div class="container">
