@@ -1,7 +1,12 @@
 @extends('layouts.app')
 @section('content')
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-    body { background: #f4f6fa !important; }
+    body { 
+        background: #f4f6fa !important; 
+        font-family: 'Roboto', sans-serif;
+    }
     .cart-main {
         max-width: 1200px;
         margin: 40px auto 0 auto;
@@ -57,6 +62,12 @@
         font-weight: 600;
         padding: 8px 28px;
         border: none;
+        text-decoration: none;
+        display: inline-block;
+        transition: background 0.2s;
+    }
+    .cart-empty-content .btn-green:hover {
+        background: #2e7d32;
     }
     .cart-summary {
         flex: 1;
@@ -88,6 +99,8 @@
         color: #bbb;
         font-weight: 600;
         pointer-events: none;
+        border: none;
+        padding: 12px;
     }
     .recommend-section {
         max-width: 1200px;
@@ -148,6 +161,7 @@
         font-weight: 600;
         padding: 6px 0;
         transition: background 0.2s;
+        cursor: pointer;
     }
     .recommend-btn:hover {
         background: #fffde7;
@@ -168,6 +182,9 @@
         }
     }
 </style>
+
+@include('partials.appbar')
+
 <div class="cart-main">
     <div class="cart-left">
         <div class="cart-title">Keranjang</div>
@@ -178,7 +195,7 @@
             <div class="cart-empty-content">
                 <h5>Wah, keranjang belanjamu kosong</h5>
                 <p>Yuk, isi dengan barang-barang impianmu!</p>
-                <a href="/" class="btn btn-green">Mulai Belanja</a>
+                <a href="/" class="btn-green">Mulai Belanja</a>
             </div>
         </div>
     </div>
@@ -232,4 +249,4 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection

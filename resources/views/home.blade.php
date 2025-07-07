@@ -9,73 +9,72 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background: #fff;
+            background: #f8f9fa;
             margin: 0;
             color: #222;
         }
-        .navbar {
+        .hero-banner {
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 50%, #CDDC39 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px 40px;
-            background: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-        .navbar .search-bar {
-            flex: 0 0 400px;
-            margin: 0 32px;
+            color: white;
             position: relative;
-            max-width: 400px;
+            overflow: hidden;
         }
-        .navbar input[type="text"] {
-            width: 100%;
-            padding: 6px 36px 6px 12px;
-            border-radius: 8px;
-            border: 1px solid #e0e0e0;
-            font-size: 15px;
-            height: 32px;
+        .hero-content {
+            flex: 1;
+            max-width: 60%;
         }
-        .navbar .fa-search {
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #4CAF50;
+        .hero-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.2;
         }
-        .navbar .user-section {
-            display: flex;
-            align-items: center;
-            gap: 18px;
+        .hero-subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 24px;
+            opacity: 0.95;
+            line-height: 1.4;
         }
-        .navbar .user-section .user {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .navbar .user-section .fa-user-circle {
-            font-size: 28px;
-            color: #4CAF50;
-        }
-        .navbar .user-section .fa-comment-dots,
-        .navbar .user-section .fa-shopping-cart {
-            font-size: 22px;
-            color: #4CAF50;
-            cursor: pointer;
-        }
-        .navbar .jual-btn {
-            background: #FFEB3B;
+        .hero-btn {
+            background: #FFF176;
             color: #388E3C;
             border: none;
-            border-radius: 8px;
-            padding: 8px 24px;
-            font-weight: bold;
+            border-radius: 12px;
+            padding: 12px 28px;
+            font-weight: 600;
             font-size: 16px;
-            margin-left: 12px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        .navbar .jual-btn:hover {
-            background: #FDD835;
+        .hero-btn:hover {
+            background: #FFF59D;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+        .hero-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-icon-circle {
+            width: 120px;
+            height: 120px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
         }
         .container {
             max-width: 1200px;
@@ -177,6 +176,26 @@
             margin-right: 4px;
         }
         @media (max-width: 900px) {
+            .hero-banner {
+                flex-direction: column;
+                text-align: center;
+                padding: 32px 24px;
+            }
+            .hero-content {
+                max-width: 100%;
+                margin-bottom: 24px;
+            }
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            .hero-icon-circle {
+                width: 100px;
+                height: 100px;
+                font-size: 40px;
+            }
             .recommendations {
                 flex-direction: column;
                 gap: 0;
@@ -188,41 +207,23 @@
     </style>
 </head>
 <body>
-    <div class="navbar">
-        <div style="font-weight:bold; color:#388E3C; font-size:22px;">Benih BRMP</div>
-        <div class="search-bar">
-            <input type="text" placeholder="Cari produk...">
-            <i class="fas fa-search"></i>
-        </div>
-        <div class="user-section">
-            @auth
-                <div class="user">
-                    <i class="fas fa-user-circle"></i>
-                    <span>Hi, {{ Auth::user()->name }}</span>
-                    <i class="fas fa-chevron-down" style="font-size:14px;"></i>
-                </div>
-                <button class="jual-btn">Jual</button>
-            @else
-                <a href="{{ route('register') }}" class="btn btn-success" style="margin-right: 10px;">Daftar</a>
-                <a href="{{ route('login') }}" class="btn btn-warning" style="color: #388E3C;">Masuk</a>
-            @endauth
-            <i class="fas fa-comment-dots"></i>
-            <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
-        </div>
-    </div>
+    @include('partials.appbar')
+    
     <div class="container">
-        <!-- Poster/Banner Section -->
-        <div class="section" style="background: linear-gradient(90deg, #4CAF50 70%, #FFEB3B 100%); display: flex; align-items: center; min-height: 160px; margin-bottom: 32px; box-shadow: 0 4px 16px rgba(76,175,80,0.08);">
-            <div style="flex:1; color: #fff;">
-                <h2 style="margin:0 0 10px 0; font-size:2rem; font-weight:700; letter-spacing:1px;">Produk Baru Telah Hadir!</h2>
-                <p style="margin:0 0 18px 0; font-size:1.1rem; color:#f9fbe7;">Temukan koleksi produk terbaru dengan penawaran menarik hanya di Benih BRMP.</p>
-                <a href="#" style="background:#FFEB3B; color:#388E3C; padding:10px 28px; border-radius:8px; font-weight:bold; text-decoration:none; font-size:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06); transition:background 0.2s;">Lihat Produk Baru</a>
+        <!-- Hero Banner Section -->
+        <div class="hero-banner">
+            <div class="hero-content">
+                <h1 class="hero-title">Produk Baru Telah Hadir!</h1>
+                <p class="hero-subtitle">Temukan koleksi produk terbaru dengan penawaran menarik hanya di Benih BRMP.</p>
+                <button class="hero-btn">Lihat Produk Baru</button>
             </div>
-            <div style="flex:0 0 180px; display:flex; align-items:center; justify-content:center;">
-                <i class="fas fa-box-open" style="font-size:90px; color:#fff; background:#388E3C; border-radius:50%; padding:24px 28px;"></i>
+            <div class="hero-icon">
+                <div class="hero-icon-circle">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
             </div>
         </div>
-        <!-- End Poster/Banner Section -->
+        
         <div class="section">
             <h2 style="margin-bottom:18px;">Kategori</h2>
             <div class="categories">
