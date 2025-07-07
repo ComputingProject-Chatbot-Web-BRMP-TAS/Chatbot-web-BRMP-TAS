@@ -211,6 +211,18 @@
         </div>
     </div>
     <div class="container">
+        <!-- Poster/Banner Section -->
+        <div class="section" style="background: linear-gradient(90deg, #4CAF50 70%, #FFEB3B 100%); display: flex; align-items: center; min-height: 160px; margin-bottom: 32px; box-shadow: 0 4px 16px rgba(76,175,80,0.08);">
+            <div style="flex:1; color: #fff;">
+                <h2 style="margin:0 0 10px 0; font-size:2rem; font-weight:700; letter-spacing:1px;">Produk Baru Telah Hadir!</h2>
+                <p style="margin:0 0 18px 0; font-size:1.1rem; color:#f9fbe7;">Temukan koleksi produk terbaru dengan penawaran menarik hanya di Benih BRMP.</p>
+                <a href="#" style="background:#FFEB3B; color:#388E3C; padding:10px 28px; border-radius:8px; font-weight:bold; text-decoration:none; font-size:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06); transition:background 0.2s;">Lihat Produk Baru</a>
+            </div>
+            <div style="flex:0 0 180px; display:flex; align-items:center; justify-content:center;">
+                <i class="fas fa-box-open" style="font-size:90px; color:#fff; background:#388E3C; border-radius:50%; padding:24px 28px;"></i>
+            </div>
+        </div>
+        <!-- End Poster/Banner Section -->
         <div class="section">
             <h2 style="margin-bottom:18px;">Kategori</h2>
             <div class="categories">
