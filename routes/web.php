@@ -25,3 +25,7 @@ Route::get('/register', function () {
 Route::get('/login', function () {
     return view('auth.signin');
 })->name('login');
+
+Route::get('/cart', function () {
+    return view('cart');
+})->name('cart');

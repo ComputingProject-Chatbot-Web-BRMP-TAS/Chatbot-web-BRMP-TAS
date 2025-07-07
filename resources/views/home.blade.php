@@ -207,7 +207,7 @@
                 <a href="{{ route('login') }}" class="btn btn-warning" style="color: #388E3C;">Masuk</a>
             @endauth
             <i class="fas fa-comment-dots"></i>
-            <i class="fas fa-shopping-cart"></i>
+            <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
         </div>
     </div>
     <div class="container">
