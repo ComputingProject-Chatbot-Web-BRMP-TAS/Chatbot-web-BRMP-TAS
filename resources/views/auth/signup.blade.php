@@ -5,7 +5,16 @@
         <div class="card shadow" style="border-radius: 20px;">
             <div class="card-body p-4">
                 <h2 class="text-center mb-4" style="color: #388e3c;">Daftar</h2>
-                <form method="POST" action="{{ route('register') }}">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <form method="POST" action="{{ route('register.post') }}">
                     @csrf
                     <div class="mb-3">
                         <input type="text" name="name" class="form-control" placeholder="Nama Lengkap" required autofocus style="background: #fffbe7; border-radius: 10px;">
@@ -15,6 +24,9 @@
                     </div>
                     <div class="mb-3">
                         <input type="email" name="email" class="form-control" placeholder="Email" required style="background: #fffbe7; border-radius: 10px;">
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" name="phone" class="form-control" placeholder="Nomor HP" required style="background: #fffbe7; border-radius: 10px;">
                     </div>
                     <div class="mb-3 position-relative">
                         <input type="password" name="password" class="form-control password-field" placeholder="Password" required style="background: #fffbe7; border-radius: 10px;">

@@ -129,17 +129,17 @@
         <i class="fas fa-search"></i>
     </div>
     <div class="user-section">
-        @if(session('dummy_user'))
+        @if(session('user'))
             <div class="user" style="position:relative;">
                 <a href="{{ route('profile') }}" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit;gap:8px;">
                     <i class="fas fa-user-circle"></i>
-                    <span>Hi, {{ session('dummy_user.name') }}</span>
+                    <span>Hi, {{ session('user.name') }}</span>
                 </a>
                 <span class="dropdown-toggle" style="cursor:pointer;" onclick="toggleDropdown()">
                     <i class="fas fa-chevron-down" style="font-size:14px;"></i>
                 </span>
                 <div id="dropdown-menu" class="dropdown-menu">
-                    <form action="{{ route('dummy.logout') }}" method="POST" style="margin:0;">
+                    <form action="{{ route('logout') }}" method="POST" style="margin:0;">
                         @csrf
                         <button type="submit" class="dropdown-item">Logout</button>
                     </form>
@@ -168,8 +168,8 @@
                 });
             </script>
         @else
-            <a href="{{ route('dummy.login') }}" class="btn btn-success" style="margin-right: 10px;">Login</a>
-            <a href="{{ route('dummy.register') }}" class="btn btn-warning">Daftar</a>
+            <a href="{{ route('login') }}" class="btn btn-success" style="margin-right: 10px;">Login</a>
+            <a href="{{ route('register') }}" class="btn btn-warning">Daftar</a>
         @endif
         <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
     </div>

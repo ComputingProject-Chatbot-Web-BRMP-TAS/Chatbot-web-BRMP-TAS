@@ -76,15 +76,15 @@
             </div>
             <div class="form-group">
                 <label for="name">Nama</label>
-                <input type="text" id="name" name="name" value="{{ old('name', session('dummy_user.name')) }}" required autofocus>
+                <input type="text" id="name" name="name" value="{{ old('name', session('user.name')) }}" required autofocus>
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="{{ old('email', session('dummy_user.email', 'dummy@email.com')) }}" required>
+                <input type="email" id="email" name="email" value="{{ old('email', session('user.email')) }}" required>
             </div>
             <div class="form-group">
                 <label for="phone">Nomor HP</label>
-                <input type="text" id="phone" name="phone" value="{{ old('phone', session('dummy_user.phone', '08123456789')) }}" required>
+                <input type="text" id="phone" name="phone" value="{{ old('phone', session('user.phone')) }}" required>
             </div>
             <div class="form-group">
                 <label for="photo">Foto Profil (dummy)</label>

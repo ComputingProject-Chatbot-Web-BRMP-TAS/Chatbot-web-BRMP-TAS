@@ -5,7 +5,16 @@
         <div class="card shadow" style="border-radius: 20px;">
             <div class="card-body p-4">
                 <h2 class="text-center mb-4" style="color: #388e3c;">Masuk</h2>
-                <form method="POST" action="{{ route('login') }}">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <form method="POST" action="{{ route('login.post') }}">
                     @csrf
                     <div class="mb-3">
                         <input type="email" name="email" class="form-control" placeholder="Email" required autofocus style="background: #fffbe7; border-radius: 10px;">

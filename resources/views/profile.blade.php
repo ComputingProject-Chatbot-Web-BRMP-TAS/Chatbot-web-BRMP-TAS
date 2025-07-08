@@ -156,10 +156,10 @@
     <div class="container">
         <div class="profile-pic">
             <i class="fas fa-user-circle"></i>
-            <a href="{{ route('profile.edit') }}" class="edit-photo-btn" title="Edit Profil"><i class="fas fa-pen"></i></a>
+            <a href="{{ route('profile.edit') }}" class="edit-photo-btn" title="Edit Profil"><i class="fas fa-pen" style="font-size:10px;"></i></a>
         </div>
-        <div class="profile-name">{{ session('dummy_user.name') }}</div>
-        <div class="profile-username">{{ '@' . strtolower(str_replace(' ', '', session('dummy_user.name'))) }}</div>
+        <div class="profile-name">{{ session('user.name') }}</div>
+        <div class="profile-username">{{ '@' . strtolower(str_replace(' ', '', session('user.name'))) }}</div>
         <div class="stats">
             <div class="stat"><div class="count">0</div><div class="label">Pengolahan</div></div>
             <div class="stat"><div class="count">0</div><div class="label">Dikirim</div></div>
@@ -169,16 +169,16 @@
             <a href="#" class="menu-item"><i class="fas fa-store"></i>Katalog Saya</a>
             <a href="#" class="menu-item"><i class="fas fa-id-card"></i>Biodata Toko</a>
             <a href="#" class="menu-item"><i class="fas fa-question-circle"></i>Bantuan</a>
-            <form action="{{ route('dummy.logout') }}" method="POST" style="margin:0;">
+            <form action="{{ route('logout') }}" method="POST" style="margin:0;">
                 @csrf
                 <button type="submit" class="menu-item logout" style="width:100%;text-align:left;background:none;border:none;padding:13px 0;"> <i class="fas fa-sign-out-alt"></i>Keluar</button>
             </form>
         </div>
         <div class="biodata-box">
             <div class="biodata-title">Biodata Diri</div>
-            <div class="biodata-row"><div class="biodata-label">Nama</div><div class="biodata-value">{{ session('dummy_user.name') }}</div></div>
-            <div class="biodata-row"><div class="biodata-label">Email</div><div class="biodata-value">dummy@email.com</div></div>
-            <div class="biodata-row"><div class="biodata-label">Nomor HP</div><div class="biodata-value">08123456789</div></div>
+            <div class="biodata-row"><div class="biodata-label">Nama</div><div class="biodata-value">{{ session('user.name') }}</div></div>
+            <div class="biodata-row"><div class="biodata-label">Email</div><div class="biodata-value">{{ session('user.email') }}</div></div>
+            <div class="biodata-row"><div class="biodata-label">Nomor HP</div><div class="biodata-value">{{ session('user.phone') }}</div></div>
             <button class="choose-photo-btn" disabled>Pilih Foto</button>
         </div>
     </div>
