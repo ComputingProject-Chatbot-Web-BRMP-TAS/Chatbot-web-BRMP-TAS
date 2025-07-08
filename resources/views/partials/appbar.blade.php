@@ -6,6 +6,8 @@
         padding: 16px 40px;
         background: #fff;
         box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        z-index: 1100;
+        position: relative;
     }
     .navbar .search-bar {
         flex: 0 0 400px;
@@ -124,8 +126,29 @@
     <div style="font-weight:bold; color:#388E3C; font-size:22px;">
         <a href="/" style="text-decoration: none; color: inherit;">Benih BRMP</a>
     </div>
+    <span class="appbar-category" id="appbarCategoryBtn" style="font-weight:500; color:#222; margin-left:24px; margin-right:12px; font-size:17px; cursor:pointer; position:relative;">Kategori
+        <div id="appbarCategoryDropdown" class="dropdown-anim" style="display:none;position:fixed;top:56px;left:0;background:#fff;border-radius:0;box-shadow:0 4px 24px rgba(0,0,0,0.10);padding:14px 0;z-index:1001;flex-direction:row;gap:0;min-width:600px;max-width:1920px;width:auto;overflow:hidden;opacity:0;transform:translateY(-24px);height:0;transition:opacity 0.25s cubic-bezier(.4,0,.2,1), transform 0.25s cubic-bezier(.4,0,.2,1), height 0.25s cubic-bezier(.4,0,.2,1);">
+            <div style="display:flex;flex-direction:row;gap:0;width:100%;justify-content:flex-start;">
+                <div class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600;">
+                    <i class="fas fa-seedling" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Tumbuhan</span>
+                </div>
+                <div class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600;">
+                    <i class="fas fa-leaf" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Rempah-Rempah/Herbal</span>
+                </div>
+                <div class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600;">
+                    <i class="fas fa-apple-alt" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Buah-Buahan</span>
+                </div>
+                <div class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600;">
+                    <i class="fas fa-carrot" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Sayuran</span>
+                </div>
+                <div class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600;">
+                    <i class="fas fa-spa" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Bunga</span>
+                </div>
+            </div>
+        </div>
+    </span>
     <div class="search-bar">
-        <input type="text" placeholder="Cari produk...">
+        <input type="text" placeholder="Cari di Benih BRMP" style="border:1.5px solid #bfc9d1;">
         <i class="fas fa-search"></i>
     </div>
     <div class="user-section">
@@ -174,3 +197,66 @@
         <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
     </div>
 </div>
+
+<div id="dropdownOverlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);z-index:1000;transition:opacity 0.25s;opacity:0;"></div>
+
+<script>
+// Dropdown kategori appbar (benar-benar full sepanjang navbar, animasi slide, overlay gelap)
+const appbarCatBtn = document.getElementById('appbarCategoryBtn');
+const appbarCatDropdown = document.getElementById('appbarCategoryDropdown');
+const dropdownOverlay = document.getElementById('dropdownOverlay');
+const navbar = document.querySelector('.navbar');
+function positionDropdown() {
+    const rect = navbar.getBoundingClientRect();
+    appbarCatDropdown.style.position = 'fixed';
+    appbarCatDropdown.style.left = rect.left + 'px';
+    appbarCatDropdown.style.top = (rect.bottom) + 'px';
+    appbarCatDropdown.style.width = rect.width + 'px';
+}
+function showDropdown() {
+    positionDropdown();
+    appbarCatDropdown.style.display = 'flex';
+    setTimeout(() => {
+        appbarCatDropdown.style.opacity = '1';
+        appbarCatDropdown.style.transform = 'translateY(0)';
+        appbarCatDropdown.style.height = '72px';
+        dropdownOverlay.style.display = 'block';
+        setTimeout(() => { dropdownOverlay.style.opacity = '1'; }, 10);
+    }, 10);
+}
+function hideDropdown() {
+    appbarCatDropdown.style.opacity = '0';
+    appbarCatDropdown.style.transform = 'translateY(-24px)';
+    appbarCatDropdown.style.height = '0';
+    dropdownOverlay.style.opacity = '0';
+    setTimeout(() => {
+        if(appbarCatDropdown.style.opacity === '0') appbarCatDropdown.style.display = 'none';
+        dropdownOverlay.style.display = 'none';
+    }, 250);
+}
+appbarCatBtn.onclick = function(e) {
+    e.stopPropagation();
+    if(appbarCatDropdown.style.display === 'flex' && appbarCatDropdown.style.opacity === '1') {
+        hideDropdown();
+    } else {
+        showDropdown();
+    }
+};
+dropdownOverlay.onclick = hideDropdown;
+document.addEventListener('click', function(e) {
+    if (!appbarCatBtn.contains(e.target) && !appbarCatDropdown.contains(e.target)) {
+        hideDropdown();
+    }
+});
+window.addEventListener('resize', function() {
+    if(appbarCatDropdown.style.display === 'flex') {
+        positionDropdown();
+    }
+});
+</script>
+
+<style>
+#appbarCategoryDropdown .dropdown-item:hover {
+    background: #f4f4f4;
+}
+</style>

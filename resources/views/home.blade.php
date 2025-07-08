@@ -224,46 +224,19 @@
             </div>
         </div>
         
-        <div class="section">
-            <h2 style="margin-bottom:18px;">Kategori</h2>
-            <div class="categories">
-                <div class="category selected">
-                    <i class="fas fa-th-large"></i>
-                    <span>Semua</span>
-                </div>
-                <div class="category">
-                    <i class="fas fa-tshirt"></i>
-                    <span>Fashion</span>
-                </div>
-                <div class="category">
-                    <i class="fas fa-couch"></i>
-                    <span>Furniture</span>
-                </div>
-                <div class="category">
-                    <i class="fas fa-plug"></i>
-                    <span>Elektronik</span>
-                </div>
-                <div class="category">
-                    <i class="fas fa-gem"></i>
-                    <span>Aksesoris</span>
-                </div>
-                <div class="category">
-                    <i class="fas fa-running"></i>
-                    <span>Sepatu</span>
-                </div>
-                <div class="category">
-                    <i class="fas fa-shopping-bag"></i>
-                    <span>Tas</span>
-                </div>
-                <div class="category">
-                    <i class="fas fa-paint-brush"></i>
-                    <span>Kosmetik</span>
-                </div>
-                <div class="category">
-                    <i class="fas fa-home"></i>
-                    <span>Perabotan</span>
-                </div>
+        <div class="section" style="margin-bottom:24px;">
+            <h2 style="font-weight:bold; margin-bottom:18px;">Kategori</h2>
+            <div id="kategoriGrid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:24px;">
+                <div class="category-grid-item" data-kat="Tumbuhan" style="display:flex;align-items:center;gap:14px;cursor:pointer;padding:14px 18px;border-radius:12px;border:2px solid #E0E0E0;background:#fff;transition:all 0.18s;font-weight:500;font-size:16px;color:#388E3C;"><i class="fas fa-seedling" style="font-size:28px;color:#388E3C;"></i> Tumbuhan</div>
+                <div class="category-grid-item" data-kat="Rempah-Rempah/Herbal" style="display:flex;align-items:center;gap:14px;cursor:pointer;padding:14px 18px;border-radius:12px;border:2px solid #E0E0E0;background:#fff;transition:all 0.18s;font-weight:500;font-size:16px;color:#388E3C;"><i class="fas fa-leaf" style="font-size:28px;color:#388E3C;"></i> Rempah-Rempah/Herbal</div>
+                <div class="category-grid-item" data-kat="Buah-Buahan" style="display:flex;align-items:center;gap:14px;cursor:pointer;padding:14px 18px;border-radius:12px;border:2px solid #E0E0E0;background:#fff;transition:all 0.18s;font-weight:500;font-size:16px;color:#388E3C;"><i class="fas fa-apple-alt" style="font-size:28px;color:#388E3C;"></i> Buah-Buahan</div>
+                <div class="category-grid-item" data-kat="Sayuran" style="display:flex;align-items:center;gap:14px;cursor:pointer;padding:14px 18px;border-radius:12px;border:2px solid #E0E0E0;background:#fff;transition:all 0.18s;font-weight:500;font-size:16px;color:#388E3C;"><i class="fas fa-carrot" style="font-size:28px;color:#388E3C;"></i> Sayuran</div>
+                <div class="category-grid-item" data-kat="Bunga" style="display:flex;align-items:center;gap:14px;cursor:pointer;padding:14px 18px;border-radius:12px;border:2px solid #E0E0E0;background:#fff;transition:all 0.18s;font-weight:500;font-size:16px;color:#388E3C;"><i class="fas fa-spa" style="font-size:28px;color:#388E3C;"></i> Bunga</div>
             </div>
+        </div>
+        <div class="section" id="produkKategoriSection" style="display:none;">
+            <h3 id="produkKategoriTitle" style="font-weight:bold;margin-bottom:18px;color:#388E3C;"></h3>
+            <div id="produkKategoriList" class="recommendations"></div>
         </div>
         <div class="section">
             <h3>Rekomendasi Untuk Anda</h3>
@@ -321,5 +294,27 @@
             </div>
         </div>
     </div>
+    <script>
+    const produkDummy = {
+        'Tumbuhan': ['Tumbuhan 1', 'Tumbuhan 2', 'Tumbuhan 3'],
+        'Rempah-Rempah/Herbal': ['Rempah 1', 'Rempah 2', 'Rempah 3'],
+        'Buah-Buahan': ['Buah 1', 'Buah 2', 'Buah 3'],
+        'Sayuran': ['Sayuran 1', 'Sayuran 2', 'Sayuran 3'],
+        'Bunga': ['Bunga 1', 'Bunga 2', 'Bunga 3']
+    };
+    document.querySelectorAll('.category-grid-item').forEach(function(item) {
+        item.onclick = function() {
+            const kat = this.getAttribute('data-kat');
+            document.getElementById('produkKategoriTitle').innerText = kat;
+            const list = document.getElementById('produkKategoriList');
+            list.innerHTML = '';
+            produkDummy[kat].forEach(function(nama, idx) {
+                list.innerHTML += `<div class='product-card'><div class='image-placeholder'><i class='fas fa-seedling'></i></div><div class='info'><div class='title'>${nama}</div><div class='price'>Rp. ${(idx+1)*10000}</div><div class='tag'><i class='fas fa-star'></i>Dummy</div></div></div>`;
+            });
+            document.getElementById('produkKategoriSection').style.display = 'block';
+            window.scrollTo({top: document.getElementById('produkKategoriSection').offsetTop-40, behavior:'smooth'});
+        };
+    });
+    </script>
 </body>
 </html>
