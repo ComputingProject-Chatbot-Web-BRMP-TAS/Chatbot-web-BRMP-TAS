@@ -133,3 +133,29 @@ Route::post('/dummy-logout', function (Request $request) {
     $request->session()->forget('dummy_user');
     return redirect('/');
 })->name('dummy.logout');
+
+Route::get('/profile', function () {
+    if (!session('dummy_user')) return redirect('/dummy-login');
+    return view('profile');
+})->name('profile');
+
+Route::get('/profile/edit', function () {
+    if (!session('dummy_user')) return redirect('/dummy-login');
+    return view('profile_edit');
+})->name('profile.edit');
+
+Route::post('/profile/edit', function (Illuminate\Http\Request $request) {
+    $request->validate([
+        'name' => 'required',
+        'email' => 'required|email',
+        'phone' => 'required',
+        // 'photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // dummy, tidak upload beneran
+    ]);
+    $user = session('dummy_user');
+    $user['name'] = $request->name;
+    $user['email'] = $request->email;
+    $user['phone'] = $request->phone;
+    // $user['photo'] = null; // dummy, tidak upload beneran
+    session(['dummy_user' => $user]);
+    return redirect()->route('profile')->with('success', 'Profil berhasil diupdate!');
+});

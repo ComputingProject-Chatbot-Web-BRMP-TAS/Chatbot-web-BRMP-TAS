@@ -131,8 +131,10 @@
     <div class="user-section">
         @if(session('dummy_user'))
             <div class="user" style="position:relative;">
-                <i class="fas fa-user-circle"></i>
-                <span>Hi, {{ session('dummy_user.name') }}</span>
+                <a href="{{ route('profile') }}" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit;gap:8px;">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Hi, {{ session('dummy_user.name') }}</span>
+                </a>
                 <span class="dropdown-toggle" style="cursor:pointer;" onclick="toggleDropdown()">
                     <i class="fas fa-chevron-down" style="font-size:14px;"></i>
                 </span>
