@@ -268,6 +268,7 @@
         <div class="section">
             <h3>Rekomendasi Untuk Anda</h3>
             <div class="recommendations">
+                <a href="{{ route('produk.detail', 'hp') }}" style="text-decoration:none;color:inherit;">
                 <div class="product-card">
                     <div class="image-placeholder"><i class="fas fa-image"></i></div>
                     <div class="info">
@@ -276,6 +277,8 @@
                         <div class="tag"><i class="fas fa-star"></i>Baru dengan tag</div>
                     </div>
                 </div>
+                </a>
+                <a href="{{ route('produk.detail', 'buku-cerita') }}" style="text-decoration:none;color:inherit;">
                 <div class="product-card">
                     <div class="image-placeholder"><i class="fas fa-image"></i></div>
                     <div class="info">
@@ -284,6 +287,8 @@
                         <div class="tag"><i class="fas fa-star"></i>Bekas</div>
                     </div>
                 </div>
+                </a>
+                <a href="{{ route('produk.detail', 'jembatan') }}" style="text-decoration:none;color:inherit;">
                 <div class="product-card">
                     <div class="image-placeholder"><i class="fas fa-image"></i></div>
                     <div class="info">
@@ -292,6 +297,8 @@
                         <div class="tag"><i class="fas fa-star"></i>Baru dengan tag</div>
                     </div>
                 </div>
+                </a>
+                <a href="{{ route('produk.detail', 'ikan-mujaer') }}" style="text-decoration:none;color:inherit;">
                 <div class="product-card">
                     <div class="image-placeholder"><i class="fas fa-image"></i></div>
                     <div class="info">
@@ -300,6 +307,8 @@
                         <div class="tag"><i class="fas fa-star"></i>Baru</div>
                     </div>
                 </div>
+                </a>
+                <a href="{{ route('produk.detail', 'ayam-jagoo') }}" style="text-decoration:none;color:inherit;">
                 <div class="product-card">
                     <div class="image-placeholder"><i class="fas fa-image"></i></div>
                     <div class="info">
@@ -308,6 +317,7 @@
                         <div class="tag"><i class="fas fa-star"></i>Bekas seperti baru</div>
                     </div>
                 </div>
+                </a>
             </div>
         </div>
     </div>
