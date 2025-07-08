@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+
 Route::get('/', function () {
     return view('home');
 });
@@ -84,3 +86,50 @@ Route::get('/produk/{nama}', function ($nama) {
     if (!$produk) abort(404);
     return view('produk.detail', compact('produk'));
 })->name('produk.detail');
+
+Route::get('/dummy-register', function () {
+    return view('auth.dummy_register');
+})->name('dummy.register');
+
+Route::post('/dummy-register', function (Request $request) {
+    $request->validate([
+        'name' => 'required',
+        'password' => 'required|min:3',
+    ]);
+    $users = session('dummy_users', []);
+    foreach ($users as $user) {
+        if ($user['name'] === $request->name) {
+            return back()->withErrors(['name' => 'Nama sudah terdaftar!']);
+        }
+    }
+    $users[] = [
+        'name' => $request->name,
+        'password' => $request->password,
+    ];
+    session(['dummy_users' => $users]);
+    return redirect()->route('dummy.login')->with('success', 'Berhasil daftar! Silakan login.');
+});
+
+Route::get('/dummy-login', function () {
+    return view('auth.dummy_login');
+})->name('dummy.login');
+
+Route::post('/dummy-login', function (Request $request) {
+    $request->validate([
+        'name' => 'required',
+        'password' => 'required',
+    ]);
+    $users = session('dummy_users', []);
+    foreach ($users as $user) {
+        if ($user['name'] === $request->name && $user['password'] === $request->password) {
+            session(['dummy_user' => ['name' => $user['name']]]);
+            return redirect('/');
+        }
+    }
+    return back()->withErrors(['name' => 'Nama atau password salah!']);
+});
+
+Route::post('/dummy-logout', function (Request $request) {
+    $request->session()->forget('dummy_user');
+    return redirect('/');
+})->name('dummy.logout');

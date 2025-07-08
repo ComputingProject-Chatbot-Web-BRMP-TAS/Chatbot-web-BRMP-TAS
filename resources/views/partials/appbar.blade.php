@@ -83,6 +83,41 @@
     .navbar .btn:hover {
         transform: translateY(-1px);
     }
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 40px;
+        right: 0;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        min-width: 120px;
+        z-index: 100;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: opacity 0.25s, transform 0.25s;
+    }
+    .dropdown-menu.show {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .dropdown-item {
+        background: #fff;
+        color: #222;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 18px;
+        font-weight: 600;
+        font-size: 15px;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .dropdown-item:hover {
+        background: #f4f4f4;
+    }
 </style>
 
 <div class="navbar">
@@ -94,18 +129,46 @@
         <i class="fas fa-search"></i>
     </div>
     <div class="user-section">
-        @auth
-            <div class="user">
+        @if(session('dummy_user'))
+            <div class="user" style="position:relative;">
                 <i class="fas fa-user-circle"></i>
-                <span>Hi, {{ Auth::user()->name }}</span>
-                <i class="fas fa-chevron-down" style="font-size:14px;"></i>
+                <span>Hi, {{ session('dummy_user.name') }}</span>
+                <span class="dropdown-toggle" style="cursor:pointer;" onclick="toggleDropdown()">
+                    <i class="fas fa-chevron-down" style="font-size:14px;"></i>
+                </span>
+                <div id="dropdown-menu" class="dropdown-menu">
+                    <form action="{{ route('dummy.logout') }}" method="POST" style="margin:0;">
+                        @csrf
+                        <button type="submit" class="dropdown-item">Logout</button>
+                    </form>
+                </div>
             </div>
-            <button class="jual-btn">Jual</button>
+            <script>
+                function toggleDropdown() {
+                    var menu = document.getElementById('dropdown-menu');
+                    if (menu.classList.contains('show')) {
+                        menu.classList.remove('show');
+                        setTimeout(function(){ menu.style.display = 'none'; }, 250);
+                    } else {
+                        menu.style.display = 'block';
+                        setTimeout(function(){ menu.classList.add('show'); }, 10);
+                    }
+                }
+                document.addEventListener('click', function(e) {
+                    var menu = document.getElementById('dropdown-menu');
+                    var toggle = document.querySelector('.dropdown-toggle');
+                    if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+                        if (menu.classList.contains('show')) {
+                            menu.classList.remove('show');
+                            setTimeout(function(){ menu.style.display = 'none'; }, 250);
+                        }
+                    }
+                });
+            </script>
         @else
-            <a href="{{ route('register') }}" class="btn btn-success" style="margin-right: 10px;">Daftar</a>
-            <a href="{{ route('login') }}" class="btn btn-warning">Masuk</a>
-        @endauth
-        <i class="fas fa-comment-dots"></i>
+            <a href="{{ route('dummy.login') }}" class="btn btn-success" style="margin-right: 10px;">Login</a>
+            <a href="{{ route('dummy.register') }}" class="btn btn-warning">Daftar</a>
+        @endif
         <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
     </div>
 </div>
