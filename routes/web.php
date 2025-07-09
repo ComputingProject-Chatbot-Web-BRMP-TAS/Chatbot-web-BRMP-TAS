@@ -18,6 +18,10 @@ Route::get('/login', function () {
     return view('auth.signin');
 })->name('login');
 
+Route::get('/produk-baru', function () {
+    return view('produk_baru');
+})->name('produk.baru');
+
 Route::post('/register', function (Request $request) {
     $request->validate([
         'name' => 'required',
@@ -87,10 +91,18 @@ Route::post('/profile/edit', function (Request $request) {
     return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui!');
 })->name('profile.edit');
 
-Route::get('/cart', function () {
-    return view('cart');
-})->name('cart');
-
-Route::get('/produk/{id}', function ($id) {
-    return view('produk.detail', ['id' => $id]);
-})->name('produk.detail');
+Route::get('/kategori/tumbuhan', function() {
+    return view('kategori_tumbuhan');
+});
+Route::get('/kategori/rempah', function() {
+    return view('kategori_rempah');
+});
+Route::get('/kategori/buah', function() {
+    return view('kategori_buah');
+});
+Route::get('/kategori/sayuran', function() {
+    return view('kategori_sayuran');
+});
+Route::get('/kategori/bunga', function() {
+    return view('kategori_bunga');
+});

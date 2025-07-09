@@ -16,11 +16,18 @@
     }
     .cart-left {
         flex: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
     }
     .cart-title {
         font-size: 1.6rem;
         font-weight: 600;
+        margin-top: -70px;
         margin-bottom: 24px;
+    }
+    .cart-title-margin {
+        margin-top: 80px;
     }
     .cart-empty-box {
         background: #fff;
@@ -44,6 +51,7 @@
     }
     .cart-empty-content {
         flex: 1;
+        
     }
     .cart-empty-content h5 {
         font-size: 1.2rem;
@@ -76,6 +84,7 @@
         padding: 28px 24px;
         box-shadow: 0 2px 12px rgba(0,0,0,0.04);
         min-width: 260px;
+        margin-top: -10px;
     }
     .cart-summary-title {
         font-weight: 600;
@@ -181,13 +190,14 @@
             min-width: unset;
         }
     }
+    .cart-summary-margin {
+        margin-top: 135px;
+    }
 </style>
-
-@include('partials.appbar')
 
 <div class="cart-main">
     <div class="cart-left">
-        <div class="cart-title">Keranjang</div>
+        <div class="cart-title cart-title-margin">Keranjang</div>
         <div class="cart-empty-box">
             <div class="cart-empty-img">
                 <i class="fas fa-box-open" style="color:#ffd600;"></i>
@@ -199,7 +209,7 @@
             </div>
         </div>
     </div>
-    <div class="cart-summary">
+    <div class="cart-summary cart-summary-margin">
         <div class="cart-summary-title">Ringkasan belanja</div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
             <span style="color:#666; font-size:16px;">Total</span>

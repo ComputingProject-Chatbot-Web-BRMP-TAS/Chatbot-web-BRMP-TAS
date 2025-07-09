@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Benih BRMP</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+@extends('layouts.app')
+
+@section('title', 'Home')
+
+@section('content')
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -17,7 +14,6 @@
             background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 50%, #CDDC39 100%);
             border-radius: 20px;
             padding: 40px;
-            margin-bottom: 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -204,117 +200,124 @@
                 width: 100%;
             }
         }
+        .hero-banner-margin {
+            margin: 60px 0 32px 0;
+        }
     </style>
-</head>
-<body>
-    @include('partials.appbar')
-    
     <div class="container">
         <!-- Hero Banner Section -->
-        <div class="hero-banner">
+        <div class="hero-banner hero-banner-margin">
             <div class="hero-content">
                 <h1 class="hero-title">Produk Baru Telah Hadir!</h1>
                 <p class="hero-subtitle">Temukan koleksi produk terbaru dengan penawaran menarik hanya di Benih BRMP.</p>
-                <button class="hero-btn">Lihat Produk Baru</button>
+                <button class="hero-btn" onclick="window.location.href='{{ route('produk.baru') }}'">Lihat Produk Baru</button>
             </div>
             <div class="hero-icon">
                 <div class="hero-icon-circle">
-                    <i class="fas fa-shopping-bag"></i>
+                    <i class="fas fa-seedling"></i>
                 </div>
             </div>
         </div>
         
         <div class="section" style="margin-bottom:24px;">
-            <h2 style="font-weight:bold; margin-bottom:18px;">Kategori</h2>
-            <div id="kategoriGrid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:24px;">
-                <div class="category-grid-item" data-kat="Tumbuhan" style="display:flex;align-items:center;gap:14px;cursor:pointer;padding:14px 18px;border-radius:12px;border:2px solid #E0E0E0;background:#fff;transition:all 0.18s;font-weight:500;font-size:16px;color:#388E3C;"><i class="fas fa-seedling" style="font-size:28px;color:#388E3C;"></i> Tumbuhan</div>
-                <div class="category-grid-item" data-kat="Rempah-Rempah/Herbal" style="display:flex;align-items:center;gap:14px;cursor:pointer;padding:14px 18px;border-radius:12px;border:2px solid #E0E0E0;background:#fff;transition:all 0.18s;font-weight:500;font-size:16px;color:#388E3C;"><i class="fas fa-leaf" style="font-size:28px;color:#388E3C;"></i> Rempah-Rempah/Herbal</div>
-                <div class="category-grid-item" data-kat="Buah-Buahan" style="display:flex;align-items:center;gap:14px;cursor:pointer;padding:14px 18px;border-radius:12px;border:2px solid #E0E0E0;background:#fff;transition:all 0.18s;font-weight:500;font-size:16px;color:#388E3C;"><i class="fas fa-apple-alt" style="font-size:28px;color:#388E3C;"></i> Buah-Buahan</div>
-                <div class="category-grid-item" data-kat="Sayuran" style="display:flex;align-items:center;gap:14px;cursor:pointer;padding:14px 18px;border-radius:12px;border:2px solid #E0E0E0;background:#fff;transition:all 0.18s;font-weight:500;font-size:16px;color:#388E3C;"><i class="fas fa-carrot" style="font-size:28px;color:#388E3C;"></i> Sayuran</div>
-                <div class="category-grid-item" data-kat="Bunga" style="display:flex;align-items:center;gap:14px;cursor:pointer;padding:14px 18px;border-radius:12px;border:2px solid #E0E0E0;background:#fff;transition:all 0.18s;font-weight:500;font-size:16px;color:#388E3C;"><i class="fas fa-spa" style="font-size:28px;color:#388E3C;"></i> Bunga</div>
+            <h2 style="font-weight:bold; margin-bottom:18px;">Produk Pilihan</h2>
+            <div class="product-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:24px;">
+                <div class="product-card">
+                    <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/7/6/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" alt="Benih Cabai Rawit" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
+                    <div class="info" style="padding:12px 16px 0 16px;">
+                        <div class="title" style="font-weight:500;font-size:16px;margin-bottom:4px;">Benih Cabai Rawit</div>
+                        <div class="price" style="color:#388E3C;font-weight:bold;font-size:17px;margin-bottom:4px;">Rp 15.000</div>
+                        <div class="desc" style="font-size:13px;color:#757575;">Isi 50 butir, cocok untuk pekarangan rumah.</div>
+                        <div class="tag" style="display:flex;align-items:center;font-size:13px;color:#FBC02D;margin-top:6px;"><i class="fas fa-star" style="margin-right:4px;"></i>Baru</div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2022/12/1/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" alt="Benih Tomat" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
+                    <div class="info" style="padding:12px 16px 0 16px;">
+                        <div class="title" style="font-weight:500;font-size:16px;margin-bottom:4px;">Benih Tomat</div>
+                        <div class="price" style="color:#388E3C;font-weight:bold;font-size:17px;margin-bottom:4px;">Rp 12.000</div>
+                        <div class="desc" style="font-size:13px;color:#757575;">Tahan penyakit, hasil melimpah.</div>
+                        <div class="tag" style="display:flex;align-items:center;font-size:13px;color:#FBC02D;margin-top:6px;"><i class="fas fa-star" style="margin-right:4px;"></i>Baru</div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2022/10/10/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" alt="Benih Kangkung" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
+                    <div class="info" style="padding:12px 16px 0 16px;">
+                        <div class="title" style="font-weight:500;font-size:16px;margin-bottom:4px;">Benih Kangkung</div>
+                        <div class="price" style="color:#388E3C;font-weight:bold;font-size:17px;margin-bottom:4px;">Rp 8.000</div>
+                        <div class="desc" style="font-size:13px;color:#757575;">Cepat panen, cocok untuk hidroponik.</div>
+                        <div class="tag" style="display:flex;align-items:center;font-size:13px;color:#FBC02D;margin-top:6px;"><i class="fas fa-star" style="margin-right:4px;"></i>Baru</div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/1/15/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" alt="Benih Bayam" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
+                    <div class="info" style="padding:12px 16px 0 16px;">
+                        <div class="title" style="font-weight:500;font-size:16px;margin-bottom:4px;">Benih Bayam</div>
+                        <div class="price" style="color:#388E3C;font-weight:bold;font-size:17px;margin-bottom:4px;">Rp 7.000</div>
+                        <div class="desc" style="font-size:13px;color:#757575;">Bayam hijau segar, mudah tumbuh.</div>
+                        <div class="tag" style="display:flex;align-items:center;font-size:13px;color:#FBC02D;margin-top:6px;"><i class="fas fa-star" style="margin-right:4px;"></i>Baru</div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/3/20/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" alt="Benih Wortel" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
+                    <div class="info" style="padding:12px 16px 0 16px;">
+                        <div class="title" style="font-weight:500;font-size:16px;margin-bottom:4px;">Benih Wortel</div>
+                        <div class="price" style="color:#388E3C;font-weight:bold;font-size:17px;margin-bottom:4px;">Rp 10.000</div>
+                        <div class="desc" style="font-size:13px;color:#757575;">Wortel oranye, cocok untuk dataran tinggi.</div>
+                        <div class="tag" style="display:flex;align-items:center;font-size:13px;color:#FBC02D;margin-top:6px;"><i class="fas fa-star" style="margin-right:4px;"></i>Baru</div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="section" id="produkKategoriSection" style="display:none;">
-            <h3 id="produkKategoriTitle" style="font-weight:bold;margin-bottom:18px;color:#388E3C;"></h3>
-            <div id="produkKategoriList" class="recommendations"></div>
         </div>
         <div class="section">
             <h3>Rekomendasi Untuk Anda</h3>
-            <div class="recommendations">
-                <a href="{{ route('produk.detail', 'hp') }}" style="text-decoration:none;color:inherit;">
+            <div class="product-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:24px;">
                 <div class="product-card">
-                    <div class="image-placeholder"><i class="fas fa-image"></i></div>
-                    <div class="info">
-                        <div class="title">hp</div>
-                        <div class="price">Rp. 123.213</div>
-                        <div class="tag"><i class="fas fa-star"></i>Baru dengan tag</div>
+                    <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/7/6/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" alt="Benih Cabai Rawit" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
+                    <div class="info" style="padding:12px 16px 0 16px;">
+                        <div class="title" style="font-weight:500;font-size:16px;margin-bottom:4px;">Benih Cabai Rawit</div>
+                        <div class="price" style="color:#388E3C;font-weight:bold;font-size:17px;margin-bottom:4px;">Rp 15.000</div>
+                        <div class="desc" style="font-size:13px;color:#757575;">Isi 50 butir, cocok untuk pekarangan rumah.</div>
+                        <div class="tag" style="display:flex;align-items:center;font-size:13px;color:#FBC02D;margin-top:6px;"><i class="fas fa-star" style="margin-right:4px;"></i>Baru</div>
                     </div>
                 </div>
-                </a>
-                <a href="{{ route('produk.detail', 'buku-cerita') }}" style="text-decoration:none;color:inherit;">
                 <div class="product-card">
-                    <div class="image-placeholder"><i class="fas fa-image"></i></div>
-                    <div class="info">
-                        <div class="title">buku cerita</div>
-                        <div class="price">Rp. 10.000</div>
-                        <div class="tag"><i class="fas fa-star"></i>Bekas</div>
+                    <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2022/12/1/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" alt="Benih Tomat" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
+                    <div class="info" style="padding:12px 16px 0 16px;">
+                        <div class="title" style="font-weight:500;font-size:16px;margin-bottom:4px;">Benih Tomat</div>
+                        <div class="price" style="color:#388E3C;font-weight:bold;font-size:17px;margin-bottom:4px;">Rp 12.000</div>
+                        <div class="desc" style="font-size:13px;color:#757575;">Tahan penyakit, hasil melimpah.</div>
+                        <div class="tag" style="display:flex;align-items:center;font-size:13px;color:#FBC02D;margin-top:6px;"><i class="fas fa-star" style="margin-right:4px;"></i>Baru</div>
                     </div>
                 </div>
-                </a>
-                <a href="{{ route('produk.detail', 'jembatan') }}" style="text-decoration:none;color:inherit;">
                 <div class="product-card">
-                    <div class="image-placeholder"><i class="fas fa-image"></i></div>
-                    <div class="info">
-                        <div class="title">jembatan</div>
-                        <div class="price">Rp. 30.000</div>
-                        <div class="tag"><i class="fas fa-star"></i>Baru dengan tag</div>
+                    <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2022/10/10/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" alt="Benih Kangkung" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
+                    <div class="info" style="padding:12px 16px 0 16px;">
+                        <div class="title" style="font-weight:500;font-size:16px;margin-bottom:4px;">Benih Kangkung</div>
+                        <div class="price" style="color:#388E3C;font-weight:bold;font-size:17px;margin-bottom:4px;">Rp 8.000</div>
+                        <div class="desc" style="font-size:13px;color:#757575;">Cepat panen, cocok untuk hidroponik.</div>
+                        <div class="tag" style="display:flex;align-items:center;font-size:13px;color:#FBC02D;margin-top:6px;"><i class="fas fa-star" style="margin-right:4px;"></i>Baru</div>
                     </div>
                 </div>
-                </a>
-                <a href="{{ route('produk.detail', 'ikan-mujaer') }}" style="text-decoration:none;color:inherit;">
                 <div class="product-card">
-                    <div class="image-placeholder"><i class="fas fa-image"></i></div>
-                    <div class="info">
-                        <div class="title">ikan mujaer<br>yyyyyyyyyyyyyyyyyyyy</div>
-                        <div class="price">Rp. 1.222.222.222.222</div>
-                        <div class="tag"><i class="fas fa-star"></i>Baru</div>
+                    <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/1/15/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" alt="Benih Bayam" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
+                    <div class="info" style="padding:12px 16px 0 16px;">
+                        <div class="title" style="font-weight:500;font-size:16px;margin-bottom:4px;">Benih Bayam</div>
+                        <div class="price" style="color:#388E3C;font-weight:bold;font-size:17px;margin-bottom:4px;">Rp 7.000</div>
+                        <div class="desc" style="font-size:13px;color:#757575;">Bayam hijau segar, mudah tumbuh.</div>
+                        <div class="tag" style="display:flex;align-items:center;font-size:13px;color:#FBC02D;margin-top:6px;"><i class="fas fa-star" style="margin-right:4px;"></i>Baru</div>
                     </div>
                 </div>
-                </a>
-                <a href="{{ route('produk.detail', 'ayam-jagoo') }}" style="text-decoration:none;color:inherit;">
                 <div class="product-card">
-                    <div class="image-placeholder"><i class="fas fa-image"></i></div>
-                    <div class="info">
-                        <div class="title">ayam jagoo</div>
-                        <div class="price">Rp. 8.888.888.888.888</div>
-                        <div class="tag"><i class="fas fa-star"></i>Bekas seperti baru</div>
+                    <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/3/20/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" alt="Benih Wortel" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
+                    <div class="info" style="padding:12px 16px 0 16px;">
+                        <div class="title" style="font-weight:500;font-size:16px;margin-bottom:4px;">Benih Wortel</div>
+                        <div class="price" style="color:#388E3C;font-weight:bold;font-size:17px;margin-bottom:4px;">Rp 10.000</div>
+                        <div class="desc" style="font-size:13px;color:#757575;">Wortel oranye, cocok untuk dataran tinggi.</div>
+                        <div class="tag" style="display:flex;align-items:center;font-size:13px;color:#FBC02D;margin-top:6px;"><i class="fas fa-star" style="margin-right:4px;"></i>Baru</div>
                     </div>
                 </div>
-                </a>
             </div>
         </div>
     </div>
-    <script>
-    const produkDummy = {
-        'Tumbuhan': ['Tumbuhan 1', 'Tumbuhan 2', 'Tumbuhan 3'],
-        'Rempah-Rempah/Herbal': ['Rempah 1', 'Rempah 2', 'Rempah 3'],
-        'Buah-Buahan': ['Buah 1', 'Buah 2', 'Buah 3'],
-        'Sayuran': ['Sayuran 1', 'Sayuran 2', 'Sayuran 3'],
-        'Bunga': ['Bunga 1', 'Bunga 2', 'Bunga 3']
-    };
-    document.querySelectorAll('.category-grid-item').forEach(function(item) {
-        item.onclick = function() {
-            const kat = this.getAttribute('data-kat');
-            document.getElementById('produkKategoriTitle').innerText = kat;
-            const list = document.getElementById('produkKategoriList');
-            list.innerHTML = '';
-            produkDummy[kat].forEach(function(nama, idx) {
-                list.innerHTML += `<div class='product-card'><div class='image-placeholder'><i class='fas fa-seedling'></i></div><div class='info'><div class='title'>${nama}</div><div class='price'>Rp. ${(idx+1)*10000}</div><div class='tag'><i class='fas fa-star'></i>Dummy</div></div></div>`;
-            });
-            document.getElementById('produkKategoriSection').style.display = 'block';
-            window.scrollTo({top: document.getElementById('produkKategoriSection').offsetTop-40, behavior:'smooth'});
-        };
-    });
-    </script>
-</body>
-</html>
+@endsection
