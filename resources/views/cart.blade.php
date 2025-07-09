@@ -76,6 +76,7 @@
         padding: 28px 24px;
         box-shadow: 0 2px 12px rgba(0,0,0,0.04);
         min-width: 260px;
+        margin-top: 56px;
     }
     .cart-summary-title {
         font-weight: 600;
@@ -182,8 +183,6 @@
         }
     }
 </style>
-
-@include('partials.appbar')
 
 <div class="cart-main">
     <div class="cart-left">
