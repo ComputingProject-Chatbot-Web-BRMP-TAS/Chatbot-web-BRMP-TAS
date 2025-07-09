@@ -215,7 +215,7 @@
             <div class="hero-content">
                 <h1 class="hero-title">Produk Baru Telah Hadir!</h1>
                 <p class="hero-subtitle">Temukan koleksi produk terbaru dengan penawaran menarik hanya di Benih BRMP.</p>
-                <button class="hero-btn">Lihat Produk Baru</button>
+                <button class="hero-btn" onclick="window.location.href='{{ route('produk.baru') }}'">Lihat Produk Baru</button>
             </div>
             <div class="hero-icon">
                 <div class="hero-icon-circle">

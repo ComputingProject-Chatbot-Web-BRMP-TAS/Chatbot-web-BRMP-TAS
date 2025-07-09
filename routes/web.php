@@ -36,6 +36,10 @@ Route::get('/produk/{id}', function ($id) {
     return view('produk.detail', ['id' => $id]);
 })->name('produk.detail');
 
+Route::get('/produk-baru', function () {
+    return view('produk_baru');
+})->name('produk.baru');
+
 Route::post('/register', function (Request $request) {
     $request->validate([
         'name' => 'required',
