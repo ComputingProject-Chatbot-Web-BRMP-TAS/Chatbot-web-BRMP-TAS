@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Saya</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+@extends('layouts.app')
+
+@section('title', 'Profil Saya')
+
+@section('content')
     <style>
         body { font-family: 'Roboto', sans-serif; background: #f8f9fa; margin: 0; color: #222; }
         .header-profile {
@@ -14,7 +11,9 @@
             padding: 32px 0 24px 0;
             color: white;
             text-align: center;
-            margin-bottom: 0;
+        }
+        .header-profile-margin {
+            margin: 60px 0 0 0;
         }
         .container { max-width: 520px; margin: 0 auto 32px auto; background: #fff; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 32px; }
         .profile-pic {
@@ -147,10 +146,7 @@
             .biodata-box { padding: 12px 8px; }
         }
     </style>
-</head>
-<body>
-    @include('partials.appbar')
-    <div class="header-profile">
+    <div class="header-profile header-profile-margin">
         <h2>Profil Saya</h2>
     </div>
     <div class="container">
@@ -182,5 +178,4 @@
             <button class="choose-photo-btn" disabled>Pilih Foto</button>
         </div>
     </div>
-</body>
-</html> 
+@endsection 

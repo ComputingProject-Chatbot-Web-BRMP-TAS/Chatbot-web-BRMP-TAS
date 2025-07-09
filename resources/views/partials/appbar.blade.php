@@ -7,7 +7,11 @@
         background: #fff !important;
         box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         z-index: 1100;
-        position: relative;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
     }
     .navbar .search-bar {
         flex: 0 0 400px;

@@ -26,6 +26,9 @@
         margin-top: -70px;
         margin-bottom: 24px;
     }
+    .cart-title-margin {
+        margin-top: 80px;
+    }
     .cart-empty-box {
         background: #fff;
         border-radius: 18px;
@@ -187,11 +190,14 @@
             min-width: unset;
         }
     }
+    .cart-summary-margin {
+        margin-top: 135px;
+    }
 </style>
 
 <div class="cart-main">
     <div class="cart-left">
-        <div class="cart-title">Keranjang</div>
+        <div class="cart-title cart-title-margin">Keranjang</div>
         <div class="cart-empty-box">
             <div class="cart-empty-img">
                 <i class="fas fa-box-open" style="color:#ffd600;"></i>
@@ -203,7 +209,7 @@
             </div>
         </div>
     </div>
-    <div class="cart-summary">
+    <div class="cart-summary cart-summary-margin">
         <div class="cart-summary-title">Ringkasan belanja</div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
             <span style="color:#666; font-size:16px;">Total</span>

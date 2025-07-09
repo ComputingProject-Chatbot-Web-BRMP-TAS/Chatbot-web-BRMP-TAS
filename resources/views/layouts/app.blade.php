@@ -13,14 +13,16 @@
     </style>
 </head>
 <body>
-    @include('partials.appbar')
+    @if(empty($hideAppbar) || !$hideAppbar)
+        @include('partials.appbar')
+    @endif
     @php
         $routeName = Route::currentRouteName();
         $isHome = request()->is('/') || $routeName === 'home';
         $isCart = $routeName === 'cart';
         $isKategori = in_array($routeName, ['kategori.tumbuhan','kategori.rempah','kategori.buah','kategori.sayuran','kategori.bunga']);
     @endphp
-    <div style="min-height:80vh; margin-top: 96px; @if($isHome)padding-top: 24px;@else padding-top: 0;@endif">
+    <div style="min-height:80vh; margin-top: 0; @if($isHome)padding-top: 24px;@else padding-top: 0;@endif">
         @yield('content')
     </div>
     <!-- Bootstrap 5 JS Bundle -->

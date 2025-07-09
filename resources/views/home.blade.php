@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Benih BRMP</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+@extends('layouts.app')
+
+@section('title', 'Home')
+
+@section('content')
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -17,7 +14,6 @@
             background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 50%, #CDDC39 100%);
             border-radius: 20px;
             padding: 40px;
-            margin-bottom: 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -204,14 +200,13 @@
                 width: 100%;
             }
         }
+        .hero-banner-margin {
+            margin: 60px 0 32px 0;
+        }
     </style>
-</head>
-<body>
-    @include('partials.appbar')
-    
     <div class="container">
         <!-- Hero Banner Section -->
-        <div class="hero-banner">
+        <div class="hero-banner hero-banner-margin">
             <div class="hero-content">
                 <h1 class="hero-title">Produk Baru Telah Hadir!</h1>
                 <p class="hero-subtitle">Temukan koleksi produk terbaru dengan penawaran menarik hanya di Benih BRMP.</p>
@@ -325,27 +320,4 @@
             </div>
         </div>
     </div>
-    <script>
-    const produkDummy = {
-        'Tumbuhan': ['Tumbuhan 1', 'Tumbuhan 2', 'Tumbuhan 3'],
-        'Rempah-Rempah/Herbal': ['Rempah 1', 'Rempah 2', 'Rempah 3'],
-        'Buah-Buahan': ['Buah 1', 'Buah 2', 'Buah 3'],
-        'Sayuran': ['Sayuran 1', 'Sayuran 2', 'Sayuran 3'],
-        'Bunga': ['Bunga 1', 'Bunga 2', 'Bunga 3']
-    };
-    document.querySelectorAll('.category-grid-item').forEach(function(item) {
-        item.onclick = function() {
-            const kat = this.getAttribute('data-kat');
-            document.getElementById('produkKategoriTitle').innerText = kat;
-            const list = document.getElementById('produkKategoriList');
-            list.innerHTML = '';
-            produkDummy[kat].forEach(function(nama, idx) {
-                list.innerHTML += `<div class='product-card'><div class='image-placeholder'><i class='fas fa-seedling'></i></div><div class='info'><div class='title'>${nama}</div><div class='price'>Rp. ${(idx+1)*10000}</div><div class='tag'><i class='fas fa-star'></i>Dummy</div></div></div>`;
-            });
-            document.getElementById('produkKategoriSection').style.display = 'block';
-            window.scrollTo({top: document.getElementById('produkKategoriSection').offsetTop-40, behavior:'smooth'});
-        };
-    });
-    </script>
-</body>
-</html>
+@endsection

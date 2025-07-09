@@ -2,7 +2,7 @@
 @section('content')
 <style>
 .kategori-banner {
-    margin: -90px 0 32px 0;
+    margin: 60px 0 32px 0;
 }
 </style>
 <div class="container py-4">
