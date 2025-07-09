@@ -4,7 +4,7 @@
         align-items: center;
         justify-content: space-between;
         padding: 16px 40px;
-        background: #fff;
+        background: #fff !important;
         box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         z-index: 1100;
         position: relative;
@@ -126,8 +126,8 @@
     <div style="font-weight:bold; color:#388E3C; font-size:22px;">
         <a href="/" style="text-decoration: none; color: inherit;">Benih BRMP</a>
     </div>
-    <span class="appbar-category" id="appbarCategoryBtn" style="font-weight:500; color:#222; margin-left:24px; margin-right:12px; font-size:17px; cursor:pointer; position:relative;">Kategori
-        <div id="appbarCategoryDropdown" class="dropdown-anim" style="display:none;position:fixed;top:56px;left:0;background:#fff;border-radius:0;box-shadow:0 4px 24px rgba(0,0,0,0.10);padding:14px 0;z-index:1001;flex-direction:row;gap:0;min-width:600px;max-width:1920px;width:auto;overflow:hidden;opacity:0;transform:translateY(-24px);height:0;transition:opacity 0.25s cubic-bezier(.4,0,.2,1), transform 0.25s cubic-bezier(.4,0,.2,1), height 0.25s cubic-bezier(.4,0,.2,1);">
+    <span class="appbar-category" id="appbarCategoryBtn" style="font-weight:500; color:#222; margin-left:24px; margin-right:12px; font-size:17px; cursor:pointer; position:relative; background:#fff !important;">Kategori
+        <div id="appbarCategoryDropdown" class="dropdown-anim" style="display:none;position:fixed;top:56px;left:0;background:#fff !important;border-radius:0;box-shadow:0 4px 24px rgba(0,0,0,0.10);padding:14px 0;z-index:1001;flex-direction:row;gap:0;min-width:600px;max-width:1920px;width:auto;overflow:hidden;opacity:0;transform:translateY(-24px);height:0;transition:opacity 0.25s cubic-bezier(.4,0,.2,1), transform 0.25s cubic-bezier(.4,0,.2,1), height 0.25s cubic-bezier(.4,0,.2,1);">
             <div style="display:flex;flex-direction:row;gap:0;width:100%;justify-content:flex-start;">
                 <div class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600;">
                     <i class="fas fa-seedling" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Tumbuhan</span>
