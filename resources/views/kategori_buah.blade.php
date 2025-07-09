@@ -1,7 +1,12 @@
 @extends('layouts.app')
 @section('content')
+<style>
+.kategori-banner {
+    margin: -90px 0 32px 0;
+}
+</style>
 <div class="container py-4">
-    <div class="mb-4 p-4 rounded-4" style="background:linear-gradient(90deg,#4CAF50 60%,#FFF176 100%);color:#fff;box-shadow:0 4px 24px rgba(76,175,80,0.10);">
+    <div class="mb-4 p-4 rounded-4 kategori-banner" style="background:linear-gradient(90deg,#4CAF50 60%,#FFF176 100%);color:#fff;box-shadow:0 4px 24px rgba(76,175,80,0.10);">
         <h1 class="fw-bold mb-0" style="font-size:2.3rem;letter-spacing:1px;">Buah-Buahan</h1>
         <div style="font-size:1.1rem;opacity:.95;">Benih buah-buahan segar untuk panen sehat di rumah Anda.</div>
     </div>

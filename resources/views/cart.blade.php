@@ -16,10 +16,14 @@
     }
     .cart-left {
         flex: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
     }
     .cart-title {
         font-size: 1.6rem;
         font-weight: 600;
+        margin-top: -70px;
         margin-bottom: 24px;
     }
     .cart-empty-box {
@@ -44,6 +48,7 @@
     }
     .cart-empty-content {
         flex: 1;
+        
     }
     .cart-empty-content h5 {
         font-size: 1.2rem;
@@ -76,7 +81,7 @@
         padding: 28px 24px;
         box-shadow: 0 2px 12px rgba(0,0,0,0.04);
         min-width: 260px;
-        margin-top: 56px;
+        margin-top: -10px;
     }
     .cart-summary-title {
         font-weight: 600;
