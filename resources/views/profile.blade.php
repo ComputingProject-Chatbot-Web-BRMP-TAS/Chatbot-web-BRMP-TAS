@@ -155,7 +155,7 @@
             <a href="{{ route('profile.edit') }}" class="edit-photo-btn" title="Edit Profil"><i class="fas fa-pen" style="font-size:10px;"></i></a>
         </div>
         <div class="profile-name">{{ session('user.name') }}</div>
-        <div class="profile-username">{{ '@' . strtolower(str_replace(' ', '', session('user.name'))) }}</div>
+        <!-- Removed profile-username display -->
         <div class="stats">
             <div class="stat"><div class="count">0</div><div class="label">Pengolahan</div></div>
             <div class="stat"><div class="count">0</div><div class="label">Dikirim</div></div>
@@ -178,4 +178,4 @@
             <button class="choose-photo-btn" disabled>Pilih Foto</button>
         </div>
     </div>
-@endsection 
+@endsection

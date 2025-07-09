@@ -18,6 +18,14 @@ Route::get('/login', function () {
     return view('auth.signin');
 })->name('login');
 
+Route::get('/cart', function () {
+    return view('cart');
+})->name('cart');
+
+Route::get('/produk/{id}', function ($id) {
+    return view('produk.detail', ['id' => $id]);
+})->name('produk.detail');
+
 Route::get('/produk-baru', function () {
     return view('produk_baru');
 })->name('produk.baru');
@@ -25,7 +33,6 @@ Route::get('/produk-baru', function () {
 Route::post('/register', function (Request $request) {
     $request->validate([
         'name' => 'required',
-        'username' => 'required|unique:users,username',
         'email' => 'required|email|unique:users,email',
         'phone' => 'required',
         'password' => 'required|min:4|confirmed',
@@ -33,7 +40,6 @@ Route::post('/register', function (Request $request) {
 
     $user = User::create([
         'name' => $request->name,
-        'username' => $request->username,
         'email' => $request->email,
         'phone' => $request->phone,
         'password' => Hash::make($request->password),

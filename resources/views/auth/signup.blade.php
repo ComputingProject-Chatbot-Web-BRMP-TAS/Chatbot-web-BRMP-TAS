@@ -21,9 +21,6 @@
                         <input type="text" name="name" class="form-control" placeholder="Nama Lengkap" required autofocus style="background: #fffbe7; border-radius: 10px;">
                     </div>
                     <div class="mb-3">
-                        <input type="text" name="username" class="form-control" placeholder="Username" required style="background: #fffbe7; border-radius: 10px;">
-                    </div>
-                    <div class="mb-3">
                         <input type="email" name="email" class="form-control" placeholder="Email" required style="background: #fffbe7; border-radius: 10px;">
                     </div>
                     <div class="mb-3">
@@ -63,4 +60,4 @@
         });
     });
 </script>
-@endpush 
+@endpush
