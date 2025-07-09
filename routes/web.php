@@ -104,3 +104,19 @@ Route::post('/profile/edit', function (Request $request) {
     session(['users' => $users, 'user' => $users[$request->email]]);
     return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui!');
 })->name('profile.edit');
+
+Route::get('/kategori/tumbuhan', function() {
+    return view('kategori_tumbuhan');
+});
+Route::get('/kategori/rempah', function() {
+    return view('kategori_rempah');
+});
+Route::get('/kategori/buah', function() {
+    return view('kategori_buah');
+});
+Route::get('/kategori/sayuran', function() {
+    return view('kategori_sayuran');
+});
+Route::get('/kategori/bunga', function() {
+    return view('kategori_bunga');
+});

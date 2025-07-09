@@ -13,7 +13,10 @@
     </style>
 </head>
 <body>
-    @yield('content')
+    @include('partials.appbar')
+    <div style="min-height:80vh;">
+        @yield('content')
+    </div>
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
