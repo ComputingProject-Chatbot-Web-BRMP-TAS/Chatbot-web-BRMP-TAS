@@ -284,3 +284,6 @@ function updateSubtotal() {
 }
 </script>
 @endpush 
+@section('after_content')
+    @include('partials.mitra_footer')
+@endsection
