@@ -215,7 +215,7 @@
                 <div class="profile-info-label">Tanggal Lahir</div>
                 @if(Auth::user()->birth_date ?? false)
                     <div class="profile-info-value">{{ Auth::user()->birth_date }}</div>
-                    <div class="profile-info-action" data-bs-toggle="modal" data-bs-target="#modalEditTanggalLahir">Ubah</div>
+                    {{-- Tidak ada tombol Ubah jika sudah terisi --}}
                 @else
                     <div class="profile-info-value" style="color:#4CAF50; cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modalEditTanggalLahir">Tambah Tanggal Lahir</div>
                 @endif
@@ -224,7 +224,7 @@
                 <div class="profile-info-label">Jenis Kelamin</div>
                 @if(Auth::user()->gender ?? false)
                     <div class="profile-info-value">{{ Auth::user()->gender }}</div>
-                    <div class="profile-info-action" data-bs-toggle="modal" data-bs-target="#modalEditJenisKelamin">Ubah</div>
+                    {{-- Tidak ada tombol Ubah jika sudah terisi --}}
                 @else
                     <div class="profile-info-value" style="color:#4CAF50; cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modalEditJenisKelamin">Tambah Jenis Kelamin</div>
                 @endif
@@ -279,12 +279,13 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form>
+        <form method="POST" action="{{ route('profile.update') }}">
+          @csrf
           <div class="mb-3">
             <label for="inputEmail" class="form-label">Email</label>
-            <input type="email" class="form-control" id="inputEmail" value="{{ Auth::user()->email }}">
+            <input type="email" class="form-control" id="inputEmail" name="email" value="{{ Auth::user()->email }}">
           </div>
-          <button type="submit" class="btn btn-success w-100" disabled>Simpan</button>
+          <button type="submit" class="btn btn-success w-100">Simpan</button>
         </form>
       </div>
     </div>

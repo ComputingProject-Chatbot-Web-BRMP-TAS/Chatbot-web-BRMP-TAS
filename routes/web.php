@@ -79,7 +79,7 @@ Route::get('/profile', function () {
 
 Route::post('/profile/update', function (Request $request) {
     $user = Auth::user();
-    $data = $request->only(['name', 'phone', 'gender']);
+    $data = $request->only(['name', 'phone', 'gender', 'email']);
     // Gabungkan input tanggal lahir jika ada
     if ($request->filled(['birth_date_day', 'birth_date_month', 'birth_date_year'])) {
         $day = str_pad($request->birth_date_day, 2, '0', STR_PAD_LEFT);
