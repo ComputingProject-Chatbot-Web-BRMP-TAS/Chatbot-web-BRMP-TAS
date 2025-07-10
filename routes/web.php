@@ -77,6 +77,13 @@ Route::get('/profile', function () {
     return view('profile');
 })->name('profile');
 
+Route::post('/profile/update', function (Request $request) {
+    $user = Auth::user();
+    $data = $request->only(['gender', 'birth_date']);
+    $user->update($data);
+    return back()->with('success', 'Profil berhasil diperbarui!');
+})->name('profile.update');
+
 Route::get('/kategori/tumbuhan', function() {
     return view('kategori_tumbuhan');
 });
