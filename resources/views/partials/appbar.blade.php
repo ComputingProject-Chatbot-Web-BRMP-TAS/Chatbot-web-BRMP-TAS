@@ -124,6 +124,67 @@
     .dropdown-item:hover {
         background: #f4f4f4;
     }
+    @media (max-width: 1200px) {
+        .navbar {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 8px;
+            height: auto;
+        }
+        .navbar > div:first-child, /* logo */
+        .appbar-category,
+        .navbar .user-section {
+            display: none !important;
+        }
+        .navbar .mobile-search-bar {
+            order: 1;
+            flex: 1;
+            margin: 0 8px 0 0;
+            max-width: unset;
+            display: block;
+        }
+        .navbar .cart-mobile {
+            order: 2;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #4CAF50;
+            margin: 0 8px;
+            background: none;
+            border: none;
+            height: 40px;
+            width: 40px;
+        }
+        .navbar .menu-toggle {
+            order: 3;
+            display: block;
+            background: none;
+            border: none;
+            font-size: 26px;
+            color: #388E3C;
+            margin-left: 0;
+            cursor: pointer;
+        }
+        .navbar .mobile-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #fff;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            z-index: 1200;
+            padding: 16px 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+    }
+    @media (min-width: 1201px) {
+        .navbar .menu-toggle, .navbar .mobile-menu, .navbar .cart-mobile { display: none !important; }
+    }
 </style>
 
 <div class="navbar">
@@ -151,10 +212,12 @@
             </div>
         </div>
     </span>
-    <div class="search-bar">
+    <div class="search-bar mobile-search-bar">
         <input type="text" placeholder="Cari di Benih BRMP" style="border:1.5px solid #bfc9d1;">
         <i class="fas fa-search"></i>
     </div>
+    <a href="{{ route('cart') }}" class="cart-mobile" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-shopping-cart"></i></a>
+    <button class="menu-toggle" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
     <div class="user-section">
         @auth
             <div class="user" style="position:relative;">
@@ -203,6 +266,25 @@
             <a href="{{ route('register') }}" class="btn btn-warning">Daftar</a>
         @endauth
         <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
+    </div>
+    <div class="mobile-menu" id="mobileMenu" style="display:none;">
+        <a href="/" class="btn btn-link">Beranda</a>
+        <a href="/kategori/tumbuhan" class="btn btn-link">Tumbuhan</a>
+        <a href="/kategori/rempah" class="btn btn-link">Rempah-Rempah</a>
+        <a href="/kategori/buah" class="btn btn-link">Buah-Buahan</a>
+        <a href="/kategori/sayuran" class="btn btn-link">Sayuran</a>
+        <a href="/kategori/bunga" class="btn btn-link">Bunga</a>
+        @auth
+            <a href="{{ route('profile') }}" class="btn btn-link">Profil</a>
+            <form action="{{ route('logout') }}" method="POST" style="margin:0;">
+                @csrf
+                <button type="submit" class="btn btn-link">Logout</button>
+            </form>
+        @else
+            <a href="{{ route('login') }}" class="btn btn-link">Login</a>
+            <a href="{{ route('register') }}" class="btn btn-link">Daftar</a>
+        @endauth
+        <a href="{{ route('cart') }}" class="btn btn-link">Keranjang</a>
     </div>
 </div>
 
@@ -268,3 +350,14 @@ window.addEventListener('resize', function() {
     background: #f4f4f4;
 }
 </style>
+
+<script>
+function toggleMobileMenu() {
+    var menu = document.getElementById('mobileMenu');
+    if(menu.style.display === 'flex') {
+        menu.style.display = 'none';
+    } else {
+        menu.style.display = 'flex';
+    }
+}
+</script>
