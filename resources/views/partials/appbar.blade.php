@@ -201,6 +201,38 @@
         letter-spacing: 0;
         background: none !important;
     }
+    .navbar-search-input {
+        font-family: 'Inter', Arial, sans-serif !important;
+        font-size: 16px !important;
+        color: #222 !important;
+        background: #fff !important;
+        border-radius: 8px !important;
+        border: 1.5px solid #bfc9d1 !important;
+        padding: 6px 36px 6px 12px !important;
+        height: 32px !important;
+    }
+
+    .navbar-login-btn {
+        font-family: 'Inter', Arial, sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
+        color: #fff !important;
+        background: #4CAF50 !important;
+        border-radius: 8px !important;
+        border: none !important;
+        padding: 8px 16px !important;
+    }
+
+    .navbar-register-btn {
+        font-family: 'Inter', Arial, sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
+        color: #388E3C !important;
+        background: #FFEB3B !important;
+        border-radius: 8px !important;
+        border: none !important;
+        padding: 8px 16px !important;
+    }
 </style>
 
 <div class="navbar">
@@ -230,7 +262,7 @@
         </div>
     </div>
     <div class="search-bar mobile-search-bar">
-        <input type="text" placeholder="Cari di Benih BRMP" style="border:1.5px solid #bfc9d1;">
+        <input type="text" class="navbar-search-input" placeholder="Cari di Benih BRMP" style="border:1.5px solid #bfc9d1;">
         <i class="fas fa-search"></i>
     </div>
     <a href="{{ route('cart') }}" class="cart-mobile" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-shopping-cart"></i></a>
@@ -279,8 +311,8 @@
                 });
             </script>
         @else
-            <a href="{{ route('login') }}" class="btn btn-success" style="margin-right: 10px;">Login</a>
-            <a href="{{ route('register') }}" class="btn btn-warning">Daftar</a>
+            <a href="{{ route('login') }}" class="btn btn-success navbar-login-btn" style="margin-right: 10px;">Login</a>
+            <a href="{{ route('register') }}" class="btn btn-warning navbar-register-btn">Daftar</a>
         @endauth
         <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
     </div>
