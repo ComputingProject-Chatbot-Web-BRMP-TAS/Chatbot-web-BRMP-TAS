@@ -10,6 +10,38 @@
             margin: 0;
             color: #222;
         }
+        /* Floating leaves animation */
+        .floating-leaves {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .leaf {
+            position: absolute;
+            color: #4CAF50;
+            font-size: 20px;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.3;
+        }
+        .leaf:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .leaf:nth-child(2) { left: 20%; animation-delay: 2s; }
+        .leaf:nth-child(3) { left: 30%; animation-delay: 4s; }
+        .leaf:nth-child(4) { left: 40%; animation-delay: 1s; }
+        .leaf:nth-child(5) { left: 50%; animation-delay: 3s; }
+        .leaf:nth-child(6) { left: 60%; animation-delay: 5s; }
+        .leaf:nth-child(7) { left: 70%; animation-delay: 1.5s; }
+        .leaf:nth-child(8) { left: 80%; animation-delay: 3.5s; }
+        .leaf:nth-child(9) { left: 90%; animation-delay: 0.5s; }
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.3; }
+        }
         .hero-banner {
             background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 50%, #CDDC39 100%);
             border-radius: 20px;
@@ -20,6 +52,9 @@
             color: white;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 32px rgba(76, 175, 80, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 1;
         }
         .hero-content {
             flex: 1;
@@ -76,13 +111,19 @@
             max-width: 1200px;
             margin: 32px auto;
             padding: 0 16px;
+            position: relative;
+            z-index: 1;
         }
         .section {
-            background: #fff;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
             padding: 24px;
             margin-bottom: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
         }
         .section h2, .section h3 {
             margin-top: 0;
@@ -204,6 +245,18 @@
             margin: 60px 0 32px 0;
         }
     </style>
+    <!-- Floating leaves animation -->
+    <div class="floating-leaves">
+        <div class="leaf">🍃</div>
+        <div class="leaf">🌿</div>
+        <div class="leaf">🍃</div>
+        <div class="leaf">🌱</div>
+        <div class="leaf">🍃</div>
+        <div class="leaf">🌿</div>
+        <div class="leaf">🍃</div>
+        <div class="leaf">🌱</div>
+        <div class="leaf">🍃</div>
+    </div>
     <div class="container">
         <!-- Hero Banner Section -->
         <div class="hero-banner hero-banner-margin">

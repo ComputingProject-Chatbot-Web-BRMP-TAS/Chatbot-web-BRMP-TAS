@@ -117,7 +117,7 @@
         }
     }
     .tiktok-icon {
-        margin-left: -10px;
+        margin-left: -5px;
     }
 </style>
 @endonce
@@ -160,13 +160,13 @@
                 <a href="https://www.brmp.pertanian.go.id" style="color:#fff;text-decoration:underline;">www.brmp.pertanian.go.id</a>
             </address>
             <div class="socials">
-                <a href="https://www.brmp.pertanian.go.id" target="_blank" title="Website"><i class="fas fa-globe"></i></a>
-                <a href="#" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                <a href="#" title="Facebook"><i class="fab fa-facebook-square"></i></a>
-                <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
-                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://twitter.com/brmp_pertanian" target="_blank" title="X (Twitter)"><i class="fab fa-x-twitter"></i></a>
-                <a href="#" title="TikTok" class="tiktok-icon"><i class="fab fa-tiktok"></i></a>
+                <a href="https://brmp.pertanian.go.id/" target="_blank" title="Website"><i class="fas fa-globe"></i></a>
+                <a href="https://wa.me/+6281181340678" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.facebook.com/brmpkementan" target="_blank" title="Facebook"><i class="fab fa-facebook-square"></i></a>
+                <a href="https://www.youtube.com/@brmpkementan" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.instagram.com/brmpkementan" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://twitter.com/brmpkementan" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://tiktok.com/@brmpkementan" target="_blank" title="TikTok" class="tiktok-icon"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
     </div>
