@@ -11,6 +11,7 @@
     <style>
         body { background: #eaffea; }
     </style>
+    @stack('styles')
 </head>
 <body>
     @if(empty($hideAppbar) || !$hideAppbar)

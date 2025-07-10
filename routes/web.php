@@ -23,7 +23,61 @@ Route::get('/cart', function () {
 })->name('cart');
 
 Route::get('/produk/{id}', function ($id) {
-    return view('produk.detail', ['id' => $id]);
+    $produkList = [
+        1 => [
+            'nama' => 'Benih Cabai Rawit',
+            'harga' => 15000,
+            'deskripsi' => 'Isi 50 butir, cocok untuk pekarangan rumah.',
+            'kategori' => 'Benih',
+            'kondisi' => 'Baru',
+            'style' => 'Premium',
+            'stok' => 100,
+            'img' => 'https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/7/6/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg',
+        ],
+        2 => [
+            'nama' => 'Benih Tomat',
+            'harga' => 12000,
+            'deskripsi' => 'Tahan penyakit, hasil melimpah.',
+            'kategori' => 'Benih',
+            'kondisi' => 'Baru',
+            'style' => 'Premium',
+            'stok' => 80,
+            'img' => 'https://images.tokopedia.net/img/cache/200-square/VqbcmM/2022/12/1/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg',
+        ],
+        3 => [
+            'nama' => 'Benih Kangkung',
+            'harga' => 8000,
+            'deskripsi' => 'Cepat panen, cocok untuk hidroponik.',
+            'kategori' => 'Benih',
+            'kondisi' => 'Baru',
+            'style' => 'Premium',
+            'stok' => 120,
+            'img' => 'https://images.tokopedia.net/img/cache/200-square/VqbcmM/2022/10/10/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg',
+        ],
+        4 => [
+            'nama' => 'Benih Bayam',
+            'harga' => 7000,
+            'deskripsi' => 'Bayam hijau segar, mudah tumbuh.',
+            'kategori' => 'Benih',
+            'kondisi' => 'Baru',
+            'style' => 'Premium',
+            'stok' => 90,
+            'img' => 'https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/1/15/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg',
+        ],
+        5 => [
+            'nama' => 'Benih Wortel',
+            'harga' => 10000,
+            'deskripsi' => 'Wortel oranye, cocok untuk dataran tinggi.',
+            'kategori' => 'Benih',
+            'kondisi' => 'Baru',
+            'style' => 'Premium',
+            'stok' => 60,
+            'img' => 'https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/3/20/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg',
+        ],
+    ];
+    $produk = $produkList[$id] ?? null;
+    if (!$produk) abort(404);
+    return view('produk.detail', ['produk' => $produk, 'id' => $id]);
 })->name('produk.detail');
 
 Route::get('/produk-baru', function () {

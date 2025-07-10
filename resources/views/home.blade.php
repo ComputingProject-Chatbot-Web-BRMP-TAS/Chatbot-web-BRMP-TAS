@@ -286,6 +286,7 @@
         <div class="section" style="margin-bottom:24px;">
             <h2 style="font-weight:bold; margin-bottom:18px;">Produk Pilihan</h2>
             <div class="product-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:24px;">
+                <a href="/produk/1" style="text-decoration:none;color:inherit;">
                 <div class="product-card">
                     <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/7/6/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" alt="Benih Cabai Rawit" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
                     <div class="info" style="padding:12px 16px 0 16px;">
@@ -295,6 +296,8 @@
                         <div class="tag" style="display:flex;align-items:center;font-size:13px;color:#FBC02D;margin-top:6px;"><i class="fas fa-star" style="margin-right:4px;"></i>Baru</div>
                     </div>
                 </div>
+                </a>
+                <a href="/produk/2" style="text-decoration:none;color:inherit;">
                 <div class="product-card">
                     <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2022/12/1/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" alt="Benih Tomat" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
                     <div class="info" style="padding:12px 16px 0 16px;">
@@ -304,6 +307,8 @@
                         <div class="tag" style="display:flex;align-items:center;font-size:13px;color:#FBC02D;margin-top:6px;"><i class="fas fa-star" style="margin-right:4px;"></i>Baru</div>
                     </div>
                 </div>
+                </a>
+                <a href="/produk/3" style="text-decoration:none;color:inherit;">
                 <div class="product-card">
                     <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2022/10/10/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" alt="Benih Kangkung" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
                     <div class="info" style="padding:12px 16px 0 16px;">
@@ -313,6 +318,8 @@
                         <div class="tag" style="display:flex;align-items:center;font-size:13px;color:#FBC02D;margin-top:6px;"><i class="fas fa-star" style="margin-right:4px;"></i>Baru</div>
                     </div>
                 </div>
+                </a>
+                <a href="/produk/4" style="text-decoration:none;color:inherit;">
                 <div class="product-card">
                     <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/1/15/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" alt="Benih Bayam" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
                     <div class="info" style="padding:12px 16px 0 16px;">
@@ -322,6 +329,8 @@
                         <div class="tag" style="display:flex;align-items:center;font-size:13px;color:#FBC02D;margin-top:6px;"><i class="fas fa-star" style="margin-right:4px;"></i>Baru</div>
                     </div>
                 </div>
+                </a>
+                <a href="/produk/5" style="text-decoration:none;color:inherit;">
                 <div class="product-card">
                     <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/3/20/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" alt="Benih Wortel" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
                     <div class="info" style="padding:12px 16px 0 16px;">
@@ -331,6 +340,7 @@
                         <div class="tag" style="display:flex;align-items:center;font-size:13px;color:#FBC02D;margin-top:6px;"><i class="fas fa-star" style="margin-right:4px;"></i>Baru</div>
                     </div>
                 </div>
+                </a>
             </div>
         </div>
         <div class="section">
