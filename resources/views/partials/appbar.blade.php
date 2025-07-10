@@ -156,11 +156,15 @@
         <i class="fas fa-search"></i>
     </div>
     <div class="user-section">
-        @if(session('user'))
+        @auth
             <div class="user" style="position:relative;">
                 <a href="{{ route('profile') }}" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit;gap:8px;">
-                    <i class="fas fa-user-circle"></i>
-                    <span>Hi, {{ session('user.name') }}</span>
+                    @if(Auth::user()->profile_photo_url ?? false)
+                        <img src="{{ Auth::user()->profile_photo_url }}" alt="Foto Profil" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                    @else
+                        <i class="fas fa-user-circle"></i>
+                    @endif
+                    <span>Hi, {{ Auth::user()->name }}</span>
                 </a>
                 <span class="dropdown-toggle" style="cursor:pointer;" onclick="toggleDropdown()">
                     <i class="fas fa-chevron-down" style="font-size:14px;"></i>
@@ -197,7 +201,7 @@
         @else
             <a href="{{ route('login') }}" class="btn btn-success" style="margin-right: 10px;">Login</a>
             <a href="{{ route('register') }}" class="btn btn-warning">Daftar</a>
-        @endif
+        @endauth
         <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
     </div>
 </div>

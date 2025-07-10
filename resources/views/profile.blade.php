@@ -154,7 +154,7 @@
             <i class="fas fa-user-circle"></i>
             <a href="{{ route('profile.edit') }}" class="edit-photo-btn" title="Edit Profil"><i class="fas fa-pen" style="font-size:10px;"></i></a>
         </div>
-        <div class="profile-name">{{ session('user.name') }}</div>
+        <div class="profile-name">{{ Auth::user()->name }}</div>
         <!-- Removed profile-username display -->
         <div class="stats">
             <div class="stat"><div class="count">0</div><div class="label">Pengolahan</div></div>
@@ -172,9 +172,9 @@
         </div>
         <div class="biodata-box">
             <div class="biodata-title">Biodata Diri</div>
-            <div class="biodata-row"><div class="biodata-label">Nama</div><div class="biodata-value">{{ session('user.name') }}</div></div>
-            <div class="biodata-row"><div class="biodata-label">Email</div><div class="biodata-value">{{ session('user.email') }}</div></div>
-            <div class="biodata-row"><div class="biodata-label">Nomor HP</div><div class="biodata-value">{{ session('user.phone') }}</div></div>
+            <div class="biodata-row"><div class="biodata-label">Nama</div><div class="biodata-value">{{ Auth::user()->name }}</div></div>
+            <div class="biodata-row"><div class="biodata-label">Email</div><div class="biodata-value">{{ Auth::user()->email }}</div></div>
+            <div class="biodata-row"><div class="biodata-label">Nomor HP</div><div class="biodata-value">{{ Auth::user()->phone }}</div></div>
             <button class="choose-photo-btn" disabled>Pilih Foto</button>
         </div>
     </div>
