@@ -60,4 +60,7 @@
         </div>
     </div>
 </div>
+@section('after_content')
+    @include('partials.mitra_footer')
+@endsection
 @endsection 
