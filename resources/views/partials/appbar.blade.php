@@ -233,14 +233,37 @@
         border: none !important;
         padding: 8px 16px !important;
     }
+
+    .navbar-user-greeting {
+        font-family: 'Inter', Arial, sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 18px !important;
+        color: #222 !important;
+        letter-spacing: 0;
+        background: none !important;
+    }
+    .navbar-article-link {
+        font-family: 'Inter', Arial, sans-serif !important;
+        font-weight: 500 !important;
+        font-size: 20px !important;
+        color: #222 !important;
+        text-decoration: none !important;
+        background: none !important;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+    .navbar-article-link:hover {
+        color: #388E3C !important;
+    }
 </style>
 
 <div class="navbar">
     <div class="navbar-logo">
         <a href="/" class="navbar-title">Benih BRMP</a>
     </div>
-    <div class="navbar-category">
+    <div class="navbar-category" style="display:flex;align-items:center;">
         <span class="navbar-category-title" id="appbarCategoryBtn" style="margin-left:24px; margin-right:12px; cursor:pointer; position:relative;">Kategori</span>
+        <a href="{{ route('article') }}" class="navbar-article-link" style="margin-left:12px; font-family:'Inter',Arial,sans-serif; font-weight:500; font-size:20px; color:#222; text-decoration:none; cursor:pointer;">Artikel</a>
         <div id="appbarCategoryDropdown" class="dropdown-anim" style="display:none;position:fixed;top:56px;left:0;background:#fff !important;border-radius:0;box-shadow:0 4px 24px rgba(0,0,0,0.10);padding:14px 0;z-index:1001;flex-direction:row;gap:0;min-width:600px;max-width:1920px;width:auto;overflow:hidden;opacity:0;transform:translateY(-24px);height:0;transition:opacity 0.25s cubic-bezier(.4,0,.2,1), transform 0.25s cubic-bezier(.4,0,.2,1), height 0.25s cubic-bezier(.4,0,.2,1);">
             <div style="display:flex;flex-direction:row;gap:0;width:100%;justify-content:flex-start;">
                 <a href="/kategori/tumbuhan" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
@@ -276,7 +299,7 @@
                     @else
                         <i class="fas fa-user-circle"></i>
                     @endif
-                    <span>Hi, {{ Auth::user()->name }}</span>
+                    <span class="navbar-user-greeting">Hi, {{ Auth::user()->name }}</span>
                 </a>
                 <span class="dropdown-toggle" style="cursor:pointer;" onclick="toggleDropdown()">
                     <i class="fas fa-chevron-down" style="font-size:14px;"></i>

@@ -165,3 +165,7 @@ Route::get('/addresses', function () {
     if (!Auth::check()) return redirect('/login');
     return view('addresses');
 })->name('addresses');
+
+Route::get('/artikel', function () {
+    return view('article');
+})->name('article');
