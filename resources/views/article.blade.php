@@ -1,20 +1,30 @@
-
 @extends('layouts.app')
 
 @section('content')
-<div style="max-width:900px;margin:120px auto 40px auto;padding:32px;background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.04);">
-    <h1 style="font-size:2.2rem;font-weight:700;margin-bottom:18px;">Artikel Terbaru</h1>
-    <div style="margin-bottom:32px;">
-        <h2 style="font-size:1.3rem;font-weight:600;">Cara Menanam Benih yang Baik</h2>
-        <p style="color:#444;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, nisi eu consectetur consectetur, nisl nisi consectetur nisi, eu consectetur nisl nisi euismod nisi.</p>
-    </div>
-    <div style="margin-bottom:32px;">
-        <h2 style="font-size:1.3rem;font-weight:600;">Tips Memilih Benih Berkualitas</h2>
-        <p style="color:#444;">Suspendisse potenti. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit.</p>
-    </div>
-    <div>
-        <h2 style="font-size:1.3rem;font-weight:600;">Mengenal Jenis-jenis Benih Unggul</h2>
-        <p style="color:#444;">Curabitur ac lacus arcu. Sed vehicula varius lectus auctor viverra. Nulla vehicula, sapien non hendrerit dapibus, enim urna suscipit urna.</p>
+<div style="max-width:1200px;margin:120px auto 40px auto;">
+    <h1 style="font-size:2rem;font-weight:700;margin-bottom:32px;">Artikel Terbaru</h1>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:32px;">
+        <div style="background:#fff;border-radius:24px;box-shadow:0 2px 12px rgba(0,0,0,0.04);padding-bottom:24px;">
+            <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80" alt="Migrating to Linear 101" style="width:100%;height:220px;object-fit:cover;border-radius:24px 24px 0 0;">
+            <div style="padding:24px;">
+                <h2 style="font-size:1.35rem;font-weight:700;margin-bottom:10px;">judul artikel</h2>
+                <p style="color:#444;font-size:1rem;line-height:1.6;">deskripsi singkat.</p>
+            </div>
+        </div>
+        <div style="background:#fff;border-radius:24px;box-shadow:0 2px 12px rgba(0,0,0,0.04);padding-bottom:24px;">
+            <img src="https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?auto=format&fit=crop&w=600&q=80" alt="Building your API Stack" style="width:100%;height:220px;object-fit:cover;border-radius:24px 24px 0 0;">
+            <div style="padding:24px;">
+                <h2 style="font-size:1.35rem;font-weight:700;margin-bottom:10px;">judul artikel</h2>
+                <p style="color:#444;font-size:1rem;line-height:1.6;">deskripsi singkat.</p>
+            </div>
+        </div>
+        <div style="background:#fff;border-radius:24px;box-shadow:0 2px 12px rgba(0,0,0,0.04);padding-bottom:24px;">
+            <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=600&q=80" alt="Bill Walsh leadership lessons" style="width:100%;height:220px;object-fit:cover;border-radius:24px 24px 0 0;">
+            <div style="padding:24px;">
+                <h2 style="font-size:1.35rem;font-weight:700;margin-bottom:10px;">judul artikel</h2>
+                <p style="color:#444;font-size:1rem;line-height:1.6;">deskripsi singkat.</p>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
