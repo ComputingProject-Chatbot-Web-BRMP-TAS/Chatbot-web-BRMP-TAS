@@ -366,7 +366,7 @@
           @csrf
           <div class="mb-3">
             <label for="inputPhone" class="form-label">Nomor HP</label>
-            <input type="text" class="form-control" id="inputPhone" name="phone" value="{{ Auth::user()->phone }}">
+            <input type="tel" class="form-control" id="inputPhone" name="phone" pattern="^(08|628)[0-9]{7,11}$" placeholder="Contoh: 08123456789" value="{{ Auth::user()->phone }}" >
             <div class="form-text">Kami akan mengirimkan kode verifikasi melalui SMS</div>
           </div>
           <button type="submit" class="btn btn-success w-100">Selanjutnya</button>

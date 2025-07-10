@@ -36,32 +36,22 @@
         box-shadow: 0 2px 12px rgba(0,0,0,0.06);
         padding: 32px 32px 24px 32px;
         margin-top: 32px;
+        justify-items: center;
     }
-    .address-search-row {
+    .address-add-row {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 18px;
         margin-bottom: 28px;
         flex-wrap: wrap;
-    }
-    .address-search-input {
-        flex: 1;
-        border: 1.5px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 12px 16px;
-        font-size: 1rem;
-        outline: none;
-        transition: border 0.2s;
-    }
-    .address-search-input:focus {
-        border-color: #4CAF50;
     }
     .btn-add-address {
         background: #4CAF50;
         color: #fff;
         border: none;
         border-radius: 8px;
-        padding: 12px 22px;
+        padding: 12px 40%;
         font-weight: 600;
         font-size: 1rem;
         transition: background 0.2s;
@@ -70,26 +60,6 @@
     }
     .btn-add-address:hover {
         background: #388E3C;
-    }
-    .address-filters {
-        display: flex;
-        gap: 12px;
-        margin-bottom: 32px;
-    }
-    .address-filter-btn {
-        background: #fff;
-        border: 1.5px solid #4CAF50;
-        color: #4CAF50;
-        border-radius: 8px;
-        padding: 8px 18px;
-        font-weight: 500;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: background 0.2s, color 0.2s;
-    }
-    .address-filter-btn.active, .address-filter-btn:hover {
-        background: #E8F5E9;
-        color: #388E3C;
     }
     .address-empty {
         display: flex;
@@ -124,18 +94,13 @@
     <a href="{{ route('addresses') }}" class="profile-tab @if(Route::currentRouteName() == 'addresses') active @endif">Daftar Alamat</a>
 </div>
 <div class="addresses-container">
-    <div class="address-search-row">
-        <input type="text" class="address-search-input" placeholder="Tulis Nama Alamat / Kota / Kecamatan tujuan pengiriman" disabled>
+    <div class="address-add-row">
         <button class="btn-add-address">+ Tambah Alamat Baru</button>
-    </div>
-    <div class="address-filters">
-        <button class="address-filter-btn active">Semua Alamat</button>
-        <button class="address-filter-btn">Dari Teman</button>
     </div>
     <div class="address-empty">
         <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" alt="Alamat kosong" class="address-empty-img">
         <div class="address-empty-title">Ops!, alamat tidak tersedia</div>
-        <div class="address-empty-desc">Kamu bisa cari alamat dari kolom pencarian.</div>
+        <div class="address-empty-desc">Kamu bisa tambah alamat baru dengan mengklik tombol di atas.</div>
     </div>
 </div>
 @endsection 

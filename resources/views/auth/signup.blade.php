@@ -24,7 +24,7 @@
                         <input type="email" name="email" class="form-control" placeholder="Email" required style="background: #fffbe7; border-radius: 10px;">
                     </div>
                     <div class="mb-3">
-                        <input type="text" name="phone" class="form-control" placeholder="Nomor HP" required style="background: #fffbe7; border-radius: 10px;">
+                        <input type="tel" name="phone" class="form-control" placeholder="Nomor HP" pattern="^(08|628)[0-9]{7,11}$" required style="background: #fffbe7; border-radius: 10px;">
                     </div>
                     <div class="mb-3 position-relative">
                         <input type="password" name="password" class="form-control password-field" placeholder="Password" required style="background: #fffbe7; border-radius: 10px;">
