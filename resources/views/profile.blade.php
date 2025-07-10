@@ -213,8 +213,8 @@
             </div>
             <div class="profile-info-row">
                 <div class="profile-info-label">Tanggal Lahir</div>
-                @if(Auth::user()->tanggal_lahir ?? false)
-                    <div class="profile-info-value">{{ Auth::user()->tanggal_lahir }}</div>
+                @if(Auth::user()->birth_date ?? false)
+                    <div class="profile-info-value">{{ Auth::user()->birth_date }}</div>
                     <div class="profile-info-action" data-bs-toggle="modal" data-bs-target="#modalEditTanggalLahir">Ubah</div>
                 @else
                     <div class="profile-info-value" style="color:#4CAF50; cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modalEditTanggalLahir">Tambah Tanggal Lahir</div>
@@ -222,8 +222,8 @@
             </div>
             <div class="profile-info-row">
                 <div class="profile-info-label">Jenis Kelamin</div>
-                @if(Auth::user()->jenis_kelamin ?? false)
-                    <div class="profile-info-value">{{ Auth::user()->jenis_kelamin }}</div>
+                @if(Auth::user()->gender ?? false)
+                    <div class="profile-info-value">{{ Auth::user()->gender }}</div>
                     <div class="profile-info-action" data-bs-toggle="modal" data-bs-target="#modalEditJenisKelamin">Ubah</div>
                 @else
                     <div class="profile-info-value" style="color:#4CAF50; cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modalEditJenisKelamin">Tambah Jenis Kelamin</div>
@@ -257,13 +257,14 @@
       </div>
       <div class="modal-body">
         <div class="mb-2" style="color:#666;">Kamu hanya dapat mengubah nama 1 kali lagi. Pastikan nama sudah benar.</div>
-        <form>
+        <form method="POST" action="{{ route('profile.update') }}">
+          @csrf
           <div class="mb-3">
             <label for="inputNama" class="form-label">Nama</label>
-            <input type="text" class="form-control" id="inputNama" value="{{ Auth::user()->name }}">
+            <input type="text" class="form-control" id="inputNama" name="name" value="{{ Auth::user()->name }}">
             <div class="form-text">Nama dapat dilihat oleh pengguna lainnya</div>
           </div>
-          <button type="submit" class="btn btn-success w-100" disabled>Simpan</button>
+          <button type="submit" class="btn btn-success w-100">Simpan</button>
         </form>
       </div>
     </div>
@@ -299,27 +300,17 @@
       </div>
       <div class="modal-body">
         <div class="mb-2" style="color:#666;">Kamu hanya dapat mengatur tanggal lahir satu kali. Pastikan tanggal lahir sudah benar.</div>
-        <form>
+        <form method="POST" action="{{ route('profile.update') }}">
+          @csrf
           <div class="row mb-3">
             <div class="col">
-              <select class="form-select">
-                <option selected>Tanggal</option>
-                @for($i=1;$i<=31;$i++)<option>{{ $i }}</option>@endfor
-              </select>
+              <input type="number" class="form-control" name="birth_date_day" min="1" max="31" placeholder="Tanggal" required>
             </div>
             <div class="col">
-              <select class="form-select">
-                <option selected>Bulan</option>
-                @foreach(['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'] as $bulan)
-                  <option>{{ $bulan }}</option>
-                @endforeach
-              </select>
+              <input type="number" class="form-control" name="birth_date_month" min="1" max="12" placeholder="Bulan" required>
             </div>
             <div class="col">
-              <select class="form-select">
-                <option selected>Tahun</option>
-                @for($i=date('Y');$i>=1900;$i--)<option>{{ $i }}</option>@endfor
-              </select>
+              <input type="number" class="form-control" name="birth_date_year" min="1900" max="{{ date('Y') }}" placeholder="Tahun" required>
             </div>
           </div>
           <button type="submit" class="btn btn-success w-100">Simpan</button>
@@ -338,16 +329,17 @@
       </div>
       <div class="modal-body">
         <div class="mb-2" style="color:#666;">Kamu hanya dapat mengubah data jenis kelamin 1 kali lagi. Pastikan data sudah benar</div>
-        <form>
+        <form method="POST" action="{{ route('profile.update') }}">
+          @csrf
           <div class="d-flex justify-content-center gap-4 mb-3">
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="gender" id="genderPria" checked>
+              <input class="form-check-input" type="radio" name="gender" id="genderPria" value="Pria" checked>
               <label class="form-check-label" for="genderPria">
                 <i class="fas fa-male" style="font-size:2rem;color:#4CAF50;"></i><br>Pria
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="gender" id="genderWanita">
+              <input class="form-check-input" type="radio" name="gender" id="genderWanita" value="Wanita">
               <label class="form-check-label" for="genderWanita">
                 <i class="fas fa-female" style="font-size:2rem;color:#aaa;"></i><br>Wanita
               </label>
@@ -369,10 +361,11 @@
       </div>
       <div class="modal-body">
         <div class="mb-2" style="color:#666;">Pastikan nomor HP Anda aktif untuk keamanan dan kemudahan transaksi</div>
-        <form>
+        <form method="POST" action="{{ route('profile.update') }}">
+          @csrf
           <div class="mb-3">
             <label for="inputPhone" class="form-label">Nomor HP</label>
-            <input type="text" class="form-control" id="inputPhone" value="{{ Auth::user()->phone }}">
+            <input type="text" class="form-control" id="inputPhone" name="phone" value="{{ Auth::user()->phone }}">
             <div class="form-text">Kami akan mengirimkan kode verifikasi melalui SMS</div>
           </div>
           <button type="submit" class="btn btn-success w-100">Selanjutnya</button>
