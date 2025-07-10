@@ -118,7 +118,7 @@
             background: rgba(255, 255, 255, 0.95);
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-            padding: 24px;
+            padding: 24px 18px;
             margin-bottom: 32px;
             border: 1px solid rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(10px);
@@ -162,17 +162,28 @@
             gap: 18px;
             flex-wrap: wrap;
         }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            width: 100%;
+            box-sizing: border-box;
+        }
         .product-card {
             background: #fff;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            width: 210px;
             min-height: 260px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             padding: 0 0 16px 0;
             margin-bottom: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(76, 175, 80, 0.1);
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
         }
         .product-card .image-placeholder {
             height: 120px;

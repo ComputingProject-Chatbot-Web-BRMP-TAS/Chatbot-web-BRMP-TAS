@@ -29,6 +29,11 @@
         margin-bottom: 10px;
         overflow: hidden;
         box-shadow: 0 4px 16px rgba(0,0,0,0.10), 0 1.5px 4px rgba(0,0,0,0.08);
+        transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .mitra-logo-box:hover {
+        box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 3px 12px rgba(0,0,0,0.12);
+        transform: scale(1.07);
     }
     .mitra-logo-box img {
         width: 100%;
@@ -38,6 +43,7 @@
         padding: 0;
         margin: 0;
         display: block;
+        transition: transform 0.25s;
     }
     .footer-contact {
         background: #085c3c;
