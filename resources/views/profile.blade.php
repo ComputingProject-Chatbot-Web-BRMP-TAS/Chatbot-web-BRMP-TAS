@@ -4,178 +4,381 @@
 
 @section('content')
     <style>
-        body { font-family: 'Roboto', sans-serif; background: #f8f9fa; margin: 0; color: #222; }
-        .header-profile {
-            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 50%, #CDDC39 100%);
-            border-radius: 0 0 32px 32px;
-            padding: 32px 0 24px 0;
-            color: white;
-            text-align: center;
-        }
-        .header-profile-margin {
-            margin: 60px 0 0 0;
-        }
-        .container { max-width: 520px; margin: 0 auto 32px auto; background: #fff; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 32px; }
-        .profile-pic {
-            width: 110px;
-            height: 110px;
-            background: #E0F2F1;
-            border-radius: 50%;
+        body { background: #f8f9fa; }
+        .profile-tabs {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 12px auto;
-            position: relative;
+            gap: 0;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 32px;
+            margin-top: 64px; /* dinaikkan jarak dari appbar */
+            justify-content: flex-start;
         }
-        .profile-pic i {
-            color: #4CAF50;
-            font-size: 60px;
-        }
-        .edit-photo-btn {
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            background: #FFF176;
-            color: #388E3C;
+        .profile-tab {
+            padding: 16px 36px 12px 36px;
+            font-weight: 500;
+            color: #222;
+            background: none;
             border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: color 0.2s, border 0.2s;
+            text-decoration: none; /* pastikan tidak ada underline */
+        }
+        .profile-tab:focus, .profile-tab:active, .profile-tab:hover {
+            text-decoration: none;
+        }
+        .profile-tab.active {
+            color: #4CAF50;
+            border-bottom: 3px solid #4CAF50;
+            font-weight: 700;
+        }
+        .profile-main {
+            display: flex;
+            gap: 32px;
+            align-items: flex-start;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .profile-left {
+            width: 260px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            padding: 28px 18px 18px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .profile-photo {
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            width: 22px;
-            height: 22px;
+            background: #E0F2F1;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            margin-bottom: 16px;
+            overflow: hidden;
         }
-        .profile-name {
-            font-size: 1.6rem;
-            font-weight: 700;
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .profile-photo i {
+            color: #4CAF50;
+            font-size: 64px;
+        }
+        .btn-upload {
+            background: #fff;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px 0;
+            width: 100%;
+            font-weight: 600;
             color: #388E3C;
-            text-align: center;
-            margin-bottom: 2px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s;
         }
-        .profile-username {
+        .btn-upload:hover {
+            background: #FFF176;
+            border-color: #FFF176;
+        }
+        .profile-file-info {
+            font-size: 13px;
             color: #888;
             text-align: center;
             margin-bottom: 18px;
-            font-size: 1rem;
         }
-        .stats {
+        .profile-actions {
+            width: 100%;
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 24px;
-            background: #E8F5E9;
-            border-radius: 10px;
-            padding: 12px 0;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
         }
-        .stat {
-            flex: 1;
-            text-align: center;
-        }
-        .stat .count {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #388E3C;
-        }
-        .stat .label {
-            color: #888;
-            font-size: 0.95rem;
-        }
-        .menu-list {
-            margin-bottom: 28px;
-        }
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 13px 0;
-            border-bottom: 1px solid #f0f0f0;
+        .profile-actions button {
+            width: 100%;
+            padding: 10px 0;
+            border-radius: 8px;
+            border: 1.5px solid #e0e0e0;
+            background: #fff;
             color: #222;
-            text-decoration: none;
-            font-size: 1.08rem;
-            transition: background 0.15s;
-        }
-        .menu-item:last-child { border-bottom: none; }
-        .menu-item i {
-            margin-right: 16px;
-            font-size: 1.2rem;
-            color: #4CAF50;
-        }
-        .menu-item:hover { background: #F9FBE7; }
-        .menu-item.logout {
-            color: #d32f2f;
-        }
-        .biodata-box {
-            background: #E8F5E9;
-            border-radius: 10px;
-            padding: 18px 20px;
-            margin-top: 18px;
-        }
-        .biodata-title {
-            color: #388E3C;
-            font-weight: 600;
-            margin-bottom: 12px;
-            font-size: 1.1rem;
-        }
-        .biodata-row {
-            display: flex;
-            margin-bottom: 8px;
-        }
-        .biodata-label {
-            width: 120px;
-            color: #888;
             font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s;
         }
-        .biodata-value {
-            color: #222;
+        .profile-actions button:hover {
+            background: #eaffea;
+            border-color: #4CAF50;
         }
-        .choose-photo-btn {
+        .profile-actions .btn-yellow {
             background: #FFF176;
             color: #388E3C;
             border: none;
-            border-radius: 8px;
-            padding: 7px 18px;
             font-weight: 600;
-            font-size: 15px;
-            margin-top: 10px;
-            cursor: not-allowed;
-            opacity: 0.7;
         }
-        @media (max-width: 600px) {
-            .container { padding: 16px; }
-            .biodata-box { padding: 12px 8px; }
+        .profile-actions .btn-yellow:hover {
+            background: #FFEB3B;
+        }
+        .profile-right {
+            flex: 1;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            padding: 32px 32px 24px 32px;
+        }
+        .profile-section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #388E3C;
+            margin-bottom: 18px;
+        }
+        .profile-info-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .profile-info-label {
+            width: 140px;
+            color: #888;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+        .profile-info-value {
+            color: #222;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        .profile-info-action {
+            margin-left: 18px;
+            color: #4CAF50;
+            font-weight: 600;
+            font-size: 0.98rem;
+            cursor: pointer;
+            text-decoration: none; /* pastikan tidak ada underline */
+        }
+        .profile-info-action:hover, .profile-info-action:focus, .profile-info-action:active {
+            text-decoration: none;
+        }
+        .profile-info-badge {
+            background: #eaffea;
+            color: #388E3C;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 6px;
+            padding: 3px 10px;
+            margin-left: 10px;
+        }
+        @media (max-width: 900px) {
+            .profile-main { flex-direction: column; gap: 18px; }
+            .profile-left, .profile-right { width: 100%; max-width: 100%; }
+            .profile-right { padding: 18px 8px; }
         }
     </style>
-    <div class="header-profile header-profile-margin">
-        <h2>Profil Saya</h2>
+    <div class="profile-tabs">
+        <a href="{{ route('profile') }}" class="profile-tab @if(Route::currentRouteName() == 'profile') active @endif">Biodata Diri</a>
+        <a href="{{ route('addresses') }}" class="profile-tab @if(Route::currentRouteName() == 'addresses') active @endif">Daftar Alamat</a>
     </div>
-    <div class="container">
-        <div class="profile-pic">
-            <i class="fas fa-user-circle"></i>
-            <a href="{{ route('profile.edit') }}" class="edit-photo-btn" title="Edit Profil"><i class="fas fa-pen" style="font-size:10px;"></i></a>
-        </div>
-        <div class="profile-name">{{ Auth::user()->name }}</div>
-        <!-- Removed profile-username display -->
-        <div class="stats">
-            <div class="stat"><div class="count">0</div><div class="label">Pengolahan</div></div>
-            <div class="stat"><div class="count">0</div><div class="label">Dikirim</div></div>
-            <div class="stat"><div class="count">1</div><div class="label">Selesai</div></div>
-        </div>
-        <div class="menu-list">
-            <a href="#" class="menu-item"><i class="fas fa-store"></i>Katalog Saya</a>
-            <a href="#" class="menu-item"><i class="fas fa-id-card"></i>Biodata Toko</a>
-            <a href="#" class="menu-item"><i class="fas fa-question-circle"></i>Bantuan</a>
-            <form action="{{ route('logout') }}" method="POST" style="margin:0;">
-                @csrf
-                <button type="submit" class="menu-item logout" style="width:100%;text-align:left;background:none;border:none;padding:13px 0;"> <i class="fas fa-sign-out-alt"></i>Keluar</button>
+    <div class="profile-main">
+        <div class="profile-left">
+            <div class="profile-photo">
+                @if(Auth::user()->profile_photo_url ?? false)
+                    <img src="{{ Auth::user()->profile_photo_url }}" alt="Foto Profil">
+                @else
+                    <i class="fas fa-user-circle"></i>
+                @endif
+            </div>
+            <form method="POST" action="#" enctype="multipart/form-data" style="width:100%;">
+                <button type="button" class="btn-upload">Pilih Foto</button>
             </form>
+            <div class="profile-file-info">
+                Besar file: maksimum 10.000.000 bytes (10 Megabytes).<br>
+                Ekstensi file yang diperbolehkan: JPG, JPEG, PNG
+            </div>
+            <div class="profile-actions">
+                <button>Ganti Kata Sandi</button>
+            </div>
         </div>
-        <div class="biodata-box">
-            <div class="biodata-title">Biodata Diri</div>
-            <div class="biodata-row"><div class="biodata-label">Nama</div><div class="biodata-value">{{ Auth::user()->name }}</div></div>
-            <div class="biodata-row"><div class="biodata-label">Email</div><div class="biodata-value">{{ Auth::user()->email }}</div></div>
-            <div class="biodata-row"><div class="biodata-label">Nomor HP</div><div class="biodata-value">{{ Auth::user()->phone }}</div></div>
-            <button class="choose-photo-btn" disabled>Pilih Foto</button>
+        <div class="profile-right">
+            <div class="profile-section-title">Ubah Biodata Diri</div>
+            <div class="profile-info-row">
+                <div class="profile-info-label">Nama</div>
+                <div class="profile-info-value">{{ Auth::user()->name }}</div>
+                <div class="profile-info-action" data-bs-toggle="modal" data-bs-target="#modalEditNama">Ubah</div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-label">Tanggal Lahir</div>
+                @if(Auth::user()->tanggal_lahir ?? false)
+                    <div class="profile-info-value">{{ Auth::user()->tanggal_lahir }}</div>
+                    <div class="profile-info-action" data-bs-toggle="modal" data-bs-target="#modalEditTanggalLahir">Ubah</div>
+                @else
+                    <div class="profile-info-value" style="color:#4CAF50; cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modalEditTanggalLahir">Tambah Tanggal Lahir</div>
+                @endif
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-label">Jenis Kelamin</div>
+                @if(Auth::user()->jenis_kelamin ?? false)
+                    <div class="profile-info-value">{{ Auth::user()->jenis_kelamin }}</div>
+                    <div class="profile-info-action" data-bs-toggle="modal" data-bs-target="#modalEditJenisKelamin">Ubah</div>
+                @else
+                    <div class="profile-info-value" style="color:#4CAF50; cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modalEditJenisKelamin">Tambah Jenis Kelamin</div>
+                @endif
+            </div>
+            <div class="profile-section-title" style="margin-top:32px;">Ubah Kontak</div>
+            <div class="profile-info-row">
+                <div class="profile-info-label">Email</div>
+                <div class="profile-info-value">{{ Auth::user()->email }}</div>
+                <div class="profile-info-action" data-bs-toggle="modal" data-bs-target="#modalEditEmail">Ubah</div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-label">Nomor HP</div>
+                @if(Auth::user()->phone ?? false)
+                    <div class="profile-info-value">{{ Auth::user()->phone }}</div>
+                    <div class="profile-info-action" data-bs-toggle="modal" data-bs-target="#modalEditPhone">Ubah</div>
+                @else
+                    <div class="profile-info-value" style="color:#4CAF50; cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modalEditPhone">Tambah Nomor HP</div>
+                @endif
+            </div>
         </div>
     </div>
+
+<!-- Modal Edit Nama -->
+<div class="modal fade" id="modalEditNama" tabindex="-1" aria-labelledby="modalEditNamaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEditNamaLabel">Ubah Nama</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-2" style="color:#666;">Kamu hanya dapat mengubah nama 1 kali lagi. Pastikan nama sudah benar.</div>
+        <form>
+          <div class="mb-3">
+            <label for="inputNama" class="form-label">Nama</label>
+            <input type="text" class="form-control" id="inputNama" value="{{ Auth::user()->name }}">
+            <div class="form-text">Nama dapat dilihat oleh pengguna lainnya</div>
+          </div>
+          <button type="submit" class="btn btn-success w-100" disabled>Simpan</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Edit Email -->
+<div class="modal fade" id="modalEditEmail" tabindex="-1" aria-labelledby="modalEditEmailLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEditEmailLabel">Ubah Email</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="inputEmail" class="form-label">Email</label>
+            <input type="email" class="form-control" id="inputEmail" value="{{ Auth::user()->email }}">
+          </div>
+          <button type="submit" class="btn btn-success w-100" disabled>Simpan</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Edit Tanggal Lahir -->
+<div class="modal fade" id="modalEditTanggalLahir" tabindex="-1" aria-labelledby="modalEditTanggalLahirLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEditTanggalLahirLabel">Tambah Tanggal Lahir</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-2" style="color:#666;">Kamu hanya dapat mengatur tanggal lahir satu kali. Pastikan tanggal lahir sudah benar.</div>
+        <form>
+          <div class="row mb-3">
+            <div class="col">
+              <select class="form-select">
+                <option selected>Tanggal</option>
+                @for($i=1;$i<=31;$i++)<option>{{ $i }}</option>@endfor
+              </select>
+            </div>
+            <div class="col">
+              <select class="form-select">
+                <option selected>Bulan</option>
+                @foreach(['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'] as $bulan)
+                  <option>{{ $bulan }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="col">
+              <select class="form-select">
+                <option selected>Tahun</option>
+                @for($i=date('Y');$i>=1900;$i--)<option>{{ $i }}</option>@endfor
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Simpan</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Edit Jenis Kelamin -->
+<div class="modal fade" id="modalEditJenisKelamin" tabindex="-1" aria-labelledby="modalEditJenisKelaminLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEditJenisKelaminLabel">Tambah Jenis Kelamin</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-2" style="color:#666;">Kamu hanya dapat mengubah data jenis kelamin 1 kali lagi. Pastikan data sudah benar</div>
+        <form>
+          <div class="d-flex justify-content-center gap-4 mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gender" id="genderPria" checked>
+              <label class="form-check-label" for="genderPria">
+                <i class="fas fa-male" style="font-size:2rem;color:#4CAF50;"></i><br>Pria
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gender" id="genderWanita">
+              <label class="form-check-label" for="genderWanita">
+                <i class="fas fa-female" style="font-size:2rem;color:#aaa;"></i><br>Wanita
+              </label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Simpan</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Edit Nomor HP -->
+<div class="modal fade" id="modalEditPhone" tabindex="-1" aria-labelledby="modalEditPhoneLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEditPhoneLabel">Tambah Nomor HP</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-2" style="color:#666;">Pastikan nomor HP Anda aktif untuk keamanan dan kemudahan transaksi</div>
+        <form>
+          <div class="mb-3">
+            <label for="inputPhone" class="form-label">Nomor HP</label>
+            <input type="text" class="form-control" id="inputPhone" value="{{ Auth::user()->phone }}">
+            <div class="form-text">Kami akan mengirimkan kode verifikasi melalui SMS</div>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Selanjutnya</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection

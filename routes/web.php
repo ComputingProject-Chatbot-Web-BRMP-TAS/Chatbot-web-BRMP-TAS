@@ -77,26 +77,6 @@ Route::get('/profile', function () {
     return view('profile');
 })->name('profile');
 
-Route::get('/profile/edit', function () {
-    if (!Auth::check()) return redirect('/login');
-    return view('profile_edit');
-})->name('profile.edit');
-
-Route::post('/profile/edit', function (Request $request) {
-    if (!Auth::check()) return redirect('/login');
-    $request->validate([
-        'name' => 'required',
-        'email' => 'required|email|unique:users,email,' . Auth::id(),
-        'phone' => 'required',
-    ]);
-    $user = Auth::user();
-    $user->name = $request->name;
-    $user->email = $request->email;
-    $user->phone = $request->phone;
-    $user->save();
-    return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui!');
-})->name('profile.edit');
-
 Route::get('/kategori/tumbuhan', function() {
     return view('kategori_tumbuhan');
 });
@@ -112,3 +92,8 @@ Route::get('/kategori/sayuran', function() {
 Route::get('/kategori/bunga', function() {
     return view('kategori_bunga');
 });
+
+Route::get('/addresses', function () {
+    if (!Auth::check()) return redirect('/login');
+    return view('addresses');
+})->name('addresses');
