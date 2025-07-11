@@ -24,6 +24,7 @@ class User extends Authenticatable
         'phone',
         'gender',
         'birth_date',
+        'foto_profil',
     ];
 
     /**
@@ -52,5 +53,13 @@ class User extends Authenticatable
     public function addresses()
     {
         return $this->hasMany(Address::class);
+    }
+
+    public function getProfilePhotoUrlAttribute()
+    {
+        if ($this->foto_profil) {
+            return asset('storage/foto_profil/' . $this->foto_profil);
+        }
+        return null;
     }
 }

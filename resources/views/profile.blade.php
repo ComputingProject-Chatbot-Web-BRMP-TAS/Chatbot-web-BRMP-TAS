@@ -187,15 +187,27 @@
     <div class="profile-main">
         <div class="profile-left">
             <div class="profile-photo">
-                @if(Auth::user()->profile_photo_url ?? false)
+                @if(Auth::user()->profile_photo_url)
                     <img src="{{ Auth::user()->profile_photo_url }}" alt="Foto Profil">
                 @else
                     <i class="fas fa-user-circle"></i>
                 @endif
             </div>
-            <form method="POST" action="#" enctype="multipart/form-data" style="width:100%;">
-                <button type="button" class="btn-upload">Pilih Foto</button>
+            <form method="POST" action="{{ route('profile.upload_foto') }}" enctype="multipart/form-data" style="width:100%;">
+                @csrf
+                <input type="file" name="foto_profil" id="fotoProfilInput" accept="image/jpeg,image/png" style="display:none;" onchange="this.form.submit()">
+                <button type="button" class="btn-upload" onclick="document.getElementById('fotoProfilInput').click()">Pilih Foto</button>
             </form>
+            @if ($errors->has('foto_profil'))
+                <div style="color: #d32f2f; background: #fff3f3; border: 1px solid #f8d7da; padding: 10px 16px; border-radius: 8px; margin-bottom: 16px; text-align:center;">
+                    <strong>Gagal upload foto:</strong> {{ $errors->first('foto_profil') }}
+                </div>
+            @endif
+            @if (session('success'))
+                <div style="color: #388e3c; background: #eaffea; border: 1px solid #b2dfdb; padding: 10px 16px; border-radius: 8px; margin-bottom: 16px; text-align:center;">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="profile-file-info">
                 Besar file: maksimum 10.000.000 bytes (10 Megabytes).<br>
                 Ekstensi file yang diperbolehkan: JPG, JPEG, PNG

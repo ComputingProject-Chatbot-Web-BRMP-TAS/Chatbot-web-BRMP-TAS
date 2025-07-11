@@ -8,7 +8,7 @@ class Product extends Model
 {
     protected $primaryKey = 'produk_id';
     protected $fillable = [
-        'nama', 'jenis_kategori', 'deskripsi', 'jumlah_biji', 'harga', 'gambar'
+        'nama', 'jenis_kategori', 'deskripsi', 'jumlah_biji', 'harga', 'gambar', 'stok'
     ];
 
     public function cartItems()

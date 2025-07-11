@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Product;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CartController;
+use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
     $products = Product::all();
@@ -100,6 +101,19 @@ Route::post('/profile/update', function (Request $request) {
     $user->update($data);
     return back()->with('success', 'Profil berhasil diperbarui!');
 })->name('profile.update');
+
+Route::post('/profile/upload-foto', function (\Illuminate\Http\Request $request) {
+    $user = Auth::user();
+    $request->validate([
+        'foto_profil' => 'required|image|mimes:jpeg,png,jpg|max:10240',
+    ]);
+    $file = $request->file('foto_profil');
+    $filename = 'user_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+    $path = $file->storeAs('public/foto_profil', $filename);
+    $user->foto_profil = $filename;
+    $user->save();
+    return redirect()->route('profile')->with('success', 'Foto profil berhasil diupload!');
+})->name('profile.upload_foto')->middleware('auth');
 
 Route::get('/kategori/tumbuhan', function() {
     return view('kategori_tumbuhan');
