@@ -305,7 +305,7 @@
                     @endif
                     <span class="navbar-user-greeting">Hi, {{ Auth::user()->name }}</span>
                 </a>
-                <span class="dropdown-toggle" style="cursor:pointer;" onclick="toggleDropdown()">
+                <span style="cursor:pointer;" onclick="toggleDropdown()">
                     <i class="fas fa-chevron-down" style="font-size:14px;"></i>
                 </span>
                 <div id="dropdown-menu" class="dropdown-menu">

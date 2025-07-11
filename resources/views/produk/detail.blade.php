@@ -4,39 +4,39 @@
 <div class="product-detail-modern-bg">
     <div class="product-detail-modern-container">
         <div class="product-detail-modern-left">
-            <img src="{{ $produk['img'] }}" alt="{{ $produk['nama'] }}" class="product-detail-main-image">
+            <img src="{{ $product['img'] }}" alt="{{ $product['nama'] }}" class="product-detail-main-image">
             <div class="product-detail-thumbs">
-                <img src="{{ $produk['img'] }}" alt="thumb1" class="selected">
-                <img src="{{ $produk['img'] }}" alt="thumb2">
-                <img src="{{ $produk['img'] }}" alt="thumb3">
+                <img src="{{ $product['img'] }}" alt="thumb1" class="selected">
+                <img src="{{ $product['img'] }}" alt="thumb2">
+                <img src="{{ $product['img'] }}" alt="thumb3">
             </div>
         </div>
         <div class="product-detail-modern-center">
-            <div class="product-detail-title">{{ $produk['nama'] }}</div>
-            <div class="product-detail-price">Rp{{ number_format($produk['harga'], 0, ',', '.') }}</div>
-            <div class="product-detail-stock">Stok Total: <span>{{ $produk['stok'] }}</span></div>
+            <div class="product-detail-title">{{ $product['nama'] }}</div>
+            <div class="product-detail-price">Rp{{ number_format($product['harga'], 0, ',', '.') }}</div>
+            <div class="product-detail-stock">Stok Total: <span>{{ $product['stok'] }}</span></div>
             <div class="product-detail-info-list">
-                <div><span class="label">Kategori:</span> <span class="value">{{ $produk['kategori'] }}</span></div>
+                <div><span class="label">Kategori:</span> <span class="value">{{ $product['kategori'] }}</span></div>
                 <div><span class="label">Berat Bersih:</span> <span class="value">50gr</span></div>
                 <div><span class="label">Jumlah Biji:</span> <span class="value">50</span></div>
             </div>
-            <div class="product-detail-desc">{{ $produk['deskripsi'] }}</div>
+            <div class="product-detail-desc">{{ $product['deskripsi'] }}</div>
         </div>
         <div class="product-detail-modern-right">
             <div class="product-detail-card">
                 <div class="product-detail-card-title">Atur jumlah dan catatan</div>
-                <form method="POST" action="{{ Auth::check() ? route('cart.add', $produk->produk_id) : route('login') }}">
+                <form method="POST" action="{{ Auth::check() ? route('cart.add', $product->produk_id) : route('login') }}">
                     @csrf
                     <div class="product-detail-card-qty">
                         <button type="button" class="qty-btn" onclick="decrementQty(event)">-</button>
                         <input type="text" id="qtyInput" name="kuantitas" value="1" min="1" readonly style="width:40px;text-align:center;background:#fff;cursor:default;">
                         <button type="button" class="qty-btn" onclick="incrementQty(event)">+</button>
-                        <span class="product-detail-card-stock">Stok Total: {{ $produk->jumlah_biji ?? '-' }}</span>
+                        <span class="product-detail-card-stock">Stok Total: {{ $product->jumlah_biji ?? '-' }}</span>
                     </div>
                     <div id="stockWarning" style="color:#d32f2f;font-size:0.98rem;display:none;margin-bottom:8px;">Stok tidak mencukupi</div>
                     <div class="product-detail-card-subtotal">
                         Subtotal
-                        <span id="subtotal">Rp{{ number_format($produk->harga, 0, ',', '.') }}</span>
+                        <span id="subtotal">Rp{{ number_format($product->harga, 0, ',', '.') }}</span>
                     </div>
                     <button class="btn-green w-100" style="margin-bottom:10px;" type="submit">+ Keranjang</button>
                 </form>
@@ -273,7 +273,7 @@ function decrementQty(e) {
 }
 function updateSubtotal() {
     let qty = parseInt(document.getElementById('qtyInput').value);
-    let harga = {{ $produk->harga }};
+    let harga = {{ $product->harga }};
     document.getElementById('subtotal').innerText = 'Rp' + (harga * qty).toLocaleString('id-ID');
 }
 </script>

@@ -34,8 +34,8 @@ Route::get('/cart', function () {
 })->name('cart');
 
 Route::get('/produk/{id}', function ($id) {
-    $produk = Product::findOrFail($id);
-    return view('produk.detail', ['produk' => $produk]);
+    $product = \App\Models\Product::findOrFail($id);
+    return view('produk.detail', compact('product'));
 })->name('produk.detail');
 
 Route::get('/produk-baru', function () {

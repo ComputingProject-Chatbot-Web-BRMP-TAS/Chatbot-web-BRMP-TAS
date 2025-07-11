@@ -255,11 +255,21 @@
         border-radius: 4px;
         margin-right: 10px;
     }
+    .btn-active {
+        background: #388e3c !important;
+        color: #fff !important;
+        pointer-events: auto !important;
+    }
 </style>
 
 <div class="cart-main">
     <div class="cart-left">
-        <div class="cart-title cart-title-margin">Keranjang</div>
+        <div class="cart-title cart-title-margin">
+            Keranjang
+             <span style="font: size 1.5em;rem;font-weight:600;color:#388e3c;margin-left:10px;">
+                ({{ $items->count() }} Benih)
+            </span>
+        </div> 
         @if($items->isEmpty())
             <div class="cart-empty-box">
                 <div class="cart-empty-img">
@@ -274,7 +284,7 @@
         @else
             <div style="margin-bottom:12px;display:flex;align-items:center;gap:12px;">
                 <input type="checkbox" id="checkAll" class="checkall-box" onclick="toggleAll(this)">
-                <label for="checkAll" class="checkall-label"><i class="fas fa-check-square"></i> Checklist/Uncheck Semua</label>
+                <label for="checkAll" class="checkall-label">Pilih Semua</label>
             </div>
             <form id="cartForm" method="POST" action="{{ route('cart.checkout') }}">
                 @csrf
@@ -283,7 +293,11 @@
                     <input type="checkbox" class="cart-item-checkbox" name="checked_items[]" value="{{ $item->cart_item_id }}" onchange="updateSummary()" checked>
                     <img src="{{ asset('images/' . $item->product->gambar) }}" alt="{{ $item->product->nama }}" style="width:70px;height:70px;object-fit:cover;border-radius:12px;">
                     <div style="flex:1;">
-                        <div style="font-weight:600;font-size:1.1rem;">{{ $item->product->nama }}</div>
+                        <div style="font-weight:600;font-size:1.1rem;">
+                            <a href="/produk/{{ $item->product->produk_id }}" style="color:#222; text-decoration:none; font-weight:600;">
+                                {{ $item->product->nama }}
+                            </a>
+                        </div>
                         <div style="color:#388e3c;font-weight:500;">
                             Rp{{ number_format($item->harga_satuan,0,',','.') }} x 
                             <form method="POST" action="{{ route('cart.update_qty', $item->cart_item_id) }}" style="display:inline;" onsubmit="return false;">
@@ -328,7 +342,13 @@ function updateSummary() {
         }
     });
     document.getElementById('summaryTotal').innerText = 'Rp' + total.toLocaleString('id-ID');
-    document.getElementById('checkoutBtn').disabled = checkedCount === 0;
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    checkoutBtn.disabled = checkedCount === 0;
+    if (checkedCount > 0) {
+        checkoutBtn.classList.add('btn-active');
+    } else {
+        checkoutBtn.classList.remove('btn-active');
+    }
 }
 function toggleAll(source) {
     let checkboxes = document.querySelectorAll('.cart-item-checkbox');
