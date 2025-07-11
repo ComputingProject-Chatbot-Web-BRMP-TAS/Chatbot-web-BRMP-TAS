@@ -38,25 +38,18 @@
         margin-top: 32px;
         justify-items: center;
     }
-    .address-add-row {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 18px;
-        margin-bottom: 28px;
-        flex-wrap: wrap;
-    }
     .btn-add-address {
         background: #4CAF50;
         color: #fff;
         border: none;
         border-radius: 8px;
-        padding: 12px 40%;
+        padding: 12px 16px;
         font-weight: 600;
         font-size: 1rem;
         transition: background 0.2s;
         cursor: pointer;
         white-space: nowrap;
+        width: 100%;
     }
     .btn-add-address:hover {
         background: #388E3C;
@@ -94,9 +87,7 @@
     <a href="{{ route('addresses') }}" class="profile-tab @if(Route::currentRouteName() == 'addresses') active @endif">Daftar Alamat</a>
 </div>
 <div class="addresses-container">
-    <div class="address-add-row">
-        <button class="btn-add-address" id="btnTambahAlamatBaru">+ Tambah Alamat Baru</button>
-    </div>
+    <button class="btn-add-address" id="btnTambahAlamatBaru">+ Tambah Alamat Baru</button>
     <div class="address-empty">
         <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" alt="Alamat kosong" class="address-empty-img">
         <div class="address-empty-title">Ops!, alamat tidak tersedia</div>
@@ -109,13 +100,13 @@
 <!-- Modal Tambah Alamat Baru -->
 <div class="modal fade" id="modalTambahAlamat" tabindex="-1" aria-labelledby="modalTambahAlamatLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="min-width:350px;">
-      <div class="modal-header" style="border-bottom:1px solid #eee;">
+    <div class="modal-content">
+      <div class="modal-header">
         <h5 class="modal-title" id="modalTambahAlamatLabel">Tambah Alamat</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-0" style="border-radius:16px;overflow:hidden;">
-        <div class="px-3 pt-3 pb-2">
+        <div class="px-3 pt-3 pb-3">
           <input type="text" id="searchAlamat" class="form-control" placeholder="Cari alamat atau tempat..." style="font-size:1em;">
         </div>
         <div style="position:relative;">
@@ -125,11 +116,17 @@
             <img src="/images/marker-point.png" style="width:36px;height:36px;">
           </div>
         </div>
-        <button class="btn btn-success w-100 mt-3" id="btnLokasiSaatIni" style="background:#00B14F;border:none;font-weight:600;">Gunakan Lokasi Saat Ini</button>
-        <div class="mt-3 px-3">
+        <div class="px-3 pt-3 pb-3">
+          <button class="btn btn-success w-100" id="btnLokasiSaatIni">Gunakan Lokasi Saat Ini</button>
+        </div>
+        <div class="px-3">
           <div class="fw-bold" id="alamatTerpilih" style="font-size:1.1em;">Pilih lokasi di peta</div>
         </div>
-        <button class="btn w-100 mt-3 mb-2" id="btnPilihLokasi" style="background:#00B14F;color:#fff;font-weight:600;font-size:1.1em;" disabled>Pilih Lokasi Ini</button>
+        <form>
+            <div class="px-3 pt-3 pb-3">    
+                <button type="button" class="btn btn-success w-100" id="btnPilihLokasi" disabled>Pilih Lokasi Ini</button>
+            </div>
+        </form>
       </div>
     </div>
   </div>
