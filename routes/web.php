@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Http\Controllers\AddressController;
 
 Route::get('/', function () {
     return view('home');
@@ -161,10 +162,13 @@ Route::get('/kategori/bunga', function() {
     return view('kategori_bunga');
 });
 
-Route::get('/addresses', function () {
-    if (!Auth::check()) return redirect('/login');
-    return view('addresses');
-})->name('addresses');
+Route::middleware('auth')->group(function () {
+    Route::get('/addresses', [AddressController::class, 'index'])->name('addresses');
+    Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
+    Route::delete('/addresses/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
+    Route::post('/addresses/{address}/primary', [AddressController::class, 'setPrimary'])->name('addresses.setPrimary');
+    Route::patch('/addresses/{address}', [AddressController::class, 'update'])->name('addresses.update');
+});
 
 Route::get('/artikel', function () {
     return view('article');
