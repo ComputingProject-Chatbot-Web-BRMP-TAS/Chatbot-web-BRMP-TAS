@@ -3,8 +3,8 @@
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-    body { 
-        background: #f4f6fa !important; 
+    body {
+        background: #f4f6fa !important;
         font-family: 'Roboto', sans-serif;
     }
     .cart-main {
@@ -51,7 +51,7 @@
     }
     .cart-empty-content {
         flex: 1;
-        
+
     }
     .cart-empty-content h5 {
         font-size: 1.2rem;
@@ -228,7 +228,20 @@
             <span style="color:#666; font-size:16px;">Total</span>
             <span style="color:#388e3c; font-size:20px; font-weight:700;">Rp{{ number_format($total,0,',','.') }}</span>
         </div>
-        <button class="btn" disabled>Beli</button>
+        @if(!$items->isEmpty())
+        <form action="{{ route('checkout.show') }}" method="GET">
+            @csrf
+            @foreach($items as $i => $item)
+                <input type="hidden" name="cart[{{ $i }}][product_id]" value="{{ $item->product->produk_id }}">
+                <input type="hidden" name="cart[{{ $i }}][name]" value="{{ $item->product->nama }}">
+                <input type="hidden" name="cart[{{ $i }}][price]" value="{{ $item->harga_satuan }}">
+                <input type="hidden" name="cart[{{ $i }}][qty]" value="{{ $item->kuantitas }}">
+            @endforeach
+            <button type="submit" class="btn btn-success w-100" style="pointer-events:auto;opacity:1;">Beli</button>
+        </form>
+        @else
+        <button class="btn btn-secondary w-100" disabled style="pointer-events:none;opacity:0.7;">Beli</button>
+        @endif
     </div>
 </div>
 <div class="recommend-section">

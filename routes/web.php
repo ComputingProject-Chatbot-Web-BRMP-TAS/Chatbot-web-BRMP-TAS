@@ -9,6 +9,8 @@ use App\Models\Product;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('/', function () {
     $products = Product::all();
@@ -139,6 +141,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/addresses/{address}', [AddressController::class, 'update'])->name('addresses.update');
     Route::post('/cart/add/{produk}', [CartController::class, 'addToCart'])->name('cart.add');
 });
+
+Route::post('/payment/start', [\App\Http\Controllers\PaymentController::class, 'start'])->name('payment.start');
+Route::get('/payment', [PaymentController::class, 'show'])->name('payment.show');
+
+Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout.show');
+Route::post('/checkout/next', [CheckoutController::class, 'next'])->name('checkout.next');
 
 Route::get('/artikel', function () {
     return view('article');
