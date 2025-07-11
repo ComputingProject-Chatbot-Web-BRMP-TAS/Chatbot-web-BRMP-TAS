@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 Route::get('/', function () {
     $products = Product::all();
@@ -143,3 +144,33 @@ Route::middleware('auth')->group(function () {
 Route::get('/artikel', function () {
     return view('article');
 })->name('article');
+
+Route::delete('/cart/delete/{cart_item}', function($cart_item) {
+    $item = \App\Models\CartItem::findOrFail($cart_item);
+    $item->delete();
+    return back()->with('success', 'Item berhasil dihapus dari keranjang!');
+})->name('cart.delete')->middleware('auth');
+
+Route::post('/cart/update-qty/{cart_item}', function(\Illuminate\Http\Request $request, $cart_item) {
+    $item = \App\Models\CartItem::findOrFail($cart_item);
+    $qty = max(1, (int) $request->input('kuantitas', 1));
+    $item->kuantitas = $qty;
+    $item->save();
+    return response()->json([
+        'success' => true,
+        'kuantitas' => $item->kuantitas,
+        'subtotal' => number_format($item->harga_satuan * $item->kuantitas, 0, ',', '.')
+    ]);
+})->name('cart.update_qty')->middleware('auth');
+
+Route::post('/cart/checkout', function(\Illuminate\Http\Request $request) {
+    $checked = $request->input('checked_items', []);
+    $items = \App\Models\CartItem::whereIn('cart_item_id', $checked)->with('product')->get();
+    $total = $items->sum(function($item) { return $item->kuantitas * $item->harga_satuan; });
+    // Simulasi: tampilkan halaman ringkasan checkout (atau redirect ke pembayaran, dsb)
+    return view('cart', [
+        'items' => $items,
+        'total' => $total,
+        'checkout_mode' => true
+    ]);
+})->name('cart.checkout')->middleware('auth');
