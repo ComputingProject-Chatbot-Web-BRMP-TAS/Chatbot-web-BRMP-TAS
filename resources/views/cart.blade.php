@@ -198,22 +198,35 @@
 <div class="cart-main">
     <div class="cart-left">
         <div class="cart-title cart-title-margin">Keranjang</div>
-        <div class="cart-empty-box">
-            <div class="cart-empty-img">
-                <i class="fas fa-box-open" style="color:#ffd600;"></i>
+        @if($items->isEmpty())
+            <div class="cart-empty-box">
+                <div class="cart-empty-img">
+                    <i class="fas fa-box-open" style="color:#ffd600;"></i>
+                </div>
+                <div class="cart-empty-content">
+                    <h5>Wah, keranjang belanjamu kosong</h5>
+                    <p>Yuk, isi dengan barang-barang impianmu!</p>
+                    <a href="/" class="btn-green">Mulai Belanja</a>
+                </div>
             </div>
-            <div class="cart-empty-content">
-                <h5>Wah, keranjang belanjamu kosong</h5>
-                <p>Yuk, isi dengan barang-barang impianmu!</p>
-                <a href="/" class="btn-green">Mulai Belanja</a>
-            </div>
-        </div>
+        @else
+            @foreach($items as $item)
+                <div class="cart-empty-box" style="flex-direction:row;align-items:center;gap:18px;">
+                    <img src="{{ asset('images/' . $item->product->gambar) }}" alt="{{ $item->product->nama }}" style="width:70px;height:70px;object-fit:cover;border-radius:12px;">
+                    <div style="flex:1;">
+                        <div style="font-weight:600;font-size:1.1rem;">{{ $item->product->nama }}</div>
+                        <div style="color:#388e3c;font-weight:500;">Rp{{ number_format($item->harga_satuan,0,',','.') }} x {{ $item->kuantitas }}</div>
+                        <div style="color:#757575;font-size:0.98rem;">Subtotal: Rp{{ number_format($item->harga_satuan * $item->kuantitas,0,',','.') }}</div>
+                    </div>
+                </div>
+            @endforeach
+        @endif
     </div>
     <div class="cart-summary cart-summary-margin">
         <div class="cart-summary-title">Ringkasan belanja</div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
             <span style="color:#666; font-size:16px;">Total</span>
-            <span style="color:#388e3c; font-size:20px; font-weight:700;">Rp999.666</span>
+            <span style="color:#388e3c; font-size:20px; font-weight:700;">Rp{{ number_format($total,0,',','.') }}</span>
         </div>
         <button class="btn" disabled>Beli</button>
     </div>

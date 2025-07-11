@@ -5,10 +5,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Product;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\CartController;
 
 Route::get('/', function () {
-    return view('home');
+    $products = Product::all();
+    return view('home', compact('products'));
 });
 
 Route::get('/register', function () {
@@ -20,65 +23,17 @@ Route::get('/login', function () {
 })->name('login');
 
 Route::get('/cart', function () {
-    return view('cart');
+    if (!Auth::check()) return redirect()->route('login');
+    $user = Auth::user();
+    $cart = \App\Models\Cart::where('user_id', $user->id)->first();
+    $items = $cart ? $cart->cartItems()->with('product')->get() : collect();
+    $total = $items->sum(function($item) { return $item->kuantitas * $item->harga_satuan; });
+    return view('cart', compact('items', 'total'));
 })->name('cart');
 
 Route::get('/produk/{id}', function ($id) {
-    $produkList = [
-        1 => [
-            'nama' => 'Benih Cabai Rawit',
-            'harga' => 15000,
-            'deskripsi' => 'Isi 50 butir, cocok untuk pekarangan rumah.',
-            'kategori' => 'Benih',
-            'kondisi' => 'Baru',
-            'style' => 'Premium',
-            'stok' => 100,
-            'img' => 'https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/7/6/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg',
-        ],
-        2 => [
-            'nama' => 'Benih Tomat',
-            'harga' => 12000,
-            'deskripsi' => 'Tahan penyakit, hasil melimpah.',
-            'kategori' => 'Benih',
-            'kondisi' => 'Baru',
-            'style' => 'Premium',
-            'stok' => 80,
-            'img' => 'https://images.tokopedia.net/img/cache/200-square/VqbcmM/2022/12/1/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg',
-        ],
-        3 => [
-            'nama' => 'Benih Kangkung',
-            'harga' => 8000,
-            'deskripsi' => 'Cepat panen, cocok untuk hidroponik.',
-            'kategori' => 'Benih',
-            'kondisi' => 'Baru',
-            'style' => 'Premium',
-            'stok' => 120,
-            'img' => 'https://images.tokopedia.net/img/cache/200-square/VqbcmM/2022/10/10/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg',
-        ],
-        4 => [
-            'nama' => 'Benih Bayam',
-            'harga' => 7000,
-            'deskripsi' => 'Bayam hijau segar, mudah tumbuh.',
-            'kategori' => 'Benih',
-            'kondisi' => 'Baru',
-            'style' => 'Premium',
-            'stok' => 90,
-            'img' => 'https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/1/15/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg',
-        ],
-        5 => [
-            'nama' => 'Benih Wortel',
-            'harga' => 10000,
-            'deskripsi' => 'Wortel oranye, cocok untuk dataran tinggi.',
-            'kategori' => 'Benih',
-            'kondisi' => 'Baru',
-            'style' => 'Premium',
-            'stok' => 60,
-            'img' => 'https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/3/20/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg',
-        ],
-    ];
-    $produk = $produkList[$id] ?? null;
-    if (!$produk) abort(404);
-    return view('produk.detail', ['produk' => $produk, 'id' => $id]);
+    $produk = Product::findOrFail($id);
+    return view('produk.detail', ['produk' => $produk]);
 })->name('produk.detail');
 
 Route::get('/produk-baru', function () {
@@ -168,6 +123,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/addresses/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
     Route::post('/addresses/{address}/primary', [AddressController::class, 'setPrimary'])->name('addresses.setPrimary');
     Route::patch('/addresses/{address}', [AddressController::class, 'update'])->name('addresses.update');
+    Route::post('/cart/add/{produk}', [CartController::class, 'addToCart'])->name('cart.add');
 });
 
 Route::get('/artikel', function () {

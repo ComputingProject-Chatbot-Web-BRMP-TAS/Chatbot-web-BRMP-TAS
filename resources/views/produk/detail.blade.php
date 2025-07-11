@@ -25,18 +25,21 @@
         <div class="product-detail-modern-right">
             <div class="product-detail-card">
                 <div class="product-detail-card-title">Atur jumlah dan catatan</div>
-                <div class="product-detail-card-qty">
-                    <button class="qty-btn" onclick="decrementQty(event)">-</button>
-                    <input type="text" id="qtyInput" value="1" min="1" readonly style="width:40px;text-align:center;background:#fff;cursor:default;">
-                    <button class="qty-btn" onclick="incrementQty(event)">+</button>
-                    <span class="product-detail-card-stock">Stok Total: {{ $produk['stok'] }}</span>
-                </div>
-                <div id="stockWarning" style="color:#d32f2f;font-size:0.98rem;display:none;margin-bottom:8px;">Stok tidak mencukupi</div>
-                <div class="product-detail-card-subtotal">
-                    Subtotal
-                    <span id="subtotal">Rp{{ number_format($produk['harga'], 0, ',', '.') }}</span>
-                </div>
-                <button class="btn-green w-100" style="margin-bottom:10px;">+ Keranjang</button>
+                <form method="POST" action="{{ Auth::check() ? route('cart.add', $produk->produk_id) : route('login') }}">
+                    @csrf
+                    <div class="product-detail-card-qty">
+                        <button type="button" class="qty-btn" onclick="decrementQty(event)">-</button>
+                        <input type="text" id="qtyInput" name="kuantitas" value="1" min="1" readonly style="width:40px;text-align:center;background:#fff;cursor:default;">
+                        <button type="button" class="qty-btn" onclick="incrementQty(event)">+</button>
+                        <span class="product-detail-card-stock">Stok Total: {{ $produk->jumlah_biji ?? '-' }}</span>
+                    </div>
+                    <div id="stockWarning" style="color:#d32f2f;font-size:0.98rem;display:none;margin-bottom:8px;">Stok tidak mencukupi</div>
+                    <div class="product-detail-card-subtotal">
+                        Subtotal
+                        <span id="subtotal">Rp{{ number_format($produk->harga, 0, ',', '.') }}</span>
+                    </div>
+                    <button class="btn-green w-100" style="margin-bottom:10px;" type="submit">+ Keranjang</button>
+                </form>
             </div>
         </div>
     </div>
@@ -256,31 +259,22 @@
 <script>
 function incrementQty(e) {
     e.preventDefault();
-    var qtyInput = document.getElementById('qtyInput');
-    var stok = {{ $produk['stok'] }};
-    var qty = parseInt(qtyInput.value);
-    if (qty < stok) {
-        qtyInput.value = qty + 1;
-        document.getElementById('stockWarning').style.display = 'none';
-    } else {
-        document.getElementById('stockWarning').style.display = 'block';
-    }
+    let input = document.getElementById('qtyInput');
+    let val = parseInt(input.value);
+    input.value = val + 1;
     updateSubtotal();
 }
 function decrementQty(e) {
     e.preventDefault();
-    var qtyInput = document.getElementById('qtyInput');
-    var qty = parseInt(qtyInput.value);
-    if (qty > 1) {
-        qtyInput.value = qty - 1;
-        document.getElementById('stockWarning').style.display = 'none';
-    }
+    let input = document.getElementById('qtyInput');
+    let val = parseInt(input.value);
+    if (val > 1) input.value = val - 1;
     updateSubtotal();
 }
 function updateSubtotal() {
-    var qty = parseInt(document.getElementById('qtyInput').value);
-    var price = {{ $produk['harga'] }};
-    document.getElementById('subtotal').innerText = 'Rp' + (qty * price).toLocaleString('id-ID');
+    let qty = parseInt(document.getElementById('qtyInput').value);
+    let harga = {{ $produk->harga }};
+    document.getElementById('subtotal').innerText = 'Rp' + (harga * qty).toLocaleString('id-ID');
 }
 </script>
 @endpush 
