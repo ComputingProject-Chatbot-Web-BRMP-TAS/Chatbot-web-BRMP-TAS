@@ -118,6 +118,7 @@
         padding: 18px 0 12px 0;
         font-size: 1rem;
         border-top: 1px solid #0b7a4c;
+        
     }
     @media (max-width: 900px) {
         .footer-contact .container {
@@ -153,8 +154,7 @@
 <div class="footer-contact">
     <div class="container">
         <div class="map">
-            <iframe src="https://www.google.com/maps?q=Jl.+Raya+Ragunan+No.29,+RT.8%2FRW.6,+Jati+Padang,+Ps.+Minggu,+Kota+Jakarta+Selatan,+Daerah+Khusus+Ibukota+Jakarta+12540&output=embed" width="100%" height="260" style="border:0; border-radius:12px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2653.25834159555!2d112.62337852569887!3d-7.912831491927426!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd62a061e7881d7%3A0x75efe25fb5148e1a!2sBRMP%20JATIM%20-%20BALAI%20PENERAPAN%20MODERNISASI%20PERTANIAN%20JAWA%20TIMUR!5e1!3m2!1sen!2sid!4v1752202733481!5m2!1sen!2sid" width="100%" height="260" style="border:0; border-radius:12px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>        </div>
         <div class="contact-info">
             <h3>KONTAK</h3>
             <ul>
@@ -163,11 +163,11 @@
                 <li><i class="fas fa-envelope"></i> brmp@pertanian.go.id</li>
             </ul>
             <address>
-                Jl. Raya Ragunan No. 29<br>
-                Kel. Jati Padang, Kec. Ps Minggu<br>
-                Jakarta Selatan - DKI Jakarta<br>
+                Jalan Raya Karangploso No.Km.04<br>
+                Kel. Turi Rejo, Kepuharjo, Kec. Karang Ploso<br>
+                Malang - Jawa Timur<br>
                 Indonesia<br>
-                12540<br>
+                65152<br>
                 <a href="https://www.brmp.pertanian.go.id" style="color:#fff;text-decoration:underline;">www.brmp.pertanian.go.id</a>
             </address>
             <div class="socials">

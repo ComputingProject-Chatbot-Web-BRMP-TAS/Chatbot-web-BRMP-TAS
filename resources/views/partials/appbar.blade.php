@@ -251,8 +251,12 @@
         background: none !important;
         cursor: pointer;
         transition: color 0.2s;
+        letter-spacing: 0;
     }
     .navbar-article-link:hover {
+        color: #388E3C !important;
+    }
+    .navbar-category-title:hover {
         color: #388E3C !important;
     }
 </style>
