@@ -147,7 +147,9 @@ Route::post('/payment/start', [\App\Http\Controllers\PaymentController::class, '
 Route::get('/payment', [PaymentController::class, 'show'])->name('payment.show');
 
 Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout.show');
+Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
 Route::post('/checkout/next', [CheckoutController::class, 'next'])->name('checkout.next');
+Route::post('/checkout/set-address/{addressId}', [CheckoutController::class, 'setAddress'])->name('checkout.set_address');
 
 Route::get('/artikel', function () {
     return view('article');

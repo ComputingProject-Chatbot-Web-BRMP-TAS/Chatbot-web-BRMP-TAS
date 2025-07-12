@@ -101,9 +101,9 @@
     <a href="{{ route('addresses') }}" class="profile-tab @if(Route::currentRouteName() == 'addresses') active @endif">Daftar Alamat</a>
 </div>
 <div class="addresses-container">
-    <button class="btn-add-address" id="btnTambahAlamatBaru">+ Tambah Alamat Baru</button>
+    <button class="btn-add-address" id="btnTambahAlamatBaru" data-bs-toggle="modal" data-bs-target="#modalTambahAlamat">+ Tambah Alamat Baru</button>
     @if(isset($addresses) && count($addresses) > 0)
-        <div class="mt-4">
+        <div class="mt-4 w-100">
             @foreach($addresses as $address)
                 <div class="mb-3 position-relative">
                     <form method="POST" action="{{ route('addresses.setPrimary', $address) }}">
@@ -189,72 +189,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <!-- Modal Tambah Alamat Baru (2 langkah) -->
-<div class="modal fade" id="modalTambahAlamat" tabindex="-1" aria-labelledby="modalTambahAlamatLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalTambahAlamatLabel">Tambah Alamat</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form id="formTambahAlamat" method="POST" action="{{ route('addresses.store') }}">
-        @csrf
-        <div class="modal-body p-0" style="border-radius:16px;overflow:hidden;">
-          <!-- STEP 1: PILIH LOKASI -->
-          <div id="step1Alamat" class="step-alamat">
-            <div class="px-3 pt-3 pb-3">
-              <input type="text" id="searchAlamat" class="form-control" placeholder="Cari alamat atau tempat..." style="font-size:1em;">
-            </div>
-            <div style="position:relative;">
-              <div id="gmap" style="height: 250px; width: 100%;"></div>
-              <!-- Marker tetap di tengah -->
-              <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-100%);pointer-events:none;z-index:500;">
-                <img src="/images/marker-point.png" style="width:36px;height:36px;">
-              </div>
-            </div>
-            <input type="hidden" name="latitude" id="latitudeInput">
-            <input type="hidden" name="longitude" id="longitudeInput">
-            <div class="px-3 pt-3 pb-3">
-              <button type="button" class="btn btn-success w-100" id="btnLokasiSaatIni">Gunakan Lokasi Saat Ini</button>
-            </div>
-            <div class="px-3">
-              <div class="fw-bold" id="alamatTerpilih" style="font-size:1.1em;">Pilih lokasi di peta</div>
-            </div>
-            <div class="px-3 pt-3 pb-3">    
-              <button type="button" class="btn btn-success w-100" id="btnPilihLokasi" disabled>Pilih Lokasi Ini</button>
-            </div>
-          </div>
-          <!-- STEP 2: DETAIL ALAMAT -->
-          <div id="step2Alamat" class="step-alamat" style="display:none;">
-            <div class="px-3 pt-3 pb-2">
-              <label class="form-label">Label Alamat</label>
-              <input type="text" name="label" class="form-control" placeholder="Rumah, Kantor, dll">
-            </div>
-            <div class="px-3 pb-2">
-              <label class="form-label">Alamat Lengkap</label>
-              <input type="text" id="alamatTerpilihInput" name="address" class="form-control" required>
-            </div>
-            <div class="px-3 pb-2">
-              <label class="form-label">Catatan untuk Kurir <span style="color:#888;font-size:0.95em;">(opsional)</span></label>
-              <input type="text" name="note" class="form-control" placeholder="Contoh: Patokan rumah, lantai, dsb">
-            </div>
-            <div class="px-3 pb-2">
-              <label class="form-label">Nama Penerima</label>
-              <input type="text" name="recipient_name" class="form-control" required value="{{ Auth::user()->name }}">
-            </div>
-            <div class="px-3 pb-3">
-              <label class="form-label">Nomor Telepon Penerima</label>
-              <input type="tel" name="recipient_phone" class="form-control" required pattern="^(08|628)[0-9]{7,11}$" placeholder="Contoh: 08123456789" value="{{ Auth::user()->phone }}">
-            </div>
-            <div class="px-3 pb-3 d-flex gap-2">
-              <button type="button" class="btn btn-outline-secondary w-50" id="btnAlamatBack">Kembali</button>
-              <button type="submit" class="btn btn-success w-50">Simpan Alamat</button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+@include('partials.modal_tambah_alamat')
 <!-- Modal Edit Alamat (2 langkah) -->
 <div class="modal fade" id="modalEditAlamat" tabindex="-1" aria-labelledby="modalEditAlamatLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">

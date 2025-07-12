@@ -4,11 +4,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     body {
-        background: #f4f6fa !important;
-        font-family: 'Roboto', sans-serif;
+        background: #f8f9fa;
     }
     .cart-main {
-        max-width: 1200px;
+        width: 100%;
         margin: 40px auto 0 auto;
         display: flex;
         gap: 32px;
@@ -23,11 +22,20 @@
     .cart-title {
         font-size: 1.6rem;
         font-weight: 600;
-        margin-top: -70px;
         margin-bottom: 24px;
+        color: #222;
+        margin-top: 60px;
+        margin-bottom: 32px;
     }
-    .cart-title-margin {
-        margin-top: 80px;
+    .cart-item-box {
+        background: #fff;
+        border-radius: 18px;
+        padding: 28px 24px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
     }
     .cart-empty-box {
         background: #fff;
@@ -51,7 +59,6 @@
     }
     .cart-empty-content {
         flex: 1;
-
     }
     .cart-empty-content h5 {
         font-size: 1.2rem;
@@ -83,115 +90,27 @@
         border-radius: 18px;
         padding: 28px 24px;
         box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-        min-width: 260px;
-        margin-top: -10px;
+        min-width: 320px;
     }
     .cart-summary-title {
         font-weight: 600;
         margin-bottom: 18px;
-    }
-    .cart-summary-promo {
-        background: #fffde7;
-        border-radius: 8px;
-        padding: 10px 14px;
-        color: #bfa100;
-        font-size: 15px;
-        margin-bottom: 18px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+        font-size: 1.2rem;
     }
     .cart-summary .btn {
         width: 100%;
         border-radius: 8px;
-        background: #eee;
-        color: #bbb;
+        background: #388e3c;
+        color: #fff;
         font-weight: 600;
-        pointer-events: none;
         border: none;
         padding: 12px;
+        font-size: 1.1rem;
+        margin-top: 18px;
     }
-    .recommend-section {
-        max-width: 1200px;
-        margin: 40px auto 0 auto;
-    }
-    .recommend-title {
-        font-size: 1.3rem;
-        font-weight: 600;
-        margin-bottom: 24px;
-    }
-    .recommend-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-        gap: 22px;
-    }
-    .recommend-card {
-        background: #fff;
-        border-radius: 14px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        padding: 0 0 16px 0;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .recommend-img {
-        width: 100%;
-        height: 140px;
-        object-fit: cover;
-        border-radius: 14px 14px 0 0;
-        background: #eaffea;
-    }
-    .recommend-info {
-        padding: 12px 16px 0 16px;
-    }
-    .recommend-title2 {
-        font-weight: 500;
-        font-size: 16px;
-        margin-bottom: 4px;
-        color: #222;
-    }
-    .recommend-price {
-        color: #388e3c;
-        font-weight: bold;
-        font-size: 17px;
-        margin-bottom: 4px;
-    }
-    .recommend-rating {
-        color: #ffd600;
-        font-size: 15px;
-        margin-bottom: 4px;
-    }
-    .recommend-btn {
-        margin: 10px 16px 0 16px;
-        background: #fffbe7;
-        color: #388e3c;
-        border: 1.5px solid #ffd600;
-        border-radius: 8px;
-        font-weight: 600;
-        padding: 6px 0;
-        transition: background 0.2s;
-        cursor: pointer;
-    }
-    .recommend-btn:hover {
-        background: #fffde7;
-    }
-    @media (max-width: 900px) {
-        .cart-main, .recommend-section {
-            max-width: 100%;
-            margin: 24px 0 0 0;
-            padding: 0 8px;
-        }
-        .cart-main {
-            flex-direction: column;
-            gap: 0;
-        }
-        .cart-summary {
-            margin-top: 24px;
-            min-width: unset;
-        }
-    }
-    .cart-summary-margin {
-        margin-top: 135px;
+    .cart-summary .btn:disabled {
+        background: #eee;
+        color: #bbb;
     }
     .qty-btn {
         background: #f3f3f3;
@@ -241,15 +160,15 @@
         user-select: none;
     }
     .checkall-box {
-        accent-color: #4CAF50;
+        accent-color: #388e3c;
         width: 20px;
         height: 20px;
         border-radius: 5px;
-        border: 2px solid #4CAF50;
+        border: 2px solid #388e3c;
         margin-right: 4px;
     }
     .cart-item-checkbox {
-        accent-color: #4CAF50;
+        accent-color: #388e3c;
         width: 18px;
         height: 18px;
         border-radius: 4px;
@@ -260,36 +179,55 @@
         color: #fff !important;
         pointer-events: auto !important;
     }
+    @media (max-width: 900px) {
+        .cart-main {
+            flex-direction: column;
+            gap: 0;
+            width: 100%;
+            padding: 0 12px;
+        }
+        .cart-title {
+            padding: 0 12px;
+        }
+        .cart-summary {
+            margin-top: 24px;
+            min-width: unset;
+        }
+        .cart-left {
+            width: 100%;
+        }
+        .cart-summary {
+            width: 100%;
+        }
+    }
 </style>
-
-<div class="cart-main">
-    <div class="cart-left">
-        <div class="cart-title cart-title-margin">
-            Keranjang
-             <span style="font: size 1.5em;rem;font-weight:600;color:#388e3c;margin-left:10px;">
-                ({{ $items->count() }} Benih)
-            </span>
-        </div> 
-        @if($items->isEmpty())
-            <div class="cart-empty-box">
-                <div class="cart-empty-img">
-                    <i class="fas fa-box-open" style="color:#ffd600;"></i>
+<div class="container py-4"> 
+    <div class="cart-title">
+        Keranjang
+        <span style="font-size:1.1rem;font-weight:600;color:#388e3c;margin-left:10px;">
+            ({{ $items->count() }} Benih)
+        </span>
+    </div>
+    <div class="cart-main">
+        <div class="cart-left">
+            @if($items->isEmpty())
+                <div class="cart-empty-box">
+                    <div class="cart-empty-img">
+                        <i class="fas fa-box-open" style="color:#ffd600;"></i>
+                    </div>
+                    <div class="cart-empty-content">
+                        <h5>Wah, keranjang belanjamu kosong</h5>
+                        <p>Yuk, isi dengan barang-barang impianmu!</p>
+                        <a href="/" class="btn-green">Mulai Belanja</a>
+                    </div>
                 </div>
-                <div class="cart-empty-content">
-                    <h5>Wah, keranjang belanjamu kosong</h5>
-                    <p>Yuk, isi dengan barang-barang impianmu!</p>
-                    <a href="/" class="btn-green">Mulai Belanja</a>
+            @else
+                <div style="margin-bottom:12px;display:flex;align-items:center;gap:12px;">
+                    <input type="checkbox" id="checkAll" class="checkall-box" onclick="toggleAll(this)">
+                    <label for="checkAll" class="checkall-label">Pilih Semua</label>
                 </div>
-            </div>
-        @else
-            <div style="margin-bottom:12px;display:flex;align-items:center;gap:12px;">
-                <input type="checkbox" id="checkAll" class="checkall-box" onclick="toggleAll(this)">
-                <label for="checkAll" class="checkall-label">Pilih Semua</label>
-            </div>
-            <form id="cartForm" method="POST" action="{{ route('cart.checkout') }}">
-                @csrf
                 @foreach($items as $item)
-                <div class="cart-empty-box" style="flex-direction:row;align-items:center;gap:18px;">
+                <div class="cart-item-box">
                     <input type="checkbox" class="cart-item-checkbox" name="checked_items[]" value="{{ $item->cart_item_id }}" onchange="updateSummary()" checked>
                     <img src="{{ asset('images/' . $item->product->gambar) }}" alt="{{ $item->product->nama }}" style="width:70px;height:70px;object-fit:cover;border-radius:12px;">
                     <div style="flex:1;">
@@ -298,14 +236,11 @@
                                 {{ $item->product->nama }}
                             </a>
                         </div>
-                        <div style="color:#388e3c;font-weight:500;">
+                        <div style="color:#388e3c;font-weight:500;display:flex;align-items:center;gap:8px;">
                             Rp{{ number_format($item->harga_satuan,0,',','.') }} x 
-                            <form method="POST" action="{{ route('cart.update_qty', $item->cart_item_id) }}" style="display:inline;" onsubmit="return false;">
-                                @csrf
-                                <button type="button" class="qty-btn" onclick="changeQty({{ $item->cart_item_id }}, -1)"><i class="fas fa-minus"></i></button>
-                                <input type="text" id="qtyInput{{ $item->cart_item_id }}" name="kuantitas" value="{{ $item->kuantitas }}" min="1" readonly style="width:32px;text-align:center;background:#fff;border:none;font-weight:600;">
-                                <button type="button" class="qty-btn" onclick="changeQty({{ $item->cart_item_id }}, 1)"><i class="fas fa-plus"></i></button>
-                            </form>
+                            <button type="button" class="qty-btn" onclick="changeQty({{ $item->cart_item_id }}, -1)"><i class="fas fa-minus"></i></button>
+                            <input type="text" id="qtyInput{{ $item->cart_item_id }}" name="kuantitas" value="{{ $item->kuantitas }}" min="1" readonly style="width:32px;text-align:center;background:#fff;border:none;font-weight:600;">
+                            <button type="button" class="qty-btn" onclick="changeQty({{ $item->cart_item_id }}, 1)"><i class="fas fa-plus"></i></button>
                         </div>
                         <div style="color:#757575;font-size:0.98rem;">Subtotal: Rp<span class="item-subtotal" id="subtotal{{ $item->cart_item_id }}">{{ number_format($item->harga_satuan * $item->kuantitas,0,',','.') }}</span></div>
                     </div>
@@ -316,31 +251,54 @@
                     </form>
                 </div>
                 @endforeach
-            </form>
-        @endif
-    </div>
-    <div class="cart-summary cart-summary-margin">
-        <div class="cart-summary-title">Ringkasan belanja</div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-            <span style="color:#666; font-size:16px;">Total</span>
-            <span id="summaryTotal" style="color:#388e3c; font-size:20px; font-weight:700;">Rp{{ number_format($total,0,',','.') }}</span>
+            @endif
         </div>
-        <button class="btn" id="checkoutBtn" disabled>Beli</button>
+        <div class="cart-summary">
+            <div class="cart-summary-title">Ringkasan belanja</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+                <span style="color:#666; font-size:16px;">Total</span>
+                <span id="summaryTotal" style="color:#388e3c; font-size:20px; font-weight:700;">Rp{{ number_format($total,0,',','.') }}</span>
+            </div>
+            <form id="checkoutForm" method="POST" action="{{ route('checkout.process') }}" style="display:none;">
+                @csrf
+                <input type="hidden" name="checked_items" id="checkedItemsInput">
+            </form>
+            <button class="btn" id="checkoutBtn" type="button" disabled onclick="submitCheckout()">Beli</button>
+        </div>
     </div>
 </div>
 <script>
+// Helper untuk localStorage
+function getCheckedCartItems() {
+    try {
+        return JSON.parse(localStorage.getItem('checkedCartItems') || '[]');
+    } catch (e) {
+        return [];
+    }
+}
+function setCheckedCartItems(ids) {
+    localStorage.setItem('checkedCartItems', JSON.stringify(ids));
+}
+
 function updateSummary() {
     let checkboxes = document.querySelectorAll('.cart-item-checkbox');
     let total = 0;
     let checkedCount = 0;
+    let allChecked = true;
+    let checkedIds = [];
     checkboxes.forEach(cb => {
         if (cb.checked) {
             let id = cb.value;
-            let subtotal = document.getElementById('subtotal'+id).innerText.replace(/\D/g, '');
-            total += parseInt(subtotal);
+            let subtotalText = document.getElementById('subtotal'+id).innerText;
+            let subtotal = parseInt(subtotalText.replace(/[^\d]/g, ''));
+            total += isNaN(subtotal) ? 0 : subtotal;
             checkedCount++;
+            checkedIds.push(id);
+        } else {
+            allChecked = false;
         }
     });
+    setCheckedCartItems(checkedIds);
     document.getElementById('summaryTotal').innerText = 'Rp' + total.toLocaleString('id-ID');
     const checkoutBtn = document.getElementById('checkoutBtn');
     checkoutBtn.disabled = checkedCount === 0;
@@ -349,7 +307,14 @@ function updateSummary() {
     } else {
         checkoutBtn.classList.remove('btn-active');
     }
+    // Sinkronisasi checkbox 'Pilih Semua'
+    const checkAll = document.getElementById('checkAll');
+    if (checkAll) {
+        checkAll.checked = allChecked && checkboxes.length > 0;
+        checkAll.indeterminate = !allChecked && checkedCount > 0;
+    }
 }
+
 function toggleAll(source) {
     let checkboxes = document.querySelectorAll('.cart-item-checkbox');
     checkboxes.forEach(cb => { cb.checked = source.checked; });
@@ -375,9 +340,30 @@ function changeQty(cartItemId, delta) {
         }
     });
 }
+function submitCheckout() {
+    if (document.getElementById('checkoutBtn').disabled) return;
+    // Ambil semua item yang dicentang
+    let checkedItems = Array.from(document.querySelectorAll('.cart-item-checkbox:checked')).map(cb => cb.value);
+    if (checkedItems.length === 0) {
+        alert('Pilih minimal satu barang untuk checkout');
+        return;
+    }
+    // Set nilai ke hidden input
+    document.getElementById('checkedItemsInput').value = JSON.stringify(checkedItems);
+    // Submit form
+    document.getElementById('checkoutForm').submit();
+}
 document.addEventListener('DOMContentLoaded', function() {
+    // Set status checkbox sesuai localStorage
+    let checkedIds = getCheckedCartItems();
+    let checkboxes = document.querySelectorAll('.cart-item-checkbox');
+    if (checkedIds.length > 0) {
+        checkboxes.forEach(cb => {
+            cb.checked = checkedIds.includes(cb.value);
+        });
+    }
     updateSummary();
-    document.querySelectorAll('.cart-item-checkbox').forEach(cb => {
+    checkboxes.forEach(cb => {
         cb.addEventListener('change', updateSummary);
     });
     document.getElementById('checkAll')?.addEventListener('change', function() {

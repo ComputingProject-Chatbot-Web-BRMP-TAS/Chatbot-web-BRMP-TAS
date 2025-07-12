@@ -38,7 +38,14 @@ class AddressController extends Controller
             'recipient_name' => $request->recipient_name,
             'recipient_phone' => $request->recipient_phone,
         ]);
-        return redirect()->route('addresses')->with('success', 'Alamat berhasil ditambahkan.');
+        // Redirect berdasarkan field redirect_to atau default ke addresses
+        $redirectTo = $request->input('redirect_to', route('addresses'));
+        
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Alamat berhasil ditambahkan.']);
+        }
+        
+        return redirect($redirectTo);
     }
 
     // Hapus alamat

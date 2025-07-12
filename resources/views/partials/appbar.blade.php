@@ -32,7 +32,7 @@
         right: 16px;
         top: 50%;
         transform: translateY(-50%);
-        color: #4CAF50;
+        color: #388E3C;
     }
     .navbar .user-section {
         display: flex;
@@ -46,12 +46,12 @@
     }
     .navbar .user-section .fa-user-circle {
         font-size: 28px;
-        color: #4CAF50;
+        color: #388E3C;
     }
     .navbar .user-section .fa-comment-dots,
     .navbar .user-section .fa-shopping-cart {
         font-size: 22px;
-        color: #4CAF50;
+        color: #388E3C;
         cursor: pointer;
     }
     .navbar .jual-btn {
@@ -79,7 +79,7 @@
         transition: all 0.2s;
     }
     .navbar .btn-success {
-        background: #4CAF50;
+        background: #388E3C;
         color: white;
     }
     .navbar .btn-warning {
@@ -151,7 +151,7 @@
             align-items: center;
             justify-content: center;
             font-size: 22px;
-            color: #4CAF50;
+            color: #388E3C;
             margin: 0 8px;
             background: none;
             border: none;
