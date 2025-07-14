@@ -40,11 +40,6 @@ class AddressController extends Controller
         ]);
         // Redirect berdasarkan field redirect_to atau default ke addresses
         $redirectTo = $request->input('redirect_to', route('addresses'));
-        
-        if ($request->ajax()) {
-            return response()->json(['success' => true, 'message' => 'Alamat berhasil ditambahkan.']);
-        }
-        
         return redirect($redirectTo);
     }
 
@@ -64,7 +59,8 @@ class AddressController extends Controller
                 $next->save();
             }
         }
-        return redirect()->route('addresses')->with('success', 'Alamat berhasil dihapus.');
+        $redirectTo = request('redirect_to', url()->previous() ?? route('addresses'));
+        return redirect($redirectTo)->with('success', 'Alamat berhasil dihapus.');
     }
 
     // Set alamat utama
@@ -103,6 +99,8 @@ class AddressController extends Controller
             'recipient_name' => $request->recipient_name,
             'recipient_phone' => $request->recipient_phone,
         ]);
-        return redirect()->route('addresses')->with('success', 'Alamat berhasil diperbarui.');
+        // Redirect berdasarkan field redirect_to atau default ke addresses
+        $redirectTo = $request->input('redirect_to', route('addresses'));
+        return redirect($redirectTo);
     }
 }

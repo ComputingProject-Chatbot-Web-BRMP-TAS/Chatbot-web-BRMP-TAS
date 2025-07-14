@@ -207,10 +207,11 @@
     </div>
 </div>
 @include('partials.modal_tambah_alamat')
+@include('partials.modal_edit_alamat')
 <!-- Modal Ganti Alamat -->
 <div class="modal fade" id="modalGantiAlamat" tabindex="-1" aria-labelledby="modalGantiAlamatLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+    <div class="modal-content" style="margin-top: 60px;">
       <div class="modal-header">
         <h5 class="modal-title" id="modalGantiAlamatLabel">Pilih Alamat Pengiriman</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -224,39 +225,101 @@
         @if(isset($addresses) && count($addresses) > 0)
             <div class="mt-2 w-100">
                 @foreach($addresses as $address)
-                    <form method="POST" action="{{ route('checkout.set_address', $address->id) }}">
-                        @csrf
-                        <div class="mb-2 position-relative">
-                            <div class="card @if($selectedId == $address->id) address-card-primary @else address-card-clickable @endif" style="border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,0.04);cursor:pointer;" onclick="this.closest('form').submit();">
-                                <div class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
-                                    <div style="flex:1;">
-                                        @if($address->is_primary)
-                                            <span class="badge bg-success mb-2">Utama</span><br>
-                                        @endif
-                                        <div class="fw-bold" style="font-size:1.1em;">{{ $address->label ?? 'Alamat' }}</div>
-                                        <div style="color:#555;font-size:0.98em;">{{ $address->address }}</div>
-                                        @if($address->latitude && $address->longitude)
-                                            <div style="color:#888;font-size:0.93em;">({{ $address->latitude }}, {{ $address->longitude }})</div>
-                                        @endif
-                                        @if($address->note)
-                                            <div style="color:#888;font-size:0.93em;">Catatan: {{ $address->note }}</div>
-                                        @endif
-                                        <div style="color:#888;font-size:0.93em;">Penerima: {{ $address->recipient_name }} ({{ $address->recipient_phone }})</div>
-                                    </div>
+                    <div class="mb-2 position-relative">
+                        <div class="card @if($selectedId == $address->id) address-card-primary @else address-card-clickable @endif" style="border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,0.04);cursor:pointer;">
+                            <div class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
+                                <div style="flex:1;">
+                                    <form id="formPilihAlamat{{ $address->id }}" method="POST" action="{{ route('checkout.set_address', $address->id) }}">
+                                        @csrf
+                                        <div onclick="document.getElementById('formPilihAlamat{{ $address->id }}').submit();" style="cursor:pointer;">
+                                            @if($address->is_primary)
+                                                <span class="badge bg-success mb-2">Utama</span><br>
+                                            @endif
+                                            <div class="fw-bold" style="font-size:1.1em;">{{ $address->label ?? 'Alamat' }}</div>
+                                            <div style="color:#555;font-size:0.98em;">{{ $address->address }}</div>
+                                            @if($address->latitude && $address->longitude)
+                                                <div style="color:#888;font-size:0.93em;">({{ $address->latitude }}, {{ $address->longitude }})</div>
+                                            @endif
+                                            @if($address->note)
+                                                <div style="color:#888;font-size:0.93em;">Catatan: {{ $address->note }}</div>
+                                            @endif
+                                            <div style="color:#888;font-size:0.93em;">Penerima: {{ $address->recipient_name }} ({{ $address->recipient_phone }})</div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="d-flex gap-1 align-items-start">
+                                    <button type="button" class="btn btn-sm btn-outline-primary"
+                                        onclick="editAlamat(event)"
+                                        data-id="{{ $address->id }}"
+                                        data-label="{{ $address->label }}"
+                                        data-address="{{ $address->address }}"
+                                        data-latitude="{{ $address->latitude }}"
+                                        data-longitude="{{ $address->longitude }}"
+                                        data-note="{{ $address->note }}"
+                                        data-recipient_name="{{ $address->recipient_name }}"
+                                        data-recipient_phone="{{ $address->recipient_phone }}"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalEditAlamat">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    @if(!$address->is_primary)
+                                        <form method="POST" action="{{ route('addresses.destroy', $address) }}" onsubmit="return confirm('Hapus alamat ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="redirect_to" value="{{ url()->current() }}">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Hapus</button>
+                                        </form>
+                                    @endif
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 @endforeach
             </div>
         @else
             <div class="text-muted">Belum ada alamat lain.</div>
         @endif
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-      </div>
     </div>
   </div>
 </div>
+
+<script>
+// Buat instance modalEditAlamat secara global hanya sekali
+window.modalEditAlamatInstance = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    var modalEditAlamatEl = document.getElementById('modalEditAlamat');
+    if (modalEditAlamatEl) {
+        window.modalEditAlamatInstance = new bootstrap.Modal(modalEditAlamatEl);
+        // Reset ke step 2 saat modal ditutup (opsional, jika ingin reset tampilan)
+        modalEditAlamatEl.addEventListener('hidden.bs.modal', function () {
+            document.getElementById('editStep1Alamat').style.display = 'none';
+            document.getElementById('editStep2Alamat').style.display = 'block';
+        });
+    }
+});
+
+function editAlamat(e) {
+    e.stopPropagation();
+    var btn = event.currentTarget;
+    document.getElementById('editLabelInput').value = btn.getAttribute('data-label') || '';
+    document.getElementById('editAlamatTerpilihInput').value = btn.getAttribute('data-address') || '';
+    document.getElementById('editNoteInput').value = btn.getAttribute('data-note') || '';
+    document.getElementById('editRecipientNameInput').value = btn.getAttribute('data-recipient_name') || '';
+    document.getElementById('editRecipientPhoneInput').value = btn.getAttribute('data-recipient_phone') || '';
+    document.getElementById('editLatitudeInput').value = btn.getAttribute('data-latitude') || '';
+    document.getElementById('editLongitudeInput').value = btn.getAttribute('data-longitude') || '';
+    document.getElementById('editAlamatTerpilih').innerText = btn.getAttribute('data-address') || 'Pilih lokasi di peta';
+    document.getElementById('formEditAlamat').action = '/addresses/' + btn.getAttribute('data-id');
+    document.getElementById('editStep1Alamat').style.display = 'none';
+    document.getElementById('editStep2Alamat').style.display = 'block';
+    // Tutup modal ganti alamat sebelum buka modal edit
+    var modalGanti = bootstrap.Modal.getInstance(document.getElementById('modalGantiAlamat'));
+    if (modalGanti) modalGanti.hide();
+    if (window.modalEditAlamatInstance) {
+        window.modalEditAlamatInstance.show();
+    }
+}
+</script>
 @endsection
