@@ -261,40 +261,23 @@
     }
 </style>
 
-<div class="navbar">
-    <div class="navbar-logo">
+<div class="navbar" style="display:flex;align-items:center;justify-content:space-between;">
+    <!-- Kiri: Logo + Menu -->
+    <div class="navbar-left" style="display:flex;align-items:center;gap:18px;min-width:320px;">
         <a href="/" class="navbar-title">Benih BRMP</a>
+        <span style="width:0px;"></span>
+        <span class="navbar-category-title" id="appbarCategoryBtn" style="margin-right:0px;cursor:pointer;position:relative;">Kategori</span>
+        <a href="{{ route('article') }}" class="navbar-article-link" style="margin-left:0px;">Artikel</a>
     </div>
-    <div class="navbar-category" style="display:flex;align-items:center;">
-        <span class="navbar-category-title" id="appbarCategoryBtn" style="margin-left:24px; margin-right:12px; cursor:pointer; position:relative;">Kategori</span>
-        <a href="{{ route('article') }}" class="navbar-article-link" style="margin-left:12px; font-family:'Inter',Arial,sans-serif; font-weight:500; font-size:20px; color:#222; text-decoration:none; cursor:pointer;">Artikel</a>
-        <div id="appbarCategoryDropdown" class="dropdown-anim" style="display:none;position:fixed;top:56px;left:0;background:#fff !important;border-radius:0;box-shadow:0 4px 24px rgba(0,0,0,0.10);padding:14px 0;z-index:1001;flex-direction:row;gap:0;min-width:600px;max-width:1920px;width:auto;overflow:hidden;opacity:0;transform:translateY(-24px);height:0;transition:opacity 0.25s cubic-bezier(.4,0,.2,1), transform 0.25s cubic-bezier(.4,0,.2,1), height 0.25s cubic-bezier(.4,0,.2,1);">
-            <div style="display:flex;flex-direction:row;gap:0;width:100%;justify-content:flex-start;">
-                <a href="/kategori/tumbuhan" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
-                    <i class="fas fa-seedling" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Tumbuhan</span>
-                </a>
-                <a href="/kategori/rempah" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
-                    <i class="fas fa-leaf" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Rempah-Rempah/Herbal</span>
-                </a>
-                <a href="/kategori/buah" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
-                    <i class="fas fa-apple-alt" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Buah-Buahan</span>
-                </a>
-                <a href="/kategori/sayuran" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
-                    <i class="fas fa-carrot" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Sayuran</span>
-                </a>
-                <a href="/kategori/bunga" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
-                    <i class="fas fa-spa" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Bunga</span>
-                </a>
-            </div>
+    <!-- Tengah: Searchbar -->
+    <div class="navbar-center" style="flex:1;display:flex;justify-content:center;min-width:0;">
+        <div class="search-bar" style="flex:1;min-width:120px;max-width:1000px;margin:0 16px;position:relative;">
+            <input type="text" class="navbar-search-input" placeholder="Cari di Benih BRMP" style="width:100%;border:1.5px solid #bfc9d1;">
+            <i class="fas fa-search" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);"></i>
         </div>
     </div>
-    <div class="search-bar mobile-search-bar">
-        <input type="text" class="navbar-search-input" placeholder="Cari di Benih BRMP" style="border:1.5px solid #bfc9d1;">
-        <i class="fas fa-search"></i>
-    </div>
-    <a href="{{ route('cart') }}" class="cart-mobile" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-shopping-cart"></i></a>
-    <button class="menu-toggle" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
-    <div class="user-section">
+    <!-- Kanan: User Section + Cart -->
+    <div class="user-section" style="display:flex;align-items:center;gap:18px;min-width:220px;justify-content:flex-end;">
         @auth
             <div class="user" style="position:relative;">
                 <a href="{{ route('profile') }}" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit;gap:8px;">
@@ -315,52 +298,32 @@
                     </form>
                 </div>
             </div>
-            <script>
-                function toggleDropdown() {
-                    var menu = document.getElementById('dropdown-menu');
-                    if (menu.classList.contains('show')) {
-                        menu.classList.remove('show');
-                        setTimeout(function(){ menu.style.display = 'none'; }, 250);
-                    } else {
-                        menu.style.display = 'block';
-                        setTimeout(function(){ menu.classList.add('show'); }, 10);
-                    }
-                }
-                document.addEventListener('click', function(e) {
-                    var menu = document.getElementById('dropdown-menu');
-                    var toggle = document.querySelector('.dropdown-toggle');
-                    if (!toggle.contains(e.target) && !menu.contains(e.target)) {
-                        if (menu.classList.contains('show')) {
-                            menu.classList.remove('show');
-                            setTimeout(function(){ menu.style.display = 'none'; }, 250);
-                        }
-                    }
-                });
-            </script>
         @else
             <a href="{{ route('login') }}" class="btn btn-success navbar-login-btn" style="margin-right: 10px;">Login</a>
             <a href="{{ route('register') }}" class="btn btn-warning navbar-register-btn">Daftar</a>
         @endauth
         <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
     </div>
-    <div class="mobile-menu" id="mobileMenu" style="display:none;">
-        <a href="/" class="btn btn-link">Beranda</a>
-        <a href="/kategori/tumbuhan" class="btn btn-link">Tumbuhan</a>
-        <a href="/kategori/rempah" class="btn btn-link">Rempah-Rempah</a>
-        <a href="/kategori/buah" class="btn btn-link">Buah-Buahan</a>
-        <a href="/kategori/sayuran" class="btn btn-link">Sayuran</a>
-        <a href="/kategori/bunga" class="btn btn-link">Bunga</a>
-        @auth
-            <a href="{{ route('profile') }}" class="btn btn-link">Profil</a>
-            <form action="{{ route('logout') }}" method="POST" style="margin:0;">
-                @csrf
-                <button type="submit" class="btn btn-link">Logout</button>
-            </form>
-        @else
-            <a href="{{ route('login') }}" class="btn btn-link">Login</a>
-            <a href="{{ route('register') }}" class="btn btn-link">Daftar</a>
-        @endauth
-        <a href="{{ route('cart') }}" class="btn btn-link">Keranjang</a>
+    <!-- Dropdown kategori dan mobile menu tetap di luar flex utama -->
+    <div id="appbarCategoryDropdown" class="dropdown-anim" style="display:none;position:fixed;top:56px;left:0;background:#fff !important;border-radius:0;box-shadow:0 4px 24px rgba(0,0,0,0.10);padding:14px 0;z-index:1001;flex-direction:row;gap:0;min-width:600px;max-width:1920px;width:auto;overflow:hidden;opacity:0;transform:translateY(-24px);height:0;transition:opacity 0.25s cubic-bezier(.4,0,.2,1), transform 0.25s cubic-bezier(.4,0,.2,1), height 0.25s cubic-bezier(.4,0,.2,1);">
+            <div style="display:flex;flex-direction:row;gap:0;width:100%;justify-content:flex-start;">
+                <a href="/kategori/tumbuhan" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
+                    <i class="fas fa-seedling" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Tumbuhan</span>
+                </a>
+                <a href="/kategori/rempah" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
+                    <i class="fas fa-leaf" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Rempah-Rempah/Herbal</span>
+                </a>
+                <a href="/kategori/buah" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
+                    <i class="fas fa-apple-alt" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Buah-Buahan</span>
+                </a>
+                <a href="/kategori/sayuran" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
+                    <i class="fas fa-carrot" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Sayuran</span>
+                </a>
+                <a href="/kategori/bunga" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
+                    <i class="fas fa-spa" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Bunga</span>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -426,6 +389,29 @@ window.addEventListener('resize', function() {
     background: #f4f4f4;
 }
 </style>
+
+<script>
+function toggleDropdown() {
+    var menu = document.getElementById('dropdown-menu');
+    if (menu.classList.contains('show')) {
+        menu.classList.remove('show');
+        setTimeout(function(){ menu.style.display = 'none'; }, 250);
+    } else {
+        menu.style.display = 'block';
+        setTimeout(function(){ menu.classList.add('show'); }, 10);
+    }
+}
+document.addEventListener('click', function(e) {
+    var menu = document.getElementById('dropdown-menu');
+    var toggle = document.querySelector('.dropdown-toggle');
+    if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+        if (menu.classList.contains('show')) {
+            menu.classList.remove('show');
+            setTimeout(function(){ menu.style.display = 'none'; }, 250);
+        }
+    }
+});
+</script>
 
 <script>
 function toggleMobileMenu() {
