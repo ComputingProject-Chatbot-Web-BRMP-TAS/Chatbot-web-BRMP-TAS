@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::get('/', function () {
     $products = Product::all();
@@ -59,10 +60,11 @@ Route::post('/register', function (Request $request) {
         'password' => Hash::make($request->password),
     ]);
 
-    // Optionally log the user in after registration
-    // Auth::login($user);
+    // Log the user in after registration
+    Auth::login($user);
 
-    return redirect()->route('login')->with('success', 'Akun berhasil dibuat. Silakan login!');
+    // Redirect to the email verification notice page
+    return redirect()->route('verification.notice')->with('success', 'Akun berhasil dibuat. Silakan verifikasi email Anda!');
 })->name('register.post');
 
 Route::post('/login', function (Request $request) {
@@ -86,10 +88,27 @@ Route::post('/logout', function () {
     return redirect('/login')->with('success', 'Berhasil logout!');
 })->name('logout');
 
+// Email verification notice
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+// Email verification handler
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/'); // or wherever you want after verification
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+// Resend verification email
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
 Route::get('/profile', function () {
     if (!Auth::check()) return redirect('/login');
     return view('profile');
-})->name('profile');
+})->middleware(['auth', 'verified'])->name('profile');
 
 Route::post('/profile/update', function (Request $request) {
     $user = Auth::user();
