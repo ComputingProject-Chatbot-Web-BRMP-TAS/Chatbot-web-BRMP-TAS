@@ -271,10 +271,10 @@
     </div>
     <!-- Tengah: Searchbar -->
     <div class="navbar-center" style="flex:1;display:flex;justify-content:center;min-width:0;">
-        <div class="search-bar" style="flex:1;min-width:120px;max-width:1000px;margin:0 16px;position:relative;">
-            <input type="text" class="navbar-search-input" placeholder="Cari di Benih BRMP" style="width:100%;border:1.5px solid #bfc9d1;">
-            <i class="fas fa-search" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);"></i>
-        </div>
+        <form method="get" action="/" style="flex:1;min-width:120px;max-width:1000px;margin:0 16px;position:relative;">
+            <input type="text" name="q" class="navbar-search-input" placeholder="Cari di Benih BRMP" value="{{ request('q') }}" style="width:100%;border:1.5px solid #bfc9d1;">
+            <button type="submit" style="position:absolute;right:0;top:0;height:100%;background:none;border:none;padding:0 16px;cursor:pointer;"><i class="fas fa-search" style="color:#388E3C;"></i></button>
+        </form>
     </div>
     <!-- Kanan: User Section + Cart -->
     <div class="user-section" style="display:flex;align-items:center;gap:18px;min-width:220px;justify-content:flex-end;">

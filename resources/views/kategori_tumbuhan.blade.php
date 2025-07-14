@@ -25,53 +25,26 @@
             </div>
         </div>
         <div class="col-md-9">
-            <div class="mb-3 text-success fw-semibold">Menampilkan 5 produk untuk "Tumbuhan"</div>
+            <div class="mb-3 text-success fw-semibold">Menampilkan {{ $products->count() }} produk untuk "Tumbuhan"</div>
+            @if($products->count() > 0)
             <div class="row g-4">
+                @foreach($products as $produk)
                 <div class="col-md-6 col-lg-4 col-xl-3">
                     <div class="card border-0 shadow rounded-4 h-100">
-                        <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/7/6/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" class="card-img-top rounded-top-4" alt="Benih Cabai Rawit">
+                        <img src="{{ asset('images/' . $produk->gambar) }}" class="card-img-top rounded-top-4" alt="{{ $produk->nama }}">
                         <div class="card-body bg-white rounded-bottom-4">
-                            <h5 class="card-title fw-bold text-success">Benih Cabai Rawit</h5>
-                            <div class="mb-1 text-warning fw-bold">Rp 15.000</div>
-                            <div class="card-text mb-2 text-secondary">Isi 50 butir, cocok untuk pekarangan rumah.</div>
+                            <h5 class="card-title fw-bold text-success">{{ $produk->nama }}</h5>
+                            <div class="mb-1 text-warning fw-bold">Rp {{ number_format($produk->harga, 0, ',', '.') }}</div>
+                            <div class="card-text mb-2 text-secondary">{{ $produk->deskripsi }}</div>
                             <span class="badge bg-warning text-success fw-semibold">Baru</span>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="card border-0 shadow rounded-4 h-100">
-                        <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2022/12/1/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" class="card-img-top rounded-top-4" alt="Benih Tomat">
-                        <div class="card-body bg-white rounded-bottom-4">
-                            <h5 class="card-title fw-bold text-success">Benih Tomat</h5>
-                            <div class="mb-1 text-warning fw-bold">Rp 12.000</div>
-                            <div class="card-text mb-2 text-secondary">Tahan penyakit, hasil melimpah.</div>
-                            <span class="badge bg-warning text-success fw-semibold">Baru</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="card border-0 shadow rounded-4 h-100">
-                        <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2022/10/10/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" class="card-img-top rounded-top-4" alt="Benih Kangkung">
-                        <div class="card-body bg-white rounded-bottom-4">
-                            <h5 class="card-title fw-bold text-success">Benih Kangkung</h5>
-                            <div class="mb-1 text-warning fw-bold">Rp 8.000</div>
-                            <div class="card-text mb-2 text-secondary">Cepat panen, cocok untuk hidroponik.</div>
-                            <span class="badge bg-warning text-success fw-semibold">Baru</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="card border-0 shadow rounded-4 h-100">
-                        <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/1/15/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" class="card-img-top rounded-top-4" alt="Benih Bayam">
-                        <div class="card-body bg-white rounded-bottom-4">
-                            <h5 class="card-title fw-bold text-success">Benih Bayam</h5>
-                            <div class="mb-1 text-warning fw-bold">Rp 7.000</div>
-                            <div class="card-text mb-2 text-secondary">Bayam hijau segar, mudah tumbuh.</div>
-                            <span class="badge bg-warning text-success fw-semibold">Baru</span>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
+            @else
+            <div style="padding:32px 0;text-align:center;color:#888;font-size:18px;">Produk tidak ditemukan.</div>
+            @endif
         </div>
     </div>
 </div>

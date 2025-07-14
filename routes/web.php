@@ -14,9 +14,16 @@ use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
-Route::get('/', function () {
-    $products = Product::all();
-    return view('home', compact('products'));
+Route::get('/', function (Request $request) {
+    $q = $request->input('q');
+    if ($q) {
+        $products = Product::where('nama', 'like', "%$q%")
+            ->orWhere('deskripsi', 'like', "%$q%")
+            ->get();
+    } else {
+        $products = Product::all();
+    }
+    return view('home', compact('products', 'q'));
 });
 
 Route::get('/register', function () {
@@ -138,19 +145,24 @@ Route::post('/profile/upload-foto', function (\Illuminate\Http\Request $request)
 })->name('profile.upload_foto')->middleware('auth');
 
 Route::get('/kategori/tumbuhan', function() {
-    return view('kategori_tumbuhan');
+    $products = Product::where('jenis_kategori', 'Tumbuhan')->get();
+    return view('kategori_tumbuhan', compact('products'));
 });
 Route::get('/kategori/rempah', function() {
-    return view('kategori_rempah');
+    $products = Product::where('jenis_kategori', 'Rempah-Rempah/Herbal')->get();
+    return view('kategori_rempah', compact('products'));
 });
 Route::get('/kategori/buah', function() {
-    return view('kategori_buah');
+    $products = Product::where('jenis_kategori', 'Buah-Buahan')->get();
+    return view('kategori_buah', compact('products'));
 });
 Route::get('/kategori/sayuran', function() {
-    return view('kategori_sayuran');
+    $products = Product::where('jenis_kategori', 'Sayuran')->get();
+    return view('kategori_sayuran', compact('products'));
 });
 Route::get('/kategori/bunga', function() {
-    return view('kategori_bunga');
+    $products = Product::where('jenis_kategori', 'Bunga')->get();
+    return view('kategori_bunga', compact('products'));
 });
 
 Route::middleware('auth')->group(function () {

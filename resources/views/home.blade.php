@@ -269,6 +269,7 @@
         <div class="leaf">🍃</div>
     </div>
     <div class="container">
+        <!-- Hapus search bar di homepage -->
         <!-- Hero Banner Section -->
         <div class="hero-banner hero-banner-margin">
             <div class="hero-content">
@@ -284,7 +285,14 @@
         </div>
         
         <div class="section" style="margin-bottom:24px;">
-            <h2 style="font-weight:bold; margin-bottom:18px;">Produk Pilihan</h2>
+            <h2 style="font-weight:bold; margin-bottom:18px;">
+                @if(isset($q) && $q)
+                    Hasil pencarian untuk: <span style="color:#388E3C">"{{ $q }}"</span>
+                @else
+                    Produk Pilihan
+                @endif
+            </h2>
+            @if($products->count() > 0)
             <div class="product-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:24px;">
                 @foreach($products as $produk)
                     <a href="{{ route('produk.detail', $produk->produk_id) }}" style="text-decoration:none;color:inherit;">
@@ -300,6 +308,9 @@
                     </a>
                 @endforeach
             </div>
+            @else
+                <div style="padding:32px 0;text-align:center;color:#888;font-size:18px;">Produk tidak ditemukan.</div>
+            @endif
         </div>
         {{-- Hapus section rekomendasi --}}
     </div>
