@@ -17,6 +17,7 @@ return new class extends Migration
             $table->enum('jenis_kategori', ['Tumbuhan', 'Rempah-Rempah/Herbal', 'Buah-Buahan', 'Sayuran', 'Bunga']);
             $table->text('deskripsi');
             $table->integer('jumlah_biji');
+            $table->string('berat_bersih')->nullable();
             $table->integer('harga');
             $table->string('gambar');
             $table->timestamps();

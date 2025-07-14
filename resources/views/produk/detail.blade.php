@@ -4,23 +4,23 @@
 <div class="product-detail-modern-bg">
     <div class="product-detail-modern-container">
         <div class="product-detail-modern-left">
-            <img src="{{ $product['img'] }}" alt="{{ $product['nama'] }}" class="product-detail-main-image">
+            <img src="{{ asset('images/' . $product->gambar) }}" alt="{{ $product->nama }}" class="product-detail-main-image">
             <div class="product-detail-thumbs">
-                <img src="{{ $product['img'] }}" alt="thumb1" class="selected">
-                <img src="{{ $product['img'] }}" alt="thumb2">
-                <img src="{{ $product['img'] }}" alt="thumb3">
+                <img src="{{ asset('images/' . $product->gambar) }}" alt="thumb1" class="selected">
+                <img src="{{ asset('images/' . $product->gambar) }}" alt="thumb2">
+                <img src="{{ asset('images/' . $product->gambar) }}" alt="thumb3">
             </div>
         </div>
         <div class="product-detail-modern-center">
-            <div class="product-detail-title">{{ $product['nama'] }}</div>
-            <div class="product-detail-price">Rp{{ number_format($product['harga'], 0, ',', '.') }}</div>
-            <div class="product-detail-stock">Stok Total: <span>{{ $product['stok'] }}</span></div>
+            <div class="product-detail-title">{{ $product->nama }}</div>
+            <div class="product-detail-price">Rp{{ number_format($product->harga, 0, ',', '.') }}</div>
+            <div class="product-detail-stock">Stok: <span>{{ $product->stok }}</span></div>
             <div class="product-detail-info-list">
-                <div><span class="label">Kategori:</span> <span class="value">{{ $product['kategori'] }}</span></div>
-                <div><span class="label">Berat Bersih:</span> <span class="value">50gr</span></div>
-                <div><span class="label">Jumlah Biji:</span> <span class="value">50</span></div>
+                <div><span class="label">Kategori:</span> <span class="value">{{ $product->jenis_kategori }}</span></div>
+                <div><span class="label">Berat Bersih:</span> <span class="value">{{ $product->berat_bersih }}</span></div>
+                <div><span class="label">Jumlah Biji:</span> <span class="value">{{ $product->jumlah_biji }}</span></div>
             </div>
-            <div class="product-detail-desc">{{ $product['deskripsi'] }}</div>
+            <div class="product-detail-desc">{{ $product->deskripsi }}</div>
         </div>
         <div class="product-detail-modern-right">
             <div class="product-detail-card">
@@ -31,7 +31,6 @@
                         <button type="button" class="qty-btn" onclick="decrementQty(event)">-</button>
                         <input type="text" id="qtyInput" name="kuantitas" value="1" min="1" readonly style="width:40px;text-align:center;background:#fff;cursor:default;">
                         <button type="button" class="qty-btn" onclick="incrementQty(event)">+</button>
-                        <span class="product-detail-card-stock">Stok Total: {{ $product->jumlah_biji ?? '-' }}</span>
                     </div>
                     <div id="stockWarning" style="color:#d32f2f;font-size:0.98rem;display:none;margin-bottom:8px;">Stok tidak mencukupi</div>
                     <div class="product-detail-card-subtotal">
