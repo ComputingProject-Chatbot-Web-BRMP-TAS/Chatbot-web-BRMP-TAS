@@ -25,53 +25,26 @@
             </div>
         </div>
         <div class="col-md-9">
-            <div class="mb-3 text-success fw-semibold">Menampilkan 4 produk untuk "Bunga"</div>
+            <div class="mb-3 text-success fw-semibold">Menampilkan {{ $products->count() }} produk untuk "Bunga"</div>
+            @if($products->count() > 0)
             <div class="row g-4">
+                @foreach($products as $produk)
                 <div class="col-md-6 col-lg-4 col-xl-3">
                     <div class="card border-0 shadow rounded-4 h-100">
-                        <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/7/6/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" class="card-img-top rounded-top-4" alt="Benih Mawar">
+                        <img src="{{ asset('images/' . $produk->gambar) }}" class="card-img-top rounded-top-4" alt="{{ $produk->nama }}">
                         <div class="card-body bg-white rounded-bottom-4">
-                            <h5 class="card-title fw-bold text-success">Benih Mawar</h5>
-                            <div class="mb-1 text-warning fw-bold">Rp 20.000</div>
-                            <div class="card-text mb-2 text-secondary">Mawar merah, harum dan indah.</div>
+                            <h5 class="card-title fw-bold text-success">{{ $produk->nama }}</h5>
+                            <div class="mb-1 text-warning fw-bold">Rp {{ number_format($produk->harga, 0, ',', '.') }}</div>
+                            <div class="card-text mb-2 text-secondary">{{ $produk->deskripsi }}</div>
                             <span class="badge bg-warning text-success fw-semibold">Baru</span>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="card border-0 shadow rounded-4 h-100">
-                        <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2022/12/1/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" class="card-img-top rounded-top-4" alt="Benih Melati">
-                        <div class="card-body bg-white rounded-bottom-4">
-                            <h5 class="card-title fw-bold text-success">Benih Melati</h5>
-                            <div class="mb-1 text-warning fw-bold">Rp 18.000</div>
-                            <div class="card-text mb-2 text-secondary">Melati putih, harum dan segar.</div>
-                            <span class="badge bg-warning text-success fw-semibold">Baru</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="card border-0 shadow rounded-4 h-100">
-                        <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2022/10/10/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" class="card-img-top rounded-top-4" alt="Benih Anggrek">
-                        <div class="card-body bg-white rounded-bottom-4">
-                            <h5 class="card-title fw-bold text-success">Benih Anggrek</h5>
-                            <div class="mb-1 text-warning fw-bold">Rp 25.000</div>
-                            <div class="card-text mb-2 text-secondary">Anggrek bulan, mudah tumbuh.</div>
-                            <span class="badge bg-warning text-success fw-semibold">Baru</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="card border-0 shadow rounded-4 h-100">
-                        <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/1/15/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" class="card-img-top rounded-top-4" alt="Benih Bunga Matahari">
-                        <div class="card-body bg-white rounded-bottom-4">
-                            <h5 class="card-title fw-bold text-success">Benih Bunga Matahari</h5>
-                            <div class="mb-1 text-warning fw-bold">Rp 15.000</div>
-                            <div class="card-text mb-2 text-secondary">Bunga matahari, cerah dan indah.</div>
-                            <span class="badge bg-warning text-success fw-semibold">Baru</span>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
+            @else
+            <div style="padding:32px 0;text-align:center;color:#888;font-size:18px;">Produk tidak ditemukan.</div>
+            @endif
         </div>
     </div>
 </div>
