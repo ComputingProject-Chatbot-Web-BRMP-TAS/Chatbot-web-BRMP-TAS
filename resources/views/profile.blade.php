@@ -315,16 +315,9 @@
         <div class="mb-2" style="color:#666;">Kamu hanya dapat mengatur tanggal lahir satu kali. Pastikan tanggal lahir sudah benar.</div>
         <form method="POST" action="{{ route('profile.update') }}">
           @csrf
-          <div class="row mb-3">
-            <div class="col">
-              <input type="number" class="form-control" name="birth_date_day" min="1" max="31" placeholder="Tanggal" required>
-            </div>
-            <div class="col">
-              <input type="number" class="form-control" name="birth_date_month" min="1" max="12" placeholder="Bulan" required>
-            </div>
-            <div class="col">
-              <input type="number" class="form-control" name="birth_date_year" min="1900" max="{{ date('Y') }}" placeholder="Tahun" required>
-            </div>
+          <div class="mb-3">
+            <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
+            <input type="text" id="tanggal_lahir" name="tanggal_lahir" class="form-control" placeholder="Pilih tanggal lahir" readonly required>
           </div>
           <button type="submit" class="btn btn-success w-100">Simpan</button>
         </form>
@@ -392,3 +385,27 @@
 @section('after_content')
     @include('partials.mitra_footer')
 @endsection
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const selects = document.querySelectorAll('.choices-select');
+  selects.forEach(function(select) {
+    new Choices(select, {
+      searchEnabled: false,
+      itemSelectText: '',
+      shouldSort: false,
+      position: 'bottom',
+      renderChoiceLimit: 5 // jumlah opsi yang terlihat
+    });
+  });
+});
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    flatpickr("#tanggal_lahir", {
+      dateFormat: "Y-m-d",
+      maxDate: "today",
+      allowInput: false
+    });
+  });
+</script>

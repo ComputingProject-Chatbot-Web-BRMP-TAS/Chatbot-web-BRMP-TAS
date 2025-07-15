@@ -9,3 +9,14 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+.choices,
+.choices__inner {
+  width: 100% !important;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.choices__list--dropdown {
+  max-height: 200px !important;
+  overflow-y: auto !important;
+}
