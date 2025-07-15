@@ -25,6 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'gender',
         'birth_date',
         'foto_profil',
+        'phone_verified_at',
     ];
 
     /**
@@ -46,6 +47,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
+            'phone_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
@@ -61,5 +63,10 @@ class User extends Authenticatable implements MustVerifyEmail
             return asset('storage/foto_profil/' . $this->foto_profil);
         }
         return null;
+    }
+
+    public function isPhoneVerified()
+    {
+        return !is_null($this->phone_verified_at);
     }
 }

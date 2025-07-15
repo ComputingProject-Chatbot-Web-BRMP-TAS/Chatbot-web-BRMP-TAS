@@ -250,8 +250,15 @@
             <div class="profile-info-row">
                 <div class="profile-info-label">Nomor HP</div>
                 @if(Auth::user()->phone ?? false)
-                    <div class="profile-info-value">{{ Auth::user()->phone }}</div>
+                    <div class="profile-info-value">{{ Auth::user()->phone }}
+                        @if(!Auth::user()->isPhoneVerified())
+                            <span class="profile-info-badge">Belum diverifikasi</span>
+                        @endif
+                    </div>
                     <div class="profile-info-action" data-bs-toggle="modal" data-bs-target="#modalEditPhone">Ubah</div>
+                    @if(!Auth::user()->isPhoneVerified())
+                        <button class="btn btn-outline-success btn-sm ms-2" id="btnVerifikasiPhone" data-bs-toggle="modal" data-bs-target="#modalVerifikasiPhone">Verifikasi</button>
+                    @endif
                 @else
                     <div class="profile-info-value" style="color:#4CAF50; cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modalEditPhone">Tambah Nomor HP</div>
                 @endif
@@ -380,12 +387,38 @@
     </div>
   </div>
 </div>
+<!-- Modal Verifikasi Nomor HP -->
+<div class="modal fade" id="modalVerifikasiPhone" tabindex="-1" aria-labelledby="modalVerifikasiPhoneLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalVerifikasiPhoneLabel">Verifikasi Nomor HP</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{{ route('profile.verify_phone') }}">
+          @csrf
+          <div class="mb-3">
+            <label for="otp_code" class="form-label">Masukkan Kode OTP</label>
+            <input type="text" class="form-control" id="otp_code" name="otp_code" maxlength="6" required placeholder="Kode OTP">
+            <div class="form-text">Kode OTP telah dikirim ke nomor HP Anda.</div>
+            <button type="button" class="btn btn-link p-0" id="btnKirimUlangOTP">Kirim Ulang OTP</button>
+            <div id="otpStatus" class="mt-2" style="font-size:0.95em;"></div>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Verifikasi</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('after_content')
     @include('partials.mitra_footer')
 @endsection
 
+<!-- Tambahkan jQuery CDN sebelum script custom -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   const selects = document.querySelectorAll('.choices-select');
@@ -408,4 +441,39 @@ document.addEventListener('DOMContentLoaded', function () {
       allowInput: false
     });
   });
+</script>
+<script>
+$(function() {
+  $('#btnKirimUlangOTP').on('click', function() {
+    $('#otpStatus').text('Mengirim ulang kode...');
+    $.post({
+      url: '{{ route('profile.send_otp') }}',
+      data: {
+        _token: '{{ csrf_token() }}'
+      },
+      success: function(res) {
+        $('#otpStatus').text('Kode OTP telah dikirim ulang ke nomor HP Anda.');
+      },
+      error: function() {
+        $('#otpStatus').text('Gagal mengirim ulang OTP. Coba lagi.');
+      }
+    });
+  });
+
+  $('#modalVerifikasiPhone').on('show.bs.modal', function() {
+    $('#otpStatus').text('');
+    $.post({
+      url: '{{ route('profile.send_otp') }}',
+      data: {
+        _token: '{{ csrf_token() }}'
+      },
+      success: function(res) {
+        $('#otpStatus').text('Kode OTP telah dikirim ke nomor HP Anda.');
+      },
+      error: function() {
+        $('#otpStatus').text('Gagal mengirim OTP. Coba lagi.');
+      }
+    });
+  });
+});
 </script>

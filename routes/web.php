@@ -130,6 +130,10 @@ Route::post('/profile/update', function (Request $request) {
         $year = $request->birth_date_year;
         $data['birth_date'] = "$year-$month-$day";
     }
+    // Jika phone berubah, reset verifikasi
+    if (isset($data['phone']) && $data['phone'] !== $user->phone) {
+        $data['phone_verified_at'] = null;
+    }
     $user->update($data);
     return back()->with('success', 'Profil berhasil diperbarui!');
 })->name('profile.update');
@@ -218,3 +222,31 @@ Route::post('/cart/checkout', function(\Illuminate\Http\Request $request) {
         'checkout_mode' => true
     ]);
 })->name('cart.checkout')->middleware('auth');
+
+// Route untuk mengirim OTP ke nomor HP
+Route::post('/profile/send-otp', function (\Illuminate\Http\Request $request) {
+    $user = Auth::user();
+    $otp = rand(100000, 999999);
+    session(['otp_phone' => $otp, 'otp_phone_number' => $user->phone]);
+    // Simulasi kirim OTP via SMS (implementasi asli: gunakan layanan SMS gateway)
+    \Log::info("OTP untuk verifikasi nomor HP {$user->phone}: $otp");
+    // Tambahan debug manual:
+    file_put_contents(storage_path('logs/otp_debug.txt'), "OTP: $otp untuk {$user->phone} pada ".date('Y-m-d H:i:s')."\n", FILE_APPEND);
+    return back()->with('success', 'Kode OTP telah dikirim ke nomor HP Anda.');
+})->middleware('auth')->name('profile.send_otp');
+
+// Route untuk verifikasi OTP
+Route::post('/profile/verify-phone', function (\Illuminate\Http\Request $request) {
+    $user = Auth::user();
+    $otp = $request->input('otp_code');
+    $sessionOtp = session('otp_phone');
+    $sessionPhone = session('otp_phone_number');
+    if ($otp && $sessionOtp && $user->phone === $sessionPhone && $otp == $sessionOtp) {
+        $user->phone_verified_at = now();
+        $user->save();
+        session()->forget(['otp_phone', 'otp_phone_number']);
+        return back()->with('success', 'Nomor HP berhasil diverifikasi!');
+    } else {
+        return back()->withErrors(['otp_code' => 'Kode OTP salah atau sudah kadaluarsa.']);
+    }
+})->middleware('auth')->name('profile.verify_phone');
