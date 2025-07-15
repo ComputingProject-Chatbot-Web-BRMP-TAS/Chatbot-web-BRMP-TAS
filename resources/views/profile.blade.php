@@ -213,7 +213,7 @@
                 Ekstensi file yang diperbolehkan: JPG, JPEG, PNG
             </div>
             <div class="profile-actions">
-                <button>Ganti Kata Sandi</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#modalGantiPassword">Ganti Kata Sandi</button>
             </div>
         </div>
         <div class="profile-right">
@@ -411,6 +411,39 @@
     </div>
   </div>
 </div>
+<!-- Modal Ganti Password -->
+<div class="modal fade" id="modalGantiPassword" tabindex="-1" aria-labelledby="modalGantiPasswordLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalGantiPasswordLabel">Ganti Kata Sandi</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formGantiPassword" method="POST" action="{{ route('profile.change_password') }}">
+          @csrf
+          <div class="mb-3">
+            <label for="old_password" class="form-label">Password Lama</label>
+            <input type="password" class="form-control" id="old_password" name="old_password" required>
+          </div>
+          <div class="mb-3">
+            <label for="new_password" class="form-label">Password Baru</label>
+            <input type="password" class="form-control" id="new_password" name="new_password" required minlength="8">
+            <div class="form-text" id="passwordHelpBlock">
+              Password minimal 8 karakter, mengandung huruf besar, huruf kecil, angka, dan simbol.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="new_password_confirmation" class="form-label">Konfirmasi Password Baru</label>
+            <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation" required>
+          </div>
+          <div id="passwordError" class="text-danger mb-2" style="display:none;"></div>
+          <button type="submit" class="btn btn-success w-100">Simpan</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('after_content')
@@ -474,6 +507,35 @@ $(function() {
         $('#otpStatus').text('Gagal mengirim OTP. Coba lagi.');
       }
     });
+  });
+});
+</script>
+<script>
+$(function() {
+  $('#formGantiPassword').on('submit', function(e) {
+    var newPassword = $('#new_password').val();
+    var confirmPassword = $('#new_password_confirmation').val();
+    var error = '';
+    // Password strength validation
+    if (newPassword.length < 8) {
+      error = 'Password minimal 8 karakter.';
+    } else if (!/[A-Z]/.test(newPassword)) {
+      error = 'Password harus mengandung huruf besar.';
+    } else if (!/[a-z]/.test(newPassword)) {
+      error = 'Password harus mengandung huruf kecil.';
+    } else if (!/[0-9]/.test(newPassword)) {
+      error = 'Password harus mengandung angka.';
+    } else if (!/[^A-Za-z0-9]/.test(newPassword)) {
+      error = 'Password harus mengandung simbol.';
+    } else if (newPassword !== confirmPassword) {
+      error = 'Konfirmasi password tidak cocok.';
+    }
+    if (error) {
+      $('#passwordError').text(error).show();
+      e.preventDefault();
+    } else {
+      $('#passwordError').hide();
+    }
   });
 });
 </script>

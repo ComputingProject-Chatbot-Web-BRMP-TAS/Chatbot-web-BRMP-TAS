@@ -250,3 +250,30 @@ Route::post('/profile/verify-phone', function (\Illuminate\Http\Request $request
         return back()->withErrors(['otp_code' => 'Kode OTP salah atau sudah kadaluarsa.']);
     }
 })->middleware('auth')->name('profile.verify_phone');
+
+// Ganti Password
+Route::post('/profile/change-password', function (\Illuminate\Http\Request $request) {
+    $user = Auth::user();
+    $request->validate([
+        'old_password' => 'required',
+        'new_password' => [
+            'required',
+            'min:8',
+            'regex:/[A-Z]/', // huruf besar
+            'regex:/[a-z]/', // huruf kecil
+            'regex:/[0-9]/', // angka
+            'regex:/[^A-Za-z0-9]/', // simbol
+            'confirmed',
+        ],
+    ], [
+        'new_password.min' => 'Password minimal 8 karakter.',
+        'new_password.regex' => 'Password harus mengandung huruf besar, huruf kecil, angka, dan simbol.',
+        'new_password.confirmed' => 'Konfirmasi password tidak cocok.',
+    ]);
+    if (!Hash::check($request->old_password, $user->password)) {
+        return back()->withErrors(['old_password' => 'Password lama salah.'])->withInput();
+    }
+    $user->password = Hash::make($request->new_password);
+    $user->save();
+    return back()->with('success', 'Password berhasil diubah!');
+})->middleware('auth')->name('profile.change_password');
