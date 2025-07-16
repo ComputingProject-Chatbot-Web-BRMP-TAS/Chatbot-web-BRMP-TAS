@@ -162,9 +162,64 @@
             <div class="checkout-card">
                 <div class="checkout-section-title">Pengiriman</div>
                 <div>Pilih metode pengiriman</div>
+                <form class="mt-3">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="shipping_method" id="shipping_standard" value="standard" checked>
+                        <label class="form-check-label" for="shipping_standard">
+                            Standard
+                            <div style="font-size:0.95em;color:#888;font-weight:400;">Estimasi: 2-4 hari</div>
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="shipping_method" id="shipping_kargo" value="kargo">
+                        <label class="form-check-label" for="shipping_kargo">
+                            Kargo
+                            <div style="font-size:0.95em;color:#888;font-weight:400;">Estimasi: 3-7 hari</div>
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="shipping_method" id="shipping_reguler" value="reguler">
+                        <label class="form-check-label" for="shipping_reguler">
+                            Reguler
+                            <div style="font-size:0.95em;color:#888;font-weight:400;">Estimasi: 2-5 hari</div>
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="shipping_method" id="shipping_instant" value="instant">
+                        <label class="form-check-label" for="shipping_instant">
+                            Instant
+                            <div style="font-size:0.95em;color:#888;font-weight:400;">Estimasi: &lt; 3 jam</div>
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="shipping_method" id="shipping_sameday" value="sameday">
+                        <label class="form-check-label" for="shipping_sameday">
+                            Same Day
+                            <div style="font-size:0.95em;color:#888;font-weight:400;">Estimasi: Hari yang sama</div>
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="shipping_method" id="shipping_ekonomi" value="ekonomi">
+                        <label class="form-check-label" for="shipping_ekonomi">
+                            Ekonomi
+                            <div style="font-size:0.95em;color:#888;font-weight:400;">Estimasi: 4-8 hari</div>
+                        </label>
+                    </div>
+                </form>
                 <div class="mt-2" style="color:#388e3c;">
                     <i class="bi bi-shield-check"></i> Aman dengan Garansi Pembelian
                 </div>
+            </div>
+            <div class="checkout-card">
+                <div class="checkout-section-title">Metode Pembayaran</div>
+                <div>Unggah Foto Bukti Pembayaran</div>
+                <form class="mt-3" enctype="multipart/form-data" method="POST" action="{{ route('payment.upload_proof') }}">
+                    @csrf
+                    <div class="mb-3">
+                        <input class="form-control" type="file" id="buktiPembayaran" name="bukti_pembayaran" accept="image/*" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Unggah Bukti Pembayaran</button>
+                </form>
             </div>
         </div>
         <div class="checkout-summary">

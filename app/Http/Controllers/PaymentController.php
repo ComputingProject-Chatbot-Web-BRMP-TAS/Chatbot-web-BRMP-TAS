@@ -24,4 +24,17 @@ class PaymentController extends Controller
         }
         return view('payment', compact('cart', 'total'));
     }
+
+    // Handle upload bukti pembayaran
+    public function uploadProof(Request $request)
+    {
+        $request->validate([
+            'bukti_pembayaran' => 'required|image|mimes:jpeg,png,jpg|max:10240',
+        ]);
+        $file = $request->file('bukti_pembayaran');
+        $filename = 'bukti_' . time() . '.' . $file->getClientOriginalExtension();
+        $file->storeAs('public/bukti_pembayaran', $filename);
+        // Simpan info file ke database jika perlu, atau kirim notifikasi, dll.
+        return redirect()->route('payment.show')->with('success', 'Bukti pembayaran berhasil diupload!');
+    }
 }
