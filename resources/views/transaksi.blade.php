@@ -3,145 +3,330 @@
 @section('content')
 <style>
 .transaksi-container {
-    max-width: 900px;
-    margin: 80px auto 0 auto;
-    background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-    padding: 32px 24px;
+    max-width: 1000px;
+    margin: 80px auto 80px auto;
+    background: #f8fafc;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    padding: 40px 32px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
 }
+
 .transaksi-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin-bottom: 24px;
-    color: #222;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 32px;
+    color: #1a1a1a;
+    text-align: center;
+    position: relative;
 }
+
+.transaksi-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #16a34a, #22c55e);
+    border-radius: 2px;
+}
+
 .transaksi-filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: 16px;
+    margin-bottom: 32px;
     align-items: center;
+    background: rgba(255,255,255,0.7);
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    backdrop-filter: blur(10px);
 }
+
 .transaksi-filters input[type="text"] {
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    padding: 8px 14px;
+    border-radius: 12px;
+    border: 2px solid #e5e7eb;
+    padding: 12px 18px;
     font-size: 1rem;
-    min-width: 220px;
+    min-width: 280px;
+    background: rgba(255,255,255,0.9);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-.transaksi-filters select, .transaksi-filters button, .transaksi-filters .status-btn {
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
+
+.transaksi-filters input[type="text"]:focus {
+    outline: none;
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
     background: #fff;
-    padding: 8px 16px;
+}
+
+.transaksi-filters select, .transaksi-filters button, .transaksi-filters .status-btn {
+    border-radius: 12px;
+    border: 2px solid #e5e7eb;
+    background: rgba(255,255,255,0.9);
+    padding: 12px 20px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
+
+.transaksi-filters .status-btn:hover {
+    background: rgba(22, 163, 74, 0.05);
+    border-color: #16a34a;
+    transform: translateY(-1px);
+}
+
 .transaksi-filters .status-btn.active, .transaksi-filters .status-btn:focus {
-    background: #eaffea;
-    color: #176a3a;
-    border: 1.5px solid #176a3a;
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    color: #fff;
+    border: 2px solid #16a34a;
     font-weight: 600;
+    box-shadow: 0 4px 16px rgba(22, 163, 74, 0.3);
+    transform: translateY(-1px);
 }
+
 .transaksi-list {
-    margin-top: 18px;
+    margin-top: 24px;
 }
+
 .transaksi-card {
-    background: #f8f9fa;
-    border-radius: 12px;
-    padding: 20px 18px;
-    margin-bottom: 18px;
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    gap: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid rgba(255,255,255,0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
+
+.transaksi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #16a34a, #22c55e, #16a34a);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.transaksi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
 .transaksi-card .transaksi-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
 }
+
 .transaksi-card .transaksi-status {
-    padding: 4px 14px;
-    border-radius: 8px;
-    font-size: 0.98rem;
-    font-weight: 600;
-    background: #eaffea;
-    color: #176a3a;
-    border: 1.5px solid #176a3a;
-    margin-left: 8px;
-}
-.transaksi-card .transaksi-status.berlangsung {
-    background: #fffbe6;
-    color: #bfa100;
-    border-color: #bfa100;
-}
-.transaksi-card .transaksi-status.tidak-berhasil {
-    background: #ffeaea;
-    color: #d32f2f;
-    border-color: #d32f2f;
-}
-.transaksi-card .transaksi-status.berhasil {
-    background: #eaffea;
-    color: #176a3a;
-    border-color: #176a3a;
-}
-.transaksi-card .transaksi-product {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #222;
-}
-.transaksi-card .transaksi-date {
-    color: #888;
-    font-size: 0.98rem;
-}
-.transaksi-card .transaksi-total {
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.9rem;
     font-weight: 700;
-    color: #176a3a;
-    font-size: 1.08rem;
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    color: #15803d;
+    border: 2px solid #16a34a;
+    margin-left: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.2);
 }
+
+.transaksi-card .transaksi-status.berlangsung {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    color: #92400e;
+    border-color: #d97706;
+    box-shadow: 0 2px 8px rgba(217, 119, 6, 0.2);
+}
+
+.transaksi-card .transaksi-status.tidak-berhasil {
+    background: linear-gradient(135deg, #fecaca, #fca5a5);
+    color: #dc2626;
+    border-color: #dc2626;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+}
+
+.transaksi-card .transaksi-status.berhasil {
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    color: #15803d;
+    border-color: #16a34a;
+    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.2);
+}
+
+.transaksi-card .transaksi-product {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1.4;
+}
+
+.transaksi-card .transaksi-date {
+    color: #6b7280;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 6px 12px;
+    background: rgba(107, 114, 128, 0.1);
+    border-radius: 8px;
+}
+
+.transaksi-card .transaksi-total {
+    font-weight: 800;
+    color: #16a34a;
+    font-size: 1.2rem;
+    text-shadow: 0 1px 2px rgba(22, 163, 74, 0.1);
+}
+
 .transaksi-empty {
     text-align: center;
-    color: #888;
-    margin: 60px 0 40px 0;
+    color: #6b7280;
+    margin: 80px 0 60px 0;
+    background: rgba(255,255,255,0.7);
+    padding: 60px 40px;
+    border-radius: 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
 }
+
 .transaksi-empty img {
-    width: 90px;
-    opacity: 0.7;
-    margin-bottom: 18px;
+    width: 120px;
+    opacity: 0.8;
+    margin-bottom: 24px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
 }
+
 .transaksi-empty .empty-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #222;
-    margin-bottom: 8px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 12px;
 }
+
 .transaksi-empty .empty-desc {
-    color: #888;
-    margin-bottom: 18px;
+    color: #6b7280;
+    margin-bottom: 24px;
+    font-size: 1.1rem;
 }
+
 .transaksi-empty .btn-belanja {
-    background: #176a3a;
+    background: linear-gradient(135deg, #16a34a, #22c55e);
     color: #fff;
-    border-radius: 8px;
-    padding: 10px 28px;
-    font-size: 1.08rem;
-    font-weight: 600;
+    border-radius: 12px;
+    padding: 14px 32px;
+    font-size: 1.1rem;
+    font-weight: 700;
     border: none;
-    transition: background 0.2s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(22, 163, 74, 0.3);
+    text-decoration: none;
+    display: inline-block;
 }
+
 .transaksi-empty .btn-belanja:hover {
-    background: #14592f;
+    background: linear-gradient(135deg, #15803d, #16a34a);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
 }
-@media (max-width: 600px) {
-    .transaksi-container { padding: 16px 4px; }
-    .transaksi-title { font-size: 1.2rem; }
-    .transaksi-card { padding: 14px 8px; }
+
+.btn-outline-success {
+    background: linear-gradient(135deg, rgba(22, 163, 74, 0.1), rgba(34, 197, 94, 0.1));
+    color: #16a34a;
+    border: 2px solid #16a34a;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-outline-success:hover {
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
+
+.delivery-estimate {
+    color: #16a34a;
+    font-size: 0.95rem;
+    margin-top: 8px;
+    font-weight: 600;
+    background: rgba(22, 163, 74, 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.quantity-badge {
+    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    color: #6b7280;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+@media (max-width: 768px) {
+    .transaksi-container { 
+        padding: 24px 16px;
+        margin: 40px 16px 0 16px;
+    }
+    .transaksi-title { font-size: 1.6rem; }
+    .transaksi-card { padding: 20px 16px; }
+    .transaksi-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .transaksi-filters input[type="text"] {
+        min-width: 100%;
+    }
+    .transaksi-filters .status-btn {
+        flex: 1;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .transaksi-container { 
+        padding: 20px 12px;
+        margin: 20px 8px 0 8px;
+    }
+    .transaksi-title { font-size: 1.4rem; }
+    .transaksi-card { padding: 16px 12px; }
+    .transaksi-card .transaksi-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    .transaksi-status {
+        margin-left: 0 !important;
+        text-align: center;
+    }
 }
 </style>
+
 <div class="transaksi-container">
     <div class="transaksi-title">Daftar Transaksi</div>
     <div class="transaksi-filters">
@@ -174,19 +359,20 @@
                     <div class="transaksi-product">
                         @foreach($trx->transactionItems as $item)
                             <div>
-                                {{ $item->product->nama ?? '-' }} <span style="color:#888;font-size:0.98em;">({{ $item->quantity }} barang)</span>
+                                {{ $item->product->nama ?? '-' }} 
+                                <span class="quantity-badge">({{ $item->quantity }} barang)</span>
                             </div>
                         @endforeach
                         @if($trx->estimated_delivery_date)
-                            <div style="color:#388e3c;font-size:0.98em;margin-top:2px;">
+                            <div class="delivery-estimate">
                                 Estimasi Tiba: {{ \Carbon\Carbon::parse($trx->estimated_delivery_date)->translatedFormat('d M Y') }}
                             </div>
                         @endif
                     </div>
                     <div class="transaksi-row">
-                        <span>{{ $trx->transactionItems->sum('quantity') }} barang</span>
+                        <span style="font-weight: 600; color: #6b7280;">{{ $trx->transactionItems->sum('quantity') }} barang</span>
                         <span class="transaksi-total">Total Belanja Rp {{ number_format($trx->total_harga,0,',','.') }}</span>
-                        <a href="#" class="btn btn-outline-success btn-sm" style="border-radius:7px;font-weight:600;" onclick="event.stopPropagation();">Beli Lagi</a>
+                        <a href="#" class="btn btn-outline-success btn-sm" onclick="event.stopPropagation();">Beli Lagi</a>
                     </div>
                 </div>
                 </a>
@@ -194,4 +380,4 @@
         @endif
     </div>
 </div>
-@endsection 
+@endsection
