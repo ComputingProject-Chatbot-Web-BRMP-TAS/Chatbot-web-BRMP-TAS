@@ -268,6 +268,7 @@
         <span style="width:0px;"></span>
         <span class="navbar-category-title" id="appbarCategoryBtn" style="margin-right:0px;cursor:pointer;position:relative;">Kategori</span>
         <a href="{{ route('article') }}" class="navbar-article-link" style="margin-left:0px;">Artikel</a>
+        <a href="{{ route('transaksi') }}" class="navbar-article-link" style="margin-left:0px;">Transaksi</a>
     </div>
     <!-- Tengah: Searchbar -->
     <div class="navbar-center" style="flex:1;display:flex;justify-content:center;min-width:0;">

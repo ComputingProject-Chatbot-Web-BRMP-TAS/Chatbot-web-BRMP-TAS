@@ -278,3 +278,5 @@ Route::post('/profile/change-password', function (\Illuminate\Http\Request $requ
     $user->save();
     return back()->with('success', 'Password berhasil diubah!');
 })->middleware('auth')->name('profile.change_password');
+
+Route::get('/transaksi', [\App\Http\Controllers\TransactionController::class, 'index'])->middleware('auth')->name('transaksi');
