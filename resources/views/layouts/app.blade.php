@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <style>
-        body { background: #eaffea; }
+        body { background: #f8f9fa; }
     </style>
     @stack('styles')
 </head>

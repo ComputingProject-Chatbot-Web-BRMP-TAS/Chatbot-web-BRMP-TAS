@@ -43,8 +43,8 @@ Route::get('/cart', function () {
     return view('cart', compact('items', 'total'));
 })->name('cart');
 
-Route::get('/produk/{id}', function ($id) {
-    $product = \App\Models\Product::findOrFail($id);
+Route::get('/produk/{produk_id}', function ($produk_id) {
+    $product = \App\Models\Product::findOrFail($produk_id);
     return view('produk.detail', compact('product'));
 })->name('produk.detail');
 
