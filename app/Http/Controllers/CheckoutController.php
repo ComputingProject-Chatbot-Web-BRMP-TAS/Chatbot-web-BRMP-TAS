@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Address;
 use App\Models\CartItem;
+use App\Models\Transaction;
+use App\Models\TransactionItem;
+use Carbon\Carbon;
 
 class CheckoutController extends Controller
 {
@@ -82,7 +85,10 @@ class CheckoutController extends Controller
 
     public function next(Request $request)
     {
-        // You can process shipping selection here if needed
+        // Simpan shipping method ke session jika ada
+        $shipping_method = $request->input('shipping_method', 'Standard');
+        session(['checkout_shipping_method' => $shipping_method]);
+        // Tidak membuat transaksi di sini, hanya redirect ke payment
         return redirect()->route('payment.show');
     }
 }

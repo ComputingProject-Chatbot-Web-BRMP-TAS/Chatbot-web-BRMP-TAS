@@ -280,3 +280,15 @@ Route::post('/profile/change-password', function (\Illuminate\Http\Request $requ
 })->middleware('auth')->name('profile.change_password');
 
 Route::get('/transaksi', [\App\Http\Controllers\TransactionController::class, 'index'])->middleware('auth')->name('transaksi');
+Route::get('/transaksi/{id}', [\App\Http\Controllers\TransactionController::class, 'detail'])->middleware('auth')->name('transaksi.detail');
+
+Route::get('/debug/transactions', function() {
+    $transactions = \App\Models\Transaction::with(['transactionItems.product', 'payments'])->get();
+    return response()->json($transactions);
+});
+Route::get('/debug/transaction-items', function() {
+    return response()->json(\App\Models\TransactionItem::with('product')->get());
+});
+Route::get('/debug/payments', function() {
+    return response()->json(\App\Models\Payment::all());
+});

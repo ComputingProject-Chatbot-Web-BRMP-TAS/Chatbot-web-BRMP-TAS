@@ -165,18 +165,31 @@
             </div>
         @else
             @foreach($transactions as $trx)
+                <a href="{{ route('transaksi.detail', $trx->transaksi_id) }}" style="text-decoration:none;color:inherit;">
                 <div class="transaksi-card">
                     <div class="transaksi-row">
-                        <span class="transaksi-date">{{ date('d M Y', strtotime($trx['date'])) }}</span>
-                        <span class="transaksi-status {{ strtolower(str_replace(' ', '-', $trx['status'])) }}">{{ $trx['status'] }}</span>
+                        <span class="transaksi-date">{{ \Carbon\Carbon::parse($trx->order_date)->format('d M Y') }}</span>
+                        <span class="transaksi-status {{ strtolower(str_replace(' ', '-', $trx->status)) }}">{{ $trx->status }}</span>
                     </div>
-                    <div class="transaksi-product">{{ $trx['product'] }}</div>
+                    <div class="transaksi-product">
+                        @foreach($trx->transactionItems as $item)
+                            <div>
+                                {{ $item->product->nama ?? '-' }} <span style="color:#888;font-size:0.98em;">({{ $item->quantity }} barang)</span>
+                            </div>
+                        @endforeach
+                        @if($trx->estimated_delivery_date)
+                            <div style="color:#388e3c;font-size:0.98em;margin-top:2px;">
+                                Estimasi Tiba: {{ \Carbon\Carbon::parse($trx->estimated_delivery_date)->translatedFormat('d M Y') }}
+                            </div>
+                        @endif
+                    </div>
                     <div class="transaksi-row">
-                        <span>{{ $trx['qty'] }} barang</span>
-                        <span class="transaksi-total">Total Belanja Rp {{ number_format($trx['total'],0,',','.') }}</span>
-                        <a href="#" class="btn btn-outline-success btn-sm" style="border-radius:7px;font-weight:600;">Beli Lagi</a>
+                        <span>{{ $trx->transactionItems->sum('quantity') }} barang</span>
+                        <span class="transaksi-total">Total Belanja Rp {{ number_format($trx->total_harga,0,',','.') }}</span>
+                        <a href="#" class="btn btn-outline-success btn-sm" style="border-radius:7px;font-weight:600;" onclick="event.stopPropagation();">Beli Lagi</a>
                     </div>
                 </div>
+                </a>
             @endforeach
         @endif
     </div>

@@ -20,4 +20,14 @@ class Transaction extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'transaction_id', 'transaksi_id');
+    }
+
+    public function transactionItems()
+    {
+        return $this->hasMany(TransactionItem::class, 'transaction_id', 'transaksi_id');
+    }
 } 

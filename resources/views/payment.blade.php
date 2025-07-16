@@ -284,7 +284,7 @@
     <!-- Payment Header -->
     <div class="payment-header">
         <div class="payment-deadline">
-            ⏰ BAYAR SEBELUM {{ $deadline ?? '11 JULI 2025 PUKUL 22:46' }}
+            <span style="font-weight:600;">⏰ BAYAR SEBELUM {{ $deadline }}</span>
         </div>
         <div class="payment-amount">
             IDR {{ number_format($grand_total ?? 75725, 0, ',', '.') }}
@@ -303,7 +303,15 @@
                 <div class="upload-title">
                     Unggah Bukti Transfer Pembayaran
                 </div>
-                
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="upload-form">
                     <form enctype="multipart/form-data" method="POST" action="{{ route('payment.upload_proof') }}">
                         @csrf
@@ -334,49 +342,53 @@
                 
                 <div class="transaction-info">
                     <div class="transaction-number">
-                        <span class="text-muted">Transaksi #:</span> 
-                        <strong>{{ $transaction_number ?? '71996' }}</strong>
+                        <span class="text-muted">Metode Pengiriman:</span>
+                        <strong>{{ ucfirst($shipping_method) }}</strong>
                     </div>
                     <div class="transaction-deadline">
                         <span>⏰</span>
                         <span class="text-muted">Bayar sebelum:</span>
-                        <strong>{{ $deadline ?? '11 Juli 2025 pukul 22:46' }}</strong>
+                        <strong>{{ $deadline }}</strong>
                     </div>
                 </div>
 
-                <div class="product-item">
-                    <div class="product-details">
-                        <div class="product-name">{{ $product_name ?? 'Cardigan' }}</div>
-                        <div class="product-quantity">1 × IDR {{ number_format($product_price ?? 25000, 0, ',', '.') }}</div>
-                    </div>
-                    <div class="product-price">IDR {{ number_format($product_price ?? 25000, 0, ',', '.') }}</div>
-                </div>
+                @if($cart && count($cart) > 0)
+                    @foreach($cart as $item)
+                        <div class="product-item">
+                            <div class="product-details">
+                                <div class="product-name">{{ $item['name'] ?? '-' }}</div>
+                                <div class="product-quantity">{{ $item['qty'] }} × IDR {{ number_format($item['price'], 0, ',', '.') }}</div>
+                            </div>
+                            <div class="product-price">IDR {{ number_format($item['subtotal'], 0, ',', '.') }}</div>
+                        </div>
+                    @endforeach
+                @endif
 
                 <div class="subtotal-section">
                     <div class="cost-item">
                         <span class="cost-label">Subtotal</span>
-                        <span class="cost-value fw-bold">IDR {{ number_format($subtotal ?? 25000, 0, ',', '.') }}</span>
+                        <span class="cost-value fw-bold">IDR {{ number_format($total, 0, ',', '.') }}</span>
                     </div>
                 </div>
 
                 <div class="cost-breakdown">
                     <div class="cost-item">
                         <span class="cost-label">🚚 Ongkos Kirim</span>
-                        <span class="cost-value">IDR {{ number_format($shipping ?? 50600, 0, ',', '.') }}</span>
+                        <span class="cost-value">IDR {{ number_format($shipping, 0, ',', '.') }}</span>
                     </div>
                     <div class="cost-item">
                         <span class="cost-label">🛡️ Asuransi Pengiriman</span>
-                        <span class="cost-value">IDR {{ number_format($insurance ?? 125, 0, ',', '.') }}</span>
+                        <span class="cost-value">IDR {{ number_format($insurance, 0, ',', '.') }}</span>
                     </div>
                     <div class="cost-item">
                         <span class="cost-label fw-semibold">Total Biaya</span>
-                        <span class="cost-value fw-bold">IDR {{ number_format($total_biaya ?? 50725, 0, ',', '.') }}</span>
+                        <span class="cost-value fw-bold">IDR {{ number_format($grand_total, 0, ',', '.') }}</span>
                     </div>
                 </div>
 
                 <div class="total-section">
                     <div class="total-amount">
-                        💰 IDR {{ number_format($grand_total ?? 75725, 0, ',', '.') }}
+                        💰 IDR {{ number_format($grand_total, 0, ',', '.') }}
                     </div>
                     <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">
                         Jumlah Total yang Harus Dibayar

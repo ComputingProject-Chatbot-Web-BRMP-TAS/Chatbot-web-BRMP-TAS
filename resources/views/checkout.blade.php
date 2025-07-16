@@ -162,47 +162,63 @@
             <div class="checkout-card">
                 <div class="checkout-section-title">Pengiriman</div>
                 <div>Pilih metode pengiriman</div>
+                @php
+                    use Carbon\Carbon;
+                    $today = Carbon::now('Asia/Jakarta');
+                @endphp
                 <form class="mt-3">
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="radio" name="shipping_method" id="shipping_standard" value="standard" checked>
                         <label class="form-check-label" for="shipping_standard">
                             Standard
-                            <div style="font-size:0.95em;color:#888;font-weight:400;">Estimasi: 2-4 hari</div>
+                            <div style="font-size:0.95em;color:#888;font-weight:400;">
+                                Estimasi: {{ $today->copy()->addDays(2)->translatedFormat('d M Y') }} - {{ $today->copy()->addDays(4)->translatedFormat('d M Y') }}
+                            </div>
                         </label>
                     </div>
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="radio" name="shipping_method" id="shipping_kargo" value="kargo">
                         <label class="form-check-label" for="shipping_kargo">
                             Kargo
-                            <div style="font-size:0.95em;color:#888;font-weight:400;">Estimasi: 3-7 hari</div>
+                            <div style="font-size:0.95em;color:#888;font-weight:400;">
+                                Estimasi: {{ $today->copy()->addDays(3)->translatedFormat('d M Y') }} - {{ $today->copy()->addDays(7)->translatedFormat('d M Y') }}
+                            </div>
                         </label>
                     </div>
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="radio" name="shipping_method" id="shipping_reguler" value="reguler">
                         <label class="form-check-label" for="shipping_reguler">
                             Reguler
-                            <div style="font-size:0.95em;color:#888;font-weight:400;">Estimasi: 2-5 hari</div>
+                            <div style="font-size:0.95em;color:#888;font-weight:400;">
+                                Estimasi: {{ $today->copy()->addDays(2)->translatedFormat('d M Y') }} - {{ $today->copy()->addDays(5)->translatedFormat('d M Y') }}
+                            </div>
                         </label>
                     </div>
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="radio" name="shipping_method" id="shipping_instant" value="instant">
                         <label class="form-check-label" for="shipping_instant">
                             Instant
-                            <div style="font-size:0.95em;color:#888;font-weight:400;">Estimasi: &lt; 3 jam</div>
+                            <div style="font-size:0.95em;color:#888;font-weight:400;">
+                                Estimasi: Kurang dari 3 jam ({{ $today->translatedFormat('d M Y') }})
+                            </div>
                         </label>
                     </div>
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="radio" name="shipping_method" id="shipping_sameday" value="sameday">
                         <label class="form-check-label" for="shipping_sameday">
                             Same Day
-                            <div style="font-size:0.95em;color:#888;font-weight:400;">Estimasi: Hari yang sama</div>
+                            <div style="font-size:0.95em;color:#888;font-weight:400;">
+                                Estimasi: Hari yang sama ({{ $today->translatedFormat('d M Y') }})
+                            </div>
                         </label>
                     </div>
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="radio" name="shipping_method" id="shipping_ekonomi" value="ekonomi">
                         <label class="form-check-label" for="shipping_ekonomi">
                             Ekonomi
-                            <div style="font-size:0.95em;color:#888;font-weight:400;">Estimasi: 4-8 hari</div>
+                            <div style="font-size:0.95em;color:#888;font-weight:400;">
+                                Estimasi: {{ $today->copy()->addDays(4)->translatedFormat('d M Y') }} - {{ $today->copy()->addDays(8)->translatedFormat('d M Y') }}
+                            </div>
                         </label>
                     </div>
                 </form>
@@ -210,17 +226,7 @@
                     <i class="bi bi-shield-check"></i> Aman dengan Garansi Pembelian
                 </div>
             </div>
-            <div class="checkout-card">
-                <div class="checkout-section-title">Metode Pembayaran</div>
-                <div>Unggah Foto Bukti Pembayaran</div>
-                <form class="mt-3" enctype="multipart/form-data" method="POST" action="{{ route('payment.upload_proof') }}">
-                    @csrf
-                    <div class="mb-3">
-                        <input class="form-control" type="file" id="buktiPembayaran" name="bukti_pembayaran" accept="image/*" required>
-                    </div>
-                    <button type="submit" class="btn btn-success">Unggah Bukti Pembayaran</button>
-                </form>
-            </div>
+            {{-- Hapus blok Metode Pembayaran (unggah foto bukti pembayaran) --}}
         </div>
         <div class="checkout-summary">
             <div class="checkout-summary-title">Ringkasan Pesanan</div>
