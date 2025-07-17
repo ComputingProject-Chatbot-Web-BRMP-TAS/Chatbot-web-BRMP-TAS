@@ -23,7 +23,8 @@ Route::get('/', function (Request $request) {
     } else {
         $products = Product::all();
     }
-    return view('home', compact('products', 'q'));
+    $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
+    return view('home', compact('products', 'q', 'latestProducts'));
 });
 
 Route::get('/register', function () {
@@ -45,11 +46,14 @@ Route::get('/cart', function () {
 
 Route::get('/produk/{produk_id}', function ($produk_id) {
     $product = \App\Models\Product::findOrFail($produk_id);
-    return view('produk.detail', compact('product'));
+    $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
+    return view('produk.detail', compact('product', 'latestProducts'));
 })->name('produk.detail');
 
 Route::get('/produk-baru', function () {
-    return view('produk_baru');
+    $products = Product::orderBy('produk_id', 'desc')->take(5)->get();
+    $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
+    return view('produk_baru', compact('products', 'latestProducts'));
 })->name('produk.baru');
 
 Route::post('/register', function (Request $request) {
@@ -153,23 +157,28 @@ Route::post('/profile/upload-foto', function (\Illuminate\Http\Request $request)
 
 Route::get('/kategori/tumbuhan', function() {
     $products = Product::where('jenis_kategori', 'Tumbuhan')->get();
-    return view('kategori_tumbuhan', compact('products'));
+    $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
+    return view('kategori_tumbuhan', compact('products', 'latestProducts'));
 });
 Route::get('/kategori/rempah', function() {
     $products = Product::where('jenis_kategori', 'Rempah-Rempah/Herbal')->get();
-    return view('kategori_rempah', compact('products'));
+    $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
+    return view('kategori_rempah', compact('products', 'latestProducts'));
 });
 Route::get('/kategori/buah', function() {
     $products = Product::where('jenis_kategori', 'Buah-Buahan')->get();
-    return view('kategori_buah', compact('products'));
+    $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
+    return view('kategori_buah', compact('products', 'latestProducts'));
 });
 Route::get('/kategori/sayuran', function() {
     $products = Product::where('jenis_kategori', 'Sayuran')->get();
-    return view('kategori_sayuran', compact('products'));
+    $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
+    return view('kategori_sayuran', compact('products', 'latestProducts'));
 });
 Route::get('/kategori/bunga', function() {
     $products = Product::where('jenis_kategori', 'Bunga')->get();
-    return view('kategori_bunga', compact('products'));
+    $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
+    return view('kategori_bunga', compact('products', 'latestProducts'));
 });
 
 Route::middleware('auth')->group(function () {

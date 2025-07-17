@@ -185,6 +185,18 @@
             overflow: hidden;
             box-sizing: border-box;
         }
+        .product-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: #4CAF50;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 10;
+        }
         .product-card .image-placeholder {
             height: 120px;
             background: #E0F2F1;
@@ -297,12 +309,14 @@
                 @foreach($products as $produk)
                     <a href="{{ route('produk.detail', $produk->produk_id) }}" style="text-decoration:none;color:inherit;">
                         <div class="product-card">
+                            @if(in_array($produk->produk_id, $latestProducts))
+                                <div class="product-badge">Baru</div>
+                            @endif
                             <img src="{{ asset('images/' . $produk->gambar) }}" alt="{{ $produk->nama }}" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
                             <div class="info" style="padding:12px 16px 0 16px;">
                                 <div class="title" style="font-weight:500;font-size:16px;margin-bottom:4px;">{{ $produk->nama }}</div>
                                 <div class="price" style="color:#388E3C;font-weight:bold;font-size:17px;margin-bottom:4px;">Rp {{ number_format($produk->harga, 0, ',', '.') }}</div>
                                 <div class="desc" style="font-size:13px;color:#757575;">{{ $produk->deskripsi }}</div>
-                                <div class="tag" style="display:flex;align-items:center;font-size:13px;color:#FBC02D;margin-top:6px;"><i class="fas fa-star" style="margin-right:4px;"></i>Baru</div>
                             </div>
                         </div>
                     </a>

@@ -305,46 +305,25 @@
                     <div class="filter-title">Filter</div>
                     
                     <div class="filter-section">
-                        <div class="filter-section-title">Jenis Sayuran</div>
                         <div class="filter-option">
-                            <input type="checkbox" id="bayam">
-                            <label for="bayam">Bayam</label>
+                            <input type="checkbox" id="sayuranchecked">
+                            <label for="sayuran">Sayuran</label>
                         </div>
                         <div class="filter-option">
-                            <input type="checkbox" id="kangkung">
-                            <label for="kangkung">Kangkung</label>
+                            <input type="checkbox" id="tumbuhan">
+                            <label for="tumbuhan">Tumbuhan</label>
                         </div>
                         <div class="filter-option">
-                            <input type="checkbox" id="wortel">
-                            <label for="wortel">Wortel</label>
+                            <input type="checkbox" id="rempah">
+                            <label for="rempah">Rempah-Rempah/Herbal</label>
                         </div>
                         <div class="filter-option">
-                            <input type="checkbox" id="tomat">
-                            <label for="tomat">Tomat</label>
+                            <input type="checkbox" id="buah">
+                            <label for="buah">Buah-Buahan</label>
                         </div>
                         <div class="filter-option">
-                            <input type="checkbox" id="cabai">
-                            <label for="cabai">Cabai</label>
-                        </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="terong">
-                            <label for="terong">Terong</label>
-                        </div>
-                    </div>
-
-                    <div class="filter-section">
-                        <div class="filter-section-title">Lokasi</div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="jakarta">
-                            <label for="jakarta">Jakarta</label>
-                        </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="bandung">
-                            <label for="bandung">Bandung</label>
-                        </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="surabaya">
-                            <label for="surabaya">Surabaya</label>
+                            <input type="checkbox" id="bunga">
+                            <label for="bunga">Bunga</label>
                         </div>
                     </div>
                 </div>
@@ -359,9 +338,7 @@
                         </div>
                         <div class="sort-dropdown">
                             <label for="sort">Urutkan:</label>
-                            <select id="sort" name="sort">
-                                <option value="relevant">Paling Sesuai</option>
-                                <option value="newest">Terbaru</option>
+                            <select id="sort" name="sort" onchange="sortProducts()">
                                 <option value="price-low">Harga Terendah</option>
                                 <option value="price-high">Harga Tertinggi</option>
                             </select>
@@ -369,28 +346,28 @@
                     </div>
 
                     @if($products->count() > 0)
-                        <div class="products-grid">
+                        <div class="products-grid" id="productsGrid">
                             @foreach($products as $produk)
-                                <a href="{{ route('produk.detail', $produk->produk_id) }}" class="product-card">
-                                    <div class="product-badge">Baru</div>
+                                <a href="{{ route('produk.detail', $produk->produk_id) }}" class="product-card" data-price="{{ $produk->harga }}">
+                                    @if(in_array($produk->produk_id, $latestProducts))
+                                        <div class="product-badge">Baru</div>
+                                    @endif
                                     <button class="heart-icon" onclick="event.preventDefault();">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                                         </svg>
                                     </button>
-                                    <img src="{{ asset('images/' . $produk->gambar) }}" 
-                                         class="product-image" 
-                                         alt="{{ $produk->nama }}">
+                                    @if($produk->gambar)
+                                        <img src="{{ asset('images/' . $produk->gambar) }}" 
+                                             class="product-image" 
+                                             alt="{{ $produk->nama }}">
+                                    @else
+                                        <img src="https://via.placeholder.com/200x200?text=No+Image" class="product-image" alt="No Image">
+                                    @endif
                                     <div class="product-info">
                                         <div class="product-title">{{ $produk->nama }}</div>
                                         <div class="product-price">Rp{{ number_format($produk->harga, 0, ',', '.') }}</div>
-                                        <div class="product-location">
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
-                                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                                                <circle cx="12" cy="10" r="3"/>
-                                            </svg>
-                                            Jakarta Barat
-                                        </div>
+                                        <div class="product-location">Kategori: {{ $produk->jenis_kategori }}</div>
                                     </div>
                                 </a>
                             @endforeach
@@ -410,4 +387,30 @@
 @section('after_content')
     @include('partials.mitra_footer')
 @endsection
+
+<script>
+function sortProducts() {
+    const sortSelect = document.getElementById('sort');
+    const productsGrid = document.getElementById('productsGrid');
+    const productCards = Array.from(productsGrid.querySelectorAll('.product-card'));
+    
+    const sortType = sortSelect.value;
+    
+    productCards.sort((a, b) => {
+        const priceA = parseInt(a.getAttribute('data-price'));       const priceB = parseInt(b.getAttribute('data-price'));
+        
+        if (sortType === 'price-low') {
+            return priceA - priceB; // Harga terendah ke tertinggi
+        } else if (sortType === 'price-high') {
+            return priceB - priceA; // Harga tertinggi ke terendah
+        }
+    });
+    
+    // Hapus semua card yang ada
+    productCards.forEach(card => card.remove());
+    
+    // Tambahkan kembali card yang sudah diurutkan
+    productCards.forEach(card => productsGrid.appendChild(card));
+}
+</script>
 @endsection 

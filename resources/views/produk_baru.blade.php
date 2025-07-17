@@ -327,22 +327,6 @@
                             <label for="bunga">Bunga</label>
                         </div>
                     </div>
-
-                    <div class="filter-section">
-                        <div class="filter-section-title">Lokasi</div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="jakarta">
-                            <label for="jakarta">Jakarta</label>
-                        </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="bandung">
-                            <label for="bandung">Bandung</label>
-                        </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="surabaya">
-                            <label for="surabaya">Surabaya</label>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -355,108 +339,38 @@
                         </div>
                         <div class="sort-dropdown">
                             <label for="sort">Urutkan:</label>
-                            <select id="sort" name="sort">
-                                <option value="relevant">Paling Sesuai</option>
-                                <option value="newest">Terbaru</option>
+                            <select id="sort" name="sort" onchange="sortProducts()">
                                 <option value="price-low">Harga Terendah</option>
                                 <option value="price-high">Harga Tertinggi</option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="products-grid">
-                        <!-- Sample Product Cards -->
-                        <a href="#" class="product-card">
-                            <div class="product-badge">Baru</div>
-                            <button class="heart-icon" onclick="event.preventDefault();">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                                </svg>
-                            </button>
-                            <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/7/6/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" 
-                                 class="product-image" 
-                                 alt="Benih Cabai Rawit">
-                            <div class="product-info">
-                                <div class="product-title">Benih Cabai Rawit</div>
-                                <div class="product-price">Rp15.000</div>
-                                <div class="product-location">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
-                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                                        <circle cx="12" cy="10" r="3"/>
+                    <div class="products-grid" id="productsGrid">
+                        @forelse($products as $product)
+                            <a href="{{ route('produk.detail', $product->produk_id) }}" class="product-card" data-price="{{ $product->harga }}">
+                                @if(in_array($product->produk_id, $latestProducts))
+                                    <div class="product-badge">Baru</div>
+                                @endif
+                                <button class="heart-icon" onclick="event.preventDefault();">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                                     </svg>
-                                    Jakarta Barat
+                                </button>
+                                @if($product->gambar)
+                                    <img src="{{ asset('images/' . $product->gambar) }}" class="product-image" alt="{{ $product->nama }}">
+                                @else
+                                    <img src="https://via.placeholder.com/200x200?text=No+Image" class="product-image" alt="No Image">
+                                @endif
+                                <div class="product-info">
+                                    <div class="product-title">{{ $product->nama }}</div>
+                                    <div class="product-price">Rp{{ number_format($product->harga, 0, ',', '.') }}</div>
+                                    <div class="product-location">Kategori: {{ $product->jenis_kategori }}</div>
                                 </div>
-                            </div>
-                        </a>
-
-                        <a href="#" class="product-card">
-                            <div class="product-badge">Baru</div>
-                            <button class="heart-icon" onclick="event.preventDefault();">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                                </svg>
-                            </button>
-                            <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/7/6/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" 
-                                 class="product-image" 
-                                 alt="Benih Tomat Cherry">
-                            <div class="product-info">
-                                <div class="product-title">Benih Tomat Cherry</div>
-                                <div class="product-price">Rp12.000</div>
-                                <div class="product-location">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
-                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                                        <circle cx="12" cy="10" r="3"/>
-                                    </svg>
-                                    Jakarta Barat
-                                </div>
-                            </div>
-                        </a>
-
-                        <a href="#" class="product-card">
-                            <div class="product-badge">Baru</div>
-                            <button class="heart-icon" onclick="event.preventDefault();">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                                </svg>
-                            </button>
-                            <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/7/6/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" 
-                                 class="product-image" 
-                                 alt="Benih Bayam Merah">
-                            <div class="product-info">
-                                <div class="product-title">Benih Bayam Merah</div>
-                                <div class="product-price">Rp8.000</div>
-                                <div class="product-location">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
-                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                                        <circle cx="12" cy="10" r="3"/>
-                                    </svg>
-                                    Jakarta Barat
-                                </div>
-                            </div>
-                        </a>
-
-                        <a href="#" class="product-card">
-                            <div class="product-badge">Baru</div>
-                            <button class="heart-icon" onclick="event.preventDefault();">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                                </svg>
-                            </button>
-                            <img src="https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/7/6/2e2e2e2e-2e2e-2e2e-2e2e-2e2e2e2e2e2e.jpg" 
-                                 class="product-image" 
-                                 alt="Benih Jahe Merah">
-                            <div class="product-info">
-                                <div class="product-title">Benih Jahe Merah</div>
-                                <div class="product-price">Rp25.000</div>
-                                <div class="product-location">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
-                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                                        <circle cx="12" cy="10" r="3"/>
-                                    </svg>
-                                    Jakarta Barat
-                                </div>
-                            </div>
-                        </a>
+                            </a>
+                        @empty
+                            <div class="no-products">Belum ada produk baru.</div>
+                        @endforelse
                     </div>
                 </div>
             </div>
@@ -467,4 +381,30 @@
 @section('after_content')
     @include('partials.mitra_footer')
 @endsection
+
+<script>
+function sortProducts() {
+    const sortSelect = document.getElementById('sort');
+    const productsGrid = document.getElementById('productsGrid');
+    const productCards = Array.from(productsGrid.querySelectorAll('.product-card'));
+    
+    const sortType = sortSelect.value;
+    
+    productCards.sort((a, b) => {
+        const priceA = parseInt(a.getAttribute('data-price'));       const priceB = parseInt(b.getAttribute('data-price'));
+        
+        if (sortType === 'price-low') {
+            return priceA - priceB; // Harga terendah ke tertinggi
+        } else if (sortType === 'price-high') {
+            return priceB - priceA; // Harga tertinggi ke terendah
+        }
+    });
+    
+    // Hapus semua card yang ada
+    productCards.forEach(card => card.remove());
+    
+    // Tambahkan kembali card yang sudah diurutkan
+    productCards.forEach(card => productsGrid.appendChild(card));
+}
+</script>
 @endsection 
