@@ -17,9 +17,17 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 Route::get('/', function (Request $request) {
     $q = $request->input('q');
     if ($q) {
-        $products = Product::where('nama', 'like', "%$q%")
-            ->orWhere('deskripsi', 'like', "%$q%")
-            ->get();
+        // Flexible search: split q into words, each word must be in nama or deskripsi
+        $keywords = preg_split('/\s+/', trim($q));
+        $products = Product::where(function($query) use ($keywords) {
+            foreach ($keywords as $word) {
+                $query->where(function($sub) use ($word) {
+                    $sub->where('nama', 'like', "%$word%")
+                         ->orWhere('deskripsi', 'like', "%$word%")
+                         ;
+                });
+            }
+        })->get();
         // Reset session ketika melakukan pencarian
         session()->forget('displayed_products');
     } else {
