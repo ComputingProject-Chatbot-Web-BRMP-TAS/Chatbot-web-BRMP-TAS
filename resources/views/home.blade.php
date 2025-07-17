@@ -305,22 +305,18 @@
                 @endif
             </h2>
             @if($products->count() > 0)
-            <div class="product-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:24px;">
+            <div class="product-grid" id="productsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,20px);">
                 @foreach($products as $produk)
-                    <a href="{{ route('produk.detail', $produk->produk_id) }}" style="text-decoration:none;color:inherit;">
-                        <div class="product-card">
-                            @if(in_array($produk->produk_id, $latestProducts))
-                                <div class="product-badge">Baru</div>
-                            @endif
-                            <img src="{{ asset('images/' . $produk->gambar) }}" alt="{{ $produk->nama }}" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
-                            <div class="info" style="padding:12px 16px 0 16px;">
-                                <div class="title" style="font-weight:500;font-size:16px;margin-bottom:4px;">{{ $produk->nama }}</div>
-                                <div class="price" style="color:#388E3C;font-weight:bold;font-size:17px;margin-bottom:4px;">Rp {{ number_format($produk->harga, 0, ',', '.') }}</div>
-                                <div class="desc" style="font-size:13px;color:#757575;">{{ $produk->deskripsi }}</div>
-                            </div>
-                        </div>
-                    </a>
+                    @include('partials.product-card', ['produk' => $produk])
                 @endforeach
+            </div>
+            
+            <!-- Tombol Lebih Banyak -->
+            <div id="loadMoreContainer" style="text-align:center;margin-top:30px;">
+                <button id="loadMoreBtn" class="btn-green" style="background:#4CAF50;color:#fff;border:none;border-radius:8px;padding:12px 32px;font-weight:600;transition:all 0.3s ease;">
+                    <i class="fas fa-plus" style="margin-right:8px;"></i>
+                    Lebih Banyak
+                </button>
             </div>
             @else
                 <div style="padding:32px 0;text-align:center;color:#888;font-size:18px;">Produk tidak ditemukan.</div>
@@ -332,4 +328,48 @@
 
 @section('after_content')
     @include('partials.mitra_footer')
+    <script>
+    let currentOffset = {{ $products->count() }};
+    let totalProducts = {{ \App\Models\Product::count() }};
+    let isLoading = false;
+
+    // Reset session ketika halaman di-refresh
+    window.addEventListener('beforeunload', function() {
+        fetch('/reset-products-session', {method: 'GET'});
+    });
+
+    document.getElementById('loadMoreBtn').addEventListener('click', function() {
+        if (isLoading) return;
+        
+        isLoading = true;
+        const btn = this;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Memuat...';
+        btn.disabled = true;
+        
+        fetch(`/load-more-products?offset=${currentOffset}`)
+            .then(response => response.json())
+            .then(data => {
+                // Tambahkan produk baru ke grid
+                document.getElementById('productsGrid').insertAdjacentHTML('beforeend', data.html);
+                
+                // Update offset berdasarkan total produk yang sudah dimuat
+                currentOffset = data.totalLoaded;
+                
+                // Sembunyikan tombol jika sudah tidak ada produk lagi
+                if (!data.hasMore) {
+                    document.getElementById('loadMoreContainer').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat memuat produk.');
+            })
+            .finally(() => {
+                isLoading = false;
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+    });
+    </script>
 @endsection

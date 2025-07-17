@@ -20,12 +20,58 @@ Route::get('/', function (Request $request) {
         $products = Product::where('nama', 'like', "%$q%")
             ->orWhere('deskripsi', 'like', "%$q%")
             ->get();
+        // Reset session ketika melakukan pencarian
+        session()->forget('displayed_products');
     } else {
-        $products = Product::all();
+        // Reset session dan tampilkan 10 produk baru secara acak
+        session()->forget('displayed_products');
+        // Tampilkan 10produk secara acak untuk section Produk Pilihan
+        $products = Product::inRandomOrder()->take(10)->get();
+        // Simpan ID produk yang sudah ditampilkan ke session
+        session(['displayed_products' => $products->pluck('produk_id')->toArray()]);
     }
     $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
     return view('home', compact('products', 'q', 'latestProducts'));
 });
+
+// Route untuk load more produk
+Route::get('/load-more-products', function (Request $request) {
+    $offset = $request->input('offset', 0);
+    $limit = 10;
+
+    // Ambil produk yang sudah ditampilkan dari session
+    $displayedProducts = session('displayed_products', []);
+
+    // Ambil produk yang belum ditampilkan
+    $products = Product::whereNotIn('produk_id', $displayedProducts)
+                      ->inRandomOrder()
+                      ->take($limit)
+                      ->get();
+
+    // Update session dengan produk yang baru ditampilkan
+    $newDisplayedProducts = array_merge($displayedProducts, $products->pluck('produk_id')->toArray());
+    session(['displayed_products' => $newDisplayedProducts]);
+
+    $totalProducts = Product::count();
+
+    $html = '';
+    foreach ($products as $produk) {
+        $html .= view('partials.product-card', compact('produk'))->render();
+    }
+
+    return response()->json([
+        'html' => $html,
+        'hasMore' => count($newDisplayedProducts) < $totalProducts,
+        'totalLoaded' => count($newDisplayedProducts),
+        'totalProducts' => $totalProducts
+    ]);
+})->name('load.more.products');
+
+// Route untuk reset session produk yang ditampilkan
+Route::get('/reset-products-session', function () {
+    session()->forget('displayed_products');
+    return response()->json(['success' => true]);
+})->name('reset.products.session');
 
 Route::get('/register', function () {
     return view('auth.signup');
