@@ -21,6 +21,28 @@ class PaymentController extends Controller
     // Show payment page, retrieve cart from session
     public function show(Request $request)
     {
+        $transactionId = session('current_transaction_id');
+        
+        if (!$transactionId) {
+            return redirect()->route('cart')->with('error', 'Silakan checkout ulang dari keranjang.');
+        }
+        
+        // Ambil transaksi dari database
+        $transaction = Transaction::with(['transactionItems.product', 'shippingAddress'])->find($transactionId);
+        
+        if (!$transaction) {
+            return redirect()->route('cart')->with('error', 'Transaksi tidak ditemukan.');
+        }
+        
+        // Gunakan alamat dari transaksi jika tersedia, jika tidak gunakan dari session
+        $address = $transaction->shippingAddress;
+        if (!$address) {
+            $addressId = session('checkout_address_id');
+            if ($addressId) {
+                $address = \App\Models\Address::find($addressId);
+            }
+        }
+        
         $cart = session('checkout_cart', []);
         $total = session('checkout_total', 0);
         $shipping = 0;
@@ -29,11 +51,9 @@ class PaymentController extends Controller
         $deadline = Carbon::now('Asia/Jakarta')->addDay()->format('d M Y \\P\\u\\k\\u\\l H:i');
         $shipping_method = session('checkout_shipping_method', 'Standard');
 
-        if (empty($cart) || empty($total)) {
-            return redirect()->route('cart')->with('error', 'Silakan checkout ulang dari keranjang.');
-        }
-
         return view('payment', [
+            'transaction' => $transaction,
+            'address' => $address,
             'cart' => $cart,
             'total' => $total,
             'shipping' => $shipping,
@@ -50,71 +70,52 @@ class PaymentController extends Controller
         $request->validate([
             'bukti_pembayaran' => 'required|image|mimes:jpeg,png,jpg|max:10240',
         ]);
+        
+        // Ambil transaction_id dari form atau session
+        $transactionId = $request->input('transaction_id') ?? session('current_transaction_id');
+        
+        if (!$transactionId) {
+            return redirect()->route('cart')->with('error', 'Transaksi tidak ditemukan.');
+        }
+        
+        $transaction = Transaction::find($transactionId);
+        
+        if (!$transaction) {
+            return redirect()->route('cart')->with('error', 'Transaksi tidak ditemukan.');
+        }
+        
+        // Cek apakah user yang mengupload adalah pemilik transaksi
+        if ($transaction->user_id !== Auth::id()) {
+            return redirect()->route('transaksi')->with('error', 'Anda tidak memiliki akses ke transaksi ini.');
+        }
+        
+        // Cek apakah sudah ada payment untuk transaksi ini
+        if ($transaction->payments()->exists()) {
+            return redirect()->route('transaksi.detail', $transaction->transaksi_id)->with('error', 'Bukti pembayaran sudah diupload untuk transaksi ini.');
+        }
+        
         $file = $request->file('bukti_pembayaran');
         $filename = 'bukti_' . time() . '.' . $file->getClientOriginalExtension();
         $file->storeAs('public/bukti_pembayaran', $filename);
-        // Ambil data checkout dari session
-        $user = Auth::user();
-        $cart = session('checkout_cart', []);
-        $total = session('checkout_total', 0);
-        $delivery_method = session('checkout_shipping_method', 'Standard');
-        $ongkir = 0;
-        $asuransi = 0;
-        $order_date = Carbon::now('Asia/Jakarta');
-        // Tentukan estimasi tanggal pengiriman paling lama
-        $estimated_delivery_date = null;
-        switch (strtolower($delivery_method)) {
-            case 'standard':
-                $estimated_delivery_date = $order_date->copy()->addDays(4);
-                break;
-            case 'kargo':
-                $estimated_delivery_date = $order_date->copy()->addDays(7);
-                break;
-            case 'reguler':
-                $estimated_delivery_date = $order_date->copy()->addDays(5);
-                break;
-            case 'instant':
-                $estimated_delivery_date = $order_date;
-                break;
-            case 'sameday':
-                $estimated_delivery_date = $order_date;
-                break;
-            case 'ekonomi':
-                $estimated_delivery_date = $order_date->copy()->addDays(8);
-                break;
-            default:
-                $estimated_delivery_date = $order_date->copy()->addDays(4);
-        }
-        // Buat transaksi baru
-        $transaction = Transaction::create([
-            'user_id' => $user->id,
-            'order_date' => $order_date,
-            'total_harga' => $total + $ongkir + $asuransi,
-            'status' => 'pending',
-            'delivery_method' => $delivery_method,
-            'estimated_delivery_date' => $estimated_delivery_date,
-        ]);
-        // Buat detail item transaksi
-        foreach ($cart as $item) {
-            \App\Models\TransactionItem::create([
-                'transaction_id' => $transaction->transaksi_id,
-                'product_id' => $item['product_id'],
-                'quantity' => $item['qty'],
-                'unit_price' => $item['price'],
-                'subtotal' => $item['subtotal'],
-            ]);
-        }
-        // Buat payment
+        
+        // Buat payment dengan status 'pending'
         $payment = Payment::create([
             'transaction_id' => $transaction->transaksi_id,
             'payment_date' => now('Asia/Jakarta'),
             'amount_paid' => $transaction->total_harga,
             'photo_proof_payment' => $filename,
-            'status' => 'pending',
+            'status_payment' => 'pending',
         ]);
-        // Bersihkan session checkout
+        
+        // Update status order menjadi "menunggu_konfirmasi_pembayaran"
+        $transaction->update([
+            'status_order' => 'menunggu_konfirmasi_pembayaran'
+        ]);
+        
+        // Bersihkan session checkout jika ada
         session()->forget(['checkout_cart', 'checkout_total', 'checkout_shipping_method', 'current_transaction_id']);
+        
         // Redirect ke halaman detail transaksi
-        return redirect()->route('transaksi.detail', $transaction->transaksi_id)->with('success', 'Bukti pembayaran berhasil diupload!');
+        return redirect()->route('transaksi.detail', $transaction->transaksi_id)->with('success', 'Bukti pembayaran berhasil diupload! Status order berubah menjadi "Menunggu Konfirmasi Pembayaran".');
     }
 }

@@ -7,12 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     protected $primaryKey = 'payment_id';
+    
+    protected $casts = [
+        'payment_date' => 'datetime',
+    ];
+    
     protected $fillable = [
         'transaction_id',
         'payment_date',
         'amount_paid',
         'photo_proof_payment',
-        'status',
+        'status_payment',
     ];
 
     public function transaction()

@@ -301,6 +301,154 @@
     border: 2px dashed #d1d5db;
 }
 
+.payment-upload-form {
+    background: linear-gradient(135deg, #fff, #f8fafc);
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    border: 1px solid rgba(229, 231, 235, 0.5);
+}
+
+.upload-form-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.upload-form-title::before {
+    content: '📤';
+    font-size: 1.3rem;
+}
+
+.upload-form {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    border: 2px dashed #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.upload-form:hover {
+    border-color: #16a34a;
+    background: #f1f8f4;
+}
+
+.upload-form .form-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.upload-form .form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.upload-form .form-control:focus {
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+.upload-form .form-text {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+.upload-btn {
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-weight: 600;
+    font-size: 1rem;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+    margin-top: 16px;
+}
+
+.upload-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
+    background: linear-gradient(135deg, #15803d, #16a34a);
+}
+
+.payment-instructions {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    border: 1px solid #90caf9;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    color: #1976d2;
+}
+
+.payment-instructions .instructions-title {
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.payment-instructions .instructions-title::before {
+    content: '💡';
+    font-size: 1.1rem;
+}
+
+.payment-instructions ul {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+}
+
+.payment-instructions li {
+    margin-bottom: 4px;
+    font-size: 0.95rem;
+}
+
+.alert {
+    border-radius: 12px;
+    border: none;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-weight: 500;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    color: #15803d;
+    border-left: 4px solid #16a34a;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #fecaca, #fca5a5);
+    color: #dc2626;
+    border-left: 4px solid #dc2626;
+}
+
+.alert .btn-close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: inherit;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.alert .btn-close:hover {
+    opacity: 1;
+}
+
 @media (max-width: 768px) {
     .transaksi-detail-container {
         padding: 24px 16px;
@@ -360,6 +508,20 @@
 </style>
 
 <div class="transaksi-detail-container">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    
     <a href="{{ route('transaksi') }}" class="btn btn-outline-success mb-3" style="border-radius:8px;font-weight:600;">
         Kembali ke Daftar Transaksi
     </a>
@@ -368,9 +530,9 @@
     
     <div class="transaksi-detail-info">
         <div class="date-info">
-            <span><b>Tanggal:</b> {{ \Carbon\Carbon::parse($transaction->order_date)->format('d M Y H:i') }}</span>
+            <span><b>Tanggal:</b> {{ $transaction->order_date->format('d M Y H:i') }}</span>
         </div>
-        <span class="transaksi-detail-status">{{ $transaction->status }}</span>
+        <span class="transaksi-detail-status">{{ $transaction->display_status }}</span>
     </div>
     
     <div class="delivery-info">
@@ -381,10 +543,35 @@
         @if($transaction->estimated_delivery_date)
             <div class="info-item">
                 <span class="info-label"><b>Estimasi Tiba:</b></span>
-                <span class="info-value">{{ \Carbon\Carbon::parse($transaction->estimated_delivery_date)->translatedFormat('d M Y') }}</span>
+                <span class="info-value">{{ $transaction->estimated_delivery_date->translatedFormat('d M Y') }}</span>
             </div>
         @endif
     </div>
+    
+    @if($transaction->recipient_name || $transaction->shippingAddress)
+    <div class="delivery-info">
+        <div class="info-item">
+            <span class="info-label"><b>Alamat Pengiriman:</b></span>
+            <span class="info-value">
+                @if($transaction->shippingAddress)
+                    {{ $transaction->shippingAddress->recipient_name }}<br>
+                    {{ $transaction->shippingAddress->address }}<br>
+                    Telp: {{ $transaction->shippingAddress->recipient_phone }}
+                    @if($transaction->shippingAddress->note)
+                        <br><small class="text-muted">Catatan: {{ $transaction->shippingAddress->note }}</small>
+                    @endif
+                @else
+                    {{ $transaction->recipient_name }}<br>
+                    {{ $transaction->shipping_address }}<br>
+                    Telp: {{ $transaction->recipient_phone }}
+                    @if($transaction->shipping_note)
+                        <br><small class="text-muted">Catatan: {{ $transaction->shipping_note }}</small>
+                    @endif
+                @endif
+            </span>
+        </div>
+    </div>
+    @endif
     
     <table class="transaksi-detail-table">
         <thead>
@@ -418,7 +605,7 @@
             <div class="payment-info">
                 <div class="payment-item">
                     <div class="label">📅 Tanggal Pembayaran</div>
-                    <div class="value">{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y H:i') }}</div>
+                    <div class="value">{{ $payment->payment_date->format('d M Y H:i') }}</div>
                 </div>
                 <div class="payment-item">
                     <div class="label">💰 Jumlah Dibayar</div>
@@ -427,7 +614,7 @@
                 <div class="payment-item">
                     <div class="label">✅ Status Pembayaran</div>
                     <div class="value">
-                        <span class="payment-status">{{ $payment->status }}</span>
+                        <span class="payment-status">{{ $payment->status_payment }}</span>
                     </div>
                 </div>
             </div>
@@ -442,6 +629,54 @@
             <div class="no-payment">
                 ⚠️ Belum ada pembayaran untuk transaksi ini.
             </div>
+            
+            @if($transaction->status_order === 'menunggu_pembayaran')
+            <div class="payment-upload-form">
+                <div class="payment-instructions">
+                    <div class="instructions-title">Petunjuk Pembayaran:</div>
+                    <ul>
+                        <li>Transfer sejumlah <strong>IDR {{ number_format($transaction->total_harga,0,',','.') }}</strong></li>
+                        <li>Simpan bukti transfer (screenshot atau foto)</li>
+                        <li>Upload bukti transfer di bawah ini</li>
+                        <li>Tim kami akan memverifikasi pembayaran Anda</li>
+                    </ul>
+                </div>
+                
+                <div class="upload-form-title">
+                    Upload Bukti Pembayaran
+                </div>
+                
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                
+                <div class="upload-form">
+                    <form enctype="multipart/form-data" method="POST" action="{{ route('payment.upload_proof') }}">
+                        @csrf
+                        <input type="hidden" name="transaction_id" value="{{ $transaction->transaksi_id }}">
+                        <div class="mb-3">
+                            <label for="buktiPembayaran" class="form-label">Pilih file gambar bukti transfer</label>
+                            <input class="form-control" 
+                                   type="file" 
+                                   id="buktiPembayaran" 
+                                   name="bukti_pembayaran" 
+                                   accept="image/*" 
+                                   required>
+                            <div class="form-text">Format yang didukung: JPG, JPEG, PNG (Max. 10MB)</div>
+                        </div>
+                        <button type="submit" class="upload-btn">
+                            📤 Upload Bukti Pembayaran
+                        </button>
+                    </form>
+                </div>
+            </div>
+            @endif
         @endif
     </div>
 </div>

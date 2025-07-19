@@ -287,7 +287,7 @@
             <span style="font-weight:600;">⏰ BAYAR SEBELUM {{ $deadline }}</span>
         </div>
         <div class="payment-amount">
-            IDR {{ number_format($grand_total ?? 75725, 0, ',', '.') }}
+            IDR {{ number_format($transaction->total_harga, 0, ',', '.') }}
         </div>
     </div>
 
@@ -298,6 +298,28 @@
                 <strong>💡 Petunjuk Pembayaran:</strong><br>
                 Silakan transfer sesuai nominal yang tertera dan unggah bukti transfer di bawah ini.
             </div>
+            
+            @if($address)
+            <div class="alert-info">
+                <strong>📍 Alamat Pengiriman:</strong><br>
+                <strong>{{ $address->recipient_name }}</strong><br>
+                {{ $address->address }}<br>
+                Telp: {{ $address->recipient_phone }}
+                @if($address->note)
+                    <br><small class="text-muted">Catatan: {{ $address->note }}</small>
+                @endif
+            </div>
+            @elseif($transaction->recipient_name)
+            <div class="alert-info">
+                <strong>📍 Alamat Pengiriman:</strong><br>
+                <strong>{{ $transaction->recipient_name }}</strong><br>
+                {{ $transaction->shipping_address }}<br>
+                Telp: {{ $transaction->recipient_phone }}
+                @if($transaction->shipping_note)
+                    <br><small class="text-muted">Catatan: {{ $transaction->shipping_note }}</small>
+                @endif
+            </div>
+            @endif
             
             <div class="upload-section">
                 <div class="upload-title">
@@ -342,8 +364,16 @@
                 
                 <div class="transaction-info">
                     <div class="transaction-number">
+                        <span class="text-muted">ID Transaksi:</span>
+                        <strong>#{{ $transaction->transaksi_id }}</strong>
+                    </div>
+                    <div class="transaction-number">
+                        <span class="text-muted">Tanggal Pesanan:</span>
+                        <strong>{{ $transaction->order_date->format('d M Y H:i') }}</strong>
+                    </div>
+                    <div class="transaction-number">
                         <span class="text-muted">Metode Pengiriman:</span>
-                        <strong>{{ ucfirst($shipping_method) }}</strong>
+                        <strong>{{ ucfirst($transaction->delivery_method) }}</strong>
                     </div>
                     <div class="transaction-deadline">
                         <span>⏰</span>
@@ -352,14 +382,14 @@
                     </div>
                 </div>
 
-                @if($cart && count($cart) > 0)
-                    @foreach($cart as $item)
+                @if($transaction->transactionItems && count($transaction->transactionItems) > 0)
+                    @foreach($transaction->transactionItems as $item)
                         <div class="product-item">
                             <div class="product-details">
-                                <div class="product-name">{{ $item['name'] ?? '-' }}</div>
-                                <div class="product-quantity">{{ $item['qty'] }} × IDR {{ number_format($item['price'], 0, ',', '.') }}</div>
+                                <div class="product-name">{{ $item->product->nama ?? '-' }}</div>
+                                <div class="product-quantity">{{ $item->quantity }} × IDR {{ number_format($item->unit_price, 0, ',', '.') }}</div>
                             </div>
-                            <div class="product-price">IDR {{ number_format($item['subtotal'], 0, ',', '.') }}</div>
+                            <div class="product-price">IDR {{ number_format($item->subtotal, 0, ',', '.') }}</div>
                         </div>
                     @endforeach
                 @endif
@@ -367,7 +397,7 @@
                 <div class="subtotal-section">
                     <div class="cost-item">
                         <span class="cost-label">Subtotal</span>
-                        <span class="cost-value fw-bold">IDR {{ number_format($total, 0, ',', '.') }}</span>
+                        <span class="cost-value fw-bold">IDR {{ number_format($transaction->total_harga, 0, ',', '.') }}</span>
                     </div>
                 </div>
 
@@ -382,13 +412,13 @@
                     </div>
                     <div class="cost-item">
                         <span class="cost-label fw-semibold">Total Biaya</span>
-                        <span class="cost-value fw-bold">IDR {{ number_format($grand_total, 0, ',', '.') }}</span>
+                        <span class="cost-value fw-bold">IDR {{ number_format($transaction->total_harga, 0, ',', '.') }}</span>
                     </div>
                 </div>
 
                 <div class="total-section">
                     <div class="total-amount">
-                        💰 IDR {{ number_format($grand_total, 0, ',', '.') }}
+                        💰 IDR {{ number_format($transaction->total_harga, 0, ',', '.') }}
                     </div>
                     <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">
                         Jumlah Total yang Harus Dibayar

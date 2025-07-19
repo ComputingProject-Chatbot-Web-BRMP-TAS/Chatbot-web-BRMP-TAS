@@ -262,7 +262,7 @@
             </div>
             <form action="{{ route('checkout.next') }}" method="POST" class="mt-3">
                 @csrf
-                <button type="submit" class="btn">Pilih pembayaran <i class="bi bi-chevron-right"></i></button>
+                <button type="submit" class="btn">Bayar Sekarang <i class="bi bi-chevron-right"></i></button>
             </form>
         </div>
     </div>
