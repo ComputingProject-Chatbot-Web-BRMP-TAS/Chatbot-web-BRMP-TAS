@@ -89,16 +89,17 @@ class PaymentController extends Controller
             return redirect()->route('transaksi')->with('error', 'Anda tidak memiliki akses ke transaksi ini.');
         }
         
-        // Cek apakah sudah ada payment untuk transaksi ini
-        if ($transaction->payments()->exists()) {
-            return redirect()->route('transaksi.detail', $transaction->transaksi_id)->with('error', 'Bukti pembayaran sudah diupload untuk transaksi ini.');
+        // Cek apakah sudah ada payment untuk transaksi ini yang statusnya BUKAN rejected
+        $hasNonRejectedPayment = $transaction->payments()->where('status_payment', '!=', 'rejected')->exists();
+        if ($hasNonRejectedPayment) {
+            return redirect()->route('transaksi.detail', $transaction->transaksi_id)->with('error', 'Bukti pembayaran sudah diupload dan sedang diproses untuk transaksi ini.');
         }
         
         $file = $request->file('bukti_pembayaran');
         $filename = 'bukti_' . time() . '.' . $file->getClientOriginalExtension();
         $file->storeAs('public/bukti_pembayaran', $filename);
         
-        // Buat payment dengan status 'pending'
+        // Buat payment baru dengan status 'pending'
         $payment = Payment::create([
             'transaction_id' => $transaction->transaksi_id,
             'payment_date' => now('Asia/Jakarta'),

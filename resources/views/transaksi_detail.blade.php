@@ -600,8 +600,15 @@
     
     <div class="transaksi-detail-payment">
         <div class="payment-title"><b>Pembayaran</b></div>
-        @if($transaction->payments && count($transaction->payments) > 0)
-            @php $payment = $transaction->payments->first(); @endphp
+        @php
+            $payments = $transaction->payments;
+            $hasPayments = $payments && count($payments) > 0;
+            $allRejected = $hasPayments && $payments->every(function($p) { return $p->status_payment === 'rejected'; });
+            $showUploadForm = (!$hasPayments && $transaction->status_order === 'menunggu_pembayaran') || $allRejected;
+            $latestPayment = $hasPayments ? $payments->last() : null;
+        @endphp
+        @if($hasPayments && !$allRejected)
+            @php $payment = $payments->last(); @endphp
             <div class="payment-info">
                 <div class="payment-item">
                     <div class="label">📅 Tanggal Pembayaran</div>
@@ -625,13 +632,19 @@
                     <img src="{{ asset('storage/bukti_pembayaran/'.$payment->photo_proof_payment) }}" alt="Bukti Pembayaran">
                 </div>
             @endif
-        @else
+        @elseif(!$hasPayments)
             <div class="no-payment">
                 ⚠️ Belum ada pembayaran untuk transaksi ini.
             </div>
-            
-            @if($transaction->status_order === 'menunggu_pembayaran')
+        @endif
+        @if($showUploadForm)
             <div class="payment-upload-form">
+                @if($allRejected)
+                    <div class="alert alert-warning" style="border-radius:10px; margin-bottom:16px;">
+                        <b>Upload Ulang Bukti Pembayaran</b><br>
+                        Bukti pembayaran sebelumnya <span style="color:#dc2626;font-weight:600;">ditolak</span>. Silakan upload ulang bukti pembayaran yang benar agar transaksi dapat diproses.
+                    </div>
+                @endif
                 <div class="payment-instructions">
                     <div class="instructions-title">Petunjuk Pembayaran:</div>
                     <ul>
@@ -641,11 +654,9 @@
                         <li>Tim kami akan memverifikasi pembayaran Anda</li>
                     </ul>
                 </div>
-                
                 <div class="upload-form-title">
                     Upload Bukti Pembayaran
                 </div>
-                
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul class="mb-0">
@@ -655,7 +666,6 @@
                         </ul>
                     </div>
                 @endif
-                
                 <div class="upload-form">
                     <form enctype="multipart/form-data" method="POST" action="{{ route('payment.upload_proof') }}">
                         @csrf
@@ -676,7 +686,6 @@
                     </form>
                 </div>
             </div>
-            @endif
         @endif
     </div>
 </div>

@@ -345,6 +345,25 @@
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
 }
 
+.btn-outline-danger {
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(239, 68, 68, 0.1));
+    color: #dc2626;
+    border: 2px solid #dc2626;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-outline-danger:hover {
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
 .delivery-estimate {
     color: #16a34a;
     font-size: 0.95rem;
@@ -519,6 +538,15 @@
                             @if($trx->status_order === 'menunggu_pembayaran' && !$trx->payments->count())
                                 <a href="{{ route('transaksi.detail', $trx->transaksi_id) }}" class="btn btn-outline-warning btn-sm" onclick="event.stopPropagation();">
                                     📤 Upload Bukti
+                                </a>
+                            @endif
+                            @php
+                                $hasPayments = $trx->payments && $trx->payments->count() > 0;
+                                $allRejected = $hasPayments && $trx->payments->every(function($p) { return $p->status_payment === 'rejected'; });
+                            @endphp
+                            @if($allRejected)
+                                <a href="{{ route('transaksi.detail', $trx->transaksi_id) }}" class="btn btn-outline-danger btn-sm" onclick="event.stopPropagation();">
+                                    🔁 Upload Ulang Bukti
                                 </a>
                             @endif
                             @if($trx->status_order === 'selesai')

@@ -52,7 +52,7 @@ class Transaction extends Model
      */
     public function getDisplayStatusAttribute()
     {
-        $payment = $this->payments->first();
+        $payment = $this->payments->last();
         
         // If no payment exists, show "Menunggu Pembayaran"
         if (!$payment) {
@@ -112,7 +112,7 @@ class Transaction extends Model
      */
     public function getStatusClassAttribute()
     {
-        $payment = $this->payments->first();
+        $payment = $this->payments->last();
         
         if (!$payment) {
             return 'menunggu-pembayaran';
