@@ -22,8 +22,8 @@ return new class extends Migration
             $table->integer('total_harga');
             $table->string('status_order');
             $table->string('delivery_method');
-            $table->dateTime('order_date')->change();
-            $table->dateTime('estimated_delivery_date')->nullable()->change();
+            $table->dateTime('order_date');
+            $table->dateTime('estimated_delivery_date')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('shipping_address_id')->references('id')->on('addresses')->onDelete('set null');
