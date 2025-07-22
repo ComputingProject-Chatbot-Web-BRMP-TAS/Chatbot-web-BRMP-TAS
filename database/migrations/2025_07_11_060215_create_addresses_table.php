@@ -19,6 +19,9 @@ return new class extends Migration
             $table->decimal('latitude', 10, 7);
             $table->decimal('longitude', 10, 7);
             $table->boolean('is_primary')->default(false);
+            $table->string('note')->nullable();
+            $table->string('recipient_name');
+            $table->string('recipient_phone');
             $table->timestamps();
         });
     }

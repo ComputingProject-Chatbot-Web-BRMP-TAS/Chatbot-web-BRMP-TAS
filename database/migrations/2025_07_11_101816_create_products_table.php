@@ -14,12 +14,16 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id('produk_id');
             $table->string('nama');
-            $table->enum('jenis_kategori', ['Tumbuhan', 'Rempah-Rempah/Herbal', 'Buah-Buahan', 'Sayuran', 'Bunga']);
+            $table->enum('jenis_kategori', ['Tanaman Pemanis', 'Tanaman Serat', 'Tanaman Tembakau', 'Tanaman Minyak Industri']);
             $table->text('deskripsi');
-            $table->integer('jumlah_biji');
-            $table->string('berat_bersih')->nullable();
-            $table->integer('harga');
-            $table->string('gambar');
+            $table->integer('stok_minimal');
+            $table->integer('stok')->default(0);
+            $table->string('satuan');
+            $table->integer('harga_per_satuan');
+            $table->string('gambar1');
+            $table->string('gambar2');
+            $table->string('gambar_certificate');
+
             $table->timestamps();
         });
     }

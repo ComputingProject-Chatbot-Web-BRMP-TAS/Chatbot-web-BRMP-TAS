@@ -4,21 +4,25 @@
 <div class="product-detail-modern-bg">
     <div class="product-detail-modern-container">
         <div class="product-detail-modern-left">
-            <img src="{{ asset('images/' . $product->gambar) }}" alt="{{ $product->nama }}" class="product-detail-main-image">
+            <div class="product-detail-main-image-wrapper">
+                <img src="{{ asset('images/' . $product->gambar1) }}" alt="{{ $product->nama }}" class="product-detail-main-image">
+            </div>
             <div class="product-detail-thumbs">
-                <img src="{{ asset('images/' . $product->gambar) }}" alt="thumb1" class="selected">
-                <img src="{{ asset('images/' . $product->gambar) }}" alt="thumb2">
-                <img src="{{ asset('images/' . $product->gambar) }}" alt="thumb3">
+                <img src="{{ asset('images/' . $product->gambar1) }}" alt="thumb1" class="selected">
+                @if($product->gambar2)
+                    <img src="{{ asset('images/' . $product->gambar2) }}" alt="thumb2">
+                @endif
+                @if($product->gambar_certificate)
+                    <img src="{{ asset('images/' . $product->gambar_certificate) }}" alt="certificate">
+                @endif
             </div>
         </div>
         <div class="product-detail-modern-center">
             <div class="product-detail-title">{{ $product->nama }}</div>
-            <div class="product-detail-price">Rp{{ number_format($product->harga, 0, ',', '.') }}</div>
-            <div class="product-detail-stock">Stok: <span>{{ $product->stok }}</span></div>
+            <div class="product-detail-price">Rp{{ number_format($product->harga_per_satuan, 0, ',', '.') }} / {{ $product->satuan }}</div>
+            <div class="product-detail-stock">Stok: {{ $product->stok }}{{ $product->satuan }}</div>
             <div class="product-detail-info-list">
                 <div><span class="label">Kategori:</span> <span class="value">{{ $product->jenis_kategori }}</span></div>
-                <div><span class="label">Berat Bersih:</span> <span class="value">{{ $product->berat_bersih }}</span></div>
-                <div><span class="label">Jumlah Biji:</span> <span class="value">{{ $product->jumlah_biji }}</span></div>
             </div>
             <div class="product-detail-desc">{{ $product->deskripsi }}</div>
         </div>
@@ -35,7 +39,7 @@
                     <div id="stockWarning" style="color:#d32f2f;font-size:0.98rem;display:none;margin-bottom:8px;">Stok tidak mencukupi</div>
                     <div class="product-detail-card-subtotal">
                         Subtotal
-                        <span id="subtotal">Rp{{ number_format($product->harga, 0, ',', '.') }}</span>
+                        <span id="subtotal">Rp{{ number_format($product->harga_per_satuan, 0, ',', '.') }}</span>
                     </div>
                     <button class="btn-green w-100" style="margin-bottom:10px;" type="submit">+ Keranjang</button>
                 </form>
@@ -75,6 +79,17 @@
     object-fit: contain;
     border-radius: 16px;
     background: #f3f3f3;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.product-detail-main-image-wrapper {
+    width: 340px;
+    height: 340px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f3f3f3;
+    border-radius: 16px;
     margin-bottom: 18px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
@@ -272,7 +287,7 @@ function decrementQty(e) {
 }
 function updateSubtotal() {
     let qty = parseInt(document.getElementById('qtyInput').value);
-    let harga = {{ $product->harga }};
+    let harga = {{ $product->harga_per_satuan }};
     document.getElementById('subtotal').innerText = 'Rp' + (harga * qty).toLocaleString('id-ID');
 }
 </script>

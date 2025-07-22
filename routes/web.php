@@ -209,30 +209,18 @@ Route::post('/profile/upload-foto', function (\Illuminate\Http\Request $request)
     return redirect()->route('profile')->with('success', 'Foto profil berhasil diupload!');
 })->name('profile.upload_foto')->middleware('auth');
 
-Route::get('/kategori/tumbuhan', function() {
-    $products = Product::where('jenis_kategori', 'Tumbuhan')->get();
+Route::get('/kategori/{kategori}', function($kategori) {
+    $map = [
+        'pemanis' => ['Tanaman Pemanis', 'Tanaman Pemanis'],
+        'serat' => ['Tanaman Serat', 'Tanaman Serat'],
+        'tembakau' => ['Tanaman Tembakau', 'Tanaman Tembakau'],
+        'minyak' => ['Tanaman Minyak Industri', 'Tanaman Minyak Industri'],
+    ];
+    if (!isset($map[$kategori])) abort(404);
+    [$jenis_kategori, $judul] = $map[$kategori];
+    $products = Product::where('jenis_kategori', $jenis_kategori)->get();
     $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
-    return view('kategori_tumbuhan', compact('products', 'latestProducts'));
-});
-Route::get('/kategori/rempah', function() {
-    $products = Product::where('jenis_kategori', 'Rempah-Rempah/Herbal')->get();
-    $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
-    return view('kategori_rempah', compact('products', 'latestProducts'));
-});
-Route::get('/kategori/buah', function() {
-    $products = Product::where('jenis_kategori', 'Buah-Buahan')->get();
-    $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
-    return view('kategori_buah', compact('products', 'latestProducts'));
-});
-Route::get('/kategori/sayuran', function() {
-    $products = Product::where('jenis_kategori', 'Sayuran')->get();
-    $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
-    return view('kategori_sayuran', compact('products', 'latestProducts'));
-});
-Route::get('/kategori/bunga', function() {
-    $products = Product::where('jenis_kategori', 'Bunga')->get();
-    $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
-    return view('kategori_bunga', compact('products', 'latestProducts'));
+    return view('kategori', compact('products', 'latestProducts', 'judul'));
 });
 
 Route::middleware('auth')->group(function () {

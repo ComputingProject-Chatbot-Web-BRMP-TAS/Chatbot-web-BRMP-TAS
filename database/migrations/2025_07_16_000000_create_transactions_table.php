@@ -13,14 +13,20 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id('transaksi_id');
-            $table->unsignedBigInteger('user_id');
-            $table->date('order_date');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('shipping_address_id')->nullable();
+            $table->string('recipient_name');
+            $table->string('recipient_phone');
+            $table->text('shipping_address');
+            $table->text('shipping_note')->nullable();
             $table->integer('total_harga');
             $table->string('status');
-            $table->string('delivery_method')->nullable();
-            $table->date('estimated_delivery_date')->nullable();
+            $table->string('delivery_method');
+            $table->dateTime('order_date')->change();
+            $table->dateTime('estimated_delivery_date')->nullable()->change();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('shipping_address_id')->references('id')->on('addresses')->onDelete('set null');
         });
     }
 

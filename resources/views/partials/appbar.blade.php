@@ -308,20 +308,17 @@
     <!-- Dropdown kategori dan mobile menu tetap di luar flex utama -->
     <div id="appbarCategoryDropdown" class="dropdown-anim" style="display:none;position:fixed;top:56px;left:0;background:#fff !important;border-radius:0;box-shadow:0 4px 24px rgba(0,0,0,0.10);padding:14px 0;z-index:1001;flex-direction:row;gap:0;min-width:600px;max-width:1920px;width:auto;overflow:hidden;opacity:0;transform:translateY(-24px);height:0;transition:opacity 0.25s cubic-bezier(.4,0,.2,1), transform 0.25s cubic-bezier(.4,0,.2,1), height 0.25s cubic-bezier(.4,0,.2,1);">
             <div style="display:flex;flex-direction:row;gap:0;width:100%;justify-content:flex-start;">
-                <a href="/kategori/tumbuhan" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
-                    <i class="fas fa-seedling" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Tumbuhan</span>
+                <a href="/kategori/pemanis" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
+                    <i class="fas fa-cube" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Tanaman Pemanis</span>
                 </a>
-                <a href="/kategori/rempah" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
-                    <i class="fas fa-leaf" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Rempah-Rempah/Herbal</span>
+                <a href="/kategori/serat" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
+                    <i class="fas fa-tshirt" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Tanaman Serat</span>
                 </a>
-                <a href="/kategori/buah" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
-                    <i class="fas fa-apple-alt" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Buah-Buahan</span>
+                <a href="/kategori/tembakau" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
+                    <i class="fas fa-leaf" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Tanaman Tembakau</span>
                 </a>
-                <a href="/kategori/sayuran" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
-                    <i class="fas fa-carrot" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Sayuran</span>
-                </a>
-                <a href="/kategori/bunga" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
-                    <i class="fas fa-spa" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Bunga</span>
+                <a href="/kategori/minyak" class="dropdown-item" style="padding:10px 28px;cursor:pointer;display:flex;align-items:center;gap:12px;min-width:160px;border-radius:8px;transition:background 0.15s; color:#388E3C; font-weight:600; text-decoration:none;">
+                    <i class="fas fa-oil-can" style="color:#388E3C;"></i> <span style="font-size:15px;color:#388E3C;">Tanaman Minyak Industri</span>
                 </a>
             </div>
         </div>

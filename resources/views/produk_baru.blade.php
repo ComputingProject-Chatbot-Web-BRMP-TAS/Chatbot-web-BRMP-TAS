@@ -307,24 +307,20 @@
                     <div class="filter-section">
                         <div class="filter-section-title">Kategori</div>
                         <div class="filter-option">
-                            <input type="checkbox" id="tumbuhan">
-                            <label for="tumbuhan">Tumbuhan</label>
+                            <input type="checkbox" id="pemanis">
+                            <label for="pemanis">Tanaman Pemanis</label>
                         </div>
                         <div class="filter-option">
-                            <input type="checkbox" id="rempah">
-                            <label for="rempah">Rempah-Rempah/Herbal</label>
+                            <input type="checkbox" id="serat">
+                            <label for="serat">Tanaman Serat</label>
                         </div>
                         <div class="filter-option">
-                            <input type="checkbox" id="buah">
-                            <label for="buah">Buah-Buahan</label>
+                            <input type="checkbox" id="tembakau">
+                            <label for="tembakau">Tanaman Tembakau</label>
                         </div>
                         <div class="filter-option">
-                            <input type="checkbox" id="sayuran">
-                            <label for="sayuran">Sayuran</label>
-                        </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="bunga">
-                            <label for="bunga">Bunga</label>
+                            <input type="checkbox" id="minyak">
+                            <label for="minyak">Tanaman Minyak Industri</label>
                         </div>
                     </div>
                 </div>
