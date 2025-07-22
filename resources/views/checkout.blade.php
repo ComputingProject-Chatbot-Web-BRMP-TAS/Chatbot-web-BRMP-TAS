@@ -172,11 +172,11 @@
                 @endphp
                 <form class="mt-3">
                     <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="shipping_method" id="shipping_standard" value="standard" checked>
-                        <label class="form-check-label" for="shipping_standard">
-                            Standard
+                        <input class="form-check-input" type="radio" name="shipping_method" id="shipping_reguler" value="reguler" checked>
+                        <label class="form-check-label" for="shipping_reguler">
+                            Reguler
                             <div style="font-size:0.95em;color:#888;font-weight:400;">
-                                Estimasi: {{ $today->copy()->addDays(2)->translatedFormat('d M Y') }} - {{ $today->copy()->addDays(4)->translatedFormat('d M Y') }}
+                                Estimasi: {{ $today->copy()->addDays(2)->translatedFormat('d M Y') }} - {{ $today->copy()->addDays(5)->translatedFormat('d M Y') }}
                             </div>
                         </label>
                     </div>
@@ -190,39 +190,9 @@
                         </label>
                     </div>
                     <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="shipping_method" id="shipping_reguler" value="reguler">
-                        <label class="form-check-label" for="shipping_reguler">
-                            Reguler
-                            <div style="font-size:0.95em;color:#888;font-weight:400;">
-                                Estimasi: {{ $today->copy()->addDays(2)->translatedFormat('d M Y') }} - {{ $today->copy()->addDays(5)->translatedFormat('d M Y') }}
-                            </div>
-                        </label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="shipping_method" id="shipping_instant" value="instant">
-                        <label class="form-check-label" for="shipping_instant">
-                            Instant
-                            <div style="font-size:0.95em;color:#888;font-weight:400;">
-                                Estimasi: Kurang dari 3 jam ({{ $today->translatedFormat('d M Y') }})
-                            </div>
-                        </label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="shipping_method" id="shipping_sameday" value="sameday">
-                        <label class="form-check-label" for="shipping_sameday">
-                            Same Day
-                            <div style="font-size:0.95em;color:#888;font-weight:400;">
-                                Estimasi: Hari yang sama ({{ $today->translatedFormat('d M Y') }})
-                            </div>
-                        </label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="shipping_method" id="shipping_ekonomi" value="ekonomi">
-                        <label class="form-check-label" for="shipping_ekonomi">
-                            Ekonomi
-                            <div style="font-size:0.95em;color:#888;font-weight:400;">
-                                Estimasi: {{ $today->copy()->addDays(4)->translatedFormat('d M Y') }} - {{ $today->copy()->addDays(8)->translatedFormat('d M Y') }}
-                            </div>
+                        <input class="form-check-input" type="radio" name="shipping_method" id="shipping_pickup" value="pickup">
+                        <label class="form-check-label" for="shipping_pickup">
+                            Pickup di Tempat
                         </label>
                     </div>
                 </form>
