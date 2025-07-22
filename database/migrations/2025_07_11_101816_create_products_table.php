@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('stok_minimal');
             $table->string('satuan');
             $table->integer('harga_per_satuan');
+            $table->decimal('minimal_pembelian')->default(0);
             $table->string('gambar1');
             $table->string('gambar2');
             $table->string('gambar_certificate');

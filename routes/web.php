@@ -253,7 +253,15 @@ Route::delete('/cart/delete/{cart_item}', function($cart_item) {
 
 Route::post('/cart/update-qty/{cart_item}', function(\Illuminate\Http\Request $request, $cart_item) {
     $item = \App\Models\CartItem::findOrFail($cart_item);
-    $qty = max(1, (int) $request->input('kuantitas', 1));
+    $product = $item->product; // relasi ke produk
+    $minimalPembelian = $product->minimal_pembelian ?? 1;
+    $satuan = strtolower($product->satuan ?? '');
+    $inputQty = $request->input('kuantitas', $minimalPembelian);
+    if (in_array($satuan, ['mata', 'tanaman', 'rizome'])) {
+        $qty = max($minimalPembelian, (int) $inputQty);
+    } else {
+        $qty = max($minimalPembelian, (float) $inputQty);
+    }
     $item->kuantitas = $qty;
     $item->save();
     return response()->json([

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('transaction_item_id');
             $table->unsignedBigInteger('transaction_id');
             $table->unsignedBigInteger('product_id');
-            $table->integer('quantity');
+            $table->decimal('quantity');
             $table->integer('unit_price');
             $table->integer('subtotal');
             $table->timestamps();

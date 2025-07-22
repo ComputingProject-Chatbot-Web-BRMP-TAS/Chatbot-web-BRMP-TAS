@@ -238,9 +238,8 @@
                         </div>
                         <div style="color:#388e3c;font-weight:500;display:flex;align-items:center;gap:8px;">
                             Rp{{ number_format($item->harga_satuan,0,',','.') }} x 
-                            <button type="button" class="qty-btn" onclick="changeQty({{ $item->cart_item_id }}, -1)"><i class="fas fa-minus"></i></button>
-                            <input type="text" id="qtyInput{{ $item->cart_item_id }}" name="kuantitas" value="{{ $item->kuantitas }}" min="1" readonly style="width:32px;text-align:center;background:#fff;border:none;font-weight:600;">
-                            <button type="button" class="qty-btn" onclick="changeQty({{ $item->cart_item_id }}, 1)"><i class="fas fa-plus"></i></button>
+                            <input type="text" id="qtyInput{{ $item->cart_item_id }}" name="kuantitas" value="{{ $item->kuantitas }}" min="{{ $item->product->minimal_pembelian }}" style="width:48px;text-align:center;background:#fff;border:1.5px solid #bfc9d1;font-weight:600;border-radius:6px;" onchange="updateQtyDirect({{ $item->cart_item_id }}, {{ $item->product->minimal_pembelian }})">
+                            <span style="margin-left:4px;">{{ $item->product->satuan }}</span>
                         </div>
                         <div style="color:#757575;font-size:0.98rem;">Subtotal: Rp<span class="item-subtotal" id="subtotal{{ $item->cart_item_id }}">{{ number_format($item->harga_satuan * $item->kuantitas,0,',','.') }}</span></div>
                     </div>
@@ -320,12 +319,22 @@ function toggleAll(source) {
     checkboxes.forEach(cb => { cb.checked = source.checked; });
     updateSummary();
 }
-function changeQty(cartItemId, delta) {
+function updateQtyDirect(cartItemId, minimalPembelian) {
     let input = document.getElementById('qtyInput'+cartItemId);
-    let qty = parseInt(input.value);
-    if (qty + delta < 1) return;
+    let val = input.value.replace(',', '.');
+    let satuan = input.nextElementSibling ? input.nextElementSibling.innerText.trim() : '';
+    let qty;
+    if (["Mata", "Tanaman", "Rizome"].includes(satuan)) {
+        qty = parseInt(val);
+        if (isNaN(qty) || qty < minimalPembelian) qty = minimalPembelian;
+        input.value = qty;
+    } else {
+        qty = parseFloat(val);
+        if (isNaN(qty) || qty < minimalPembelian) qty = minimalPembelian;
+        input.value = qty;
+    }
     let formData = new FormData();
-    formData.append('kuantitas', qty + delta);
+    formData.append('kuantitas', qty);
     formData.append('_token', '{{ csrf_token() }}');
     fetch(`{{ url('/cart/update-qty') }}/${cartItemId}`, {
         method: 'POST',

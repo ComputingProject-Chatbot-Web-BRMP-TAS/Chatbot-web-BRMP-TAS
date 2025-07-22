@@ -20,7 +20,7 @@
         <div class="product-detail-modern-center">
             <div class="product-detail-title">{{ $product->nama }}</div>
             <div class="product-detail-price">Rp{{ number_format($product->harga_per_satuan, 0, ',', '.') }} / {{ $product->satuan }}</div>
-            <div class="product-detail-stock">Stok: {{ $product->stok - $product->stok_minimal }}{{ $product->satuan }}</div>
+            <div class="product-detail-stock">Stok: {{ $product->stok - $product->stok_minimal }} {{ $product->satuan }}</div>
             <div class="product-detail-info-list">
                 <div><span class="label">Kategori:</span> <span class="value">{{ $product->jenis_kategori }}</span></div>
             </div>
@@ -32,7 +32,7 @@
                 <form method="POST" action="{{ Auth::check() ? route('cart.add', $product->produk_id) : route('login') }}">
                     @csrf
                     <div class="product-detail-card-qty">
-                        <input type="text" id="qtyInput" name="kuantitas" value="1" min="1" style="width:60px;text-align:center;background:#fff;">
+                        <input type="text" id="qtyInput" name="kuantitas" value="{{ $product->minimal_pembelian }}" min="{{ $product->minimal_pembelian }}" style="width:60px;text-align:center;background:#fff;">
                         <span style="margin-left:8px;">{{ $product->satuan }}</span>
                     </div>
                     <div id="stockWarning" style="color:#d32f2f;font-size:0.98rem;display:none;margin-bottom:8px;">Stok tidak mencukupi</div>
@@ -270,25 +270,54 @@
 @endpush
 @push('scripts')
 <script>
-function incrementQty(e) {
-    e.preventDefault();
-    let input = document.getElementById('qtyInput');
-    let val = parseInt(input.value);
-    input.value = val + 1;
-    updateSubtotal();
-}
-function decrementQty(e) {
-    e.preventDefault();
-    let input = document.getElementById('qtyInput');
-    let val = parseInt(input.value);
-    if (val > 1) input.value = val - 1;
-    updateSubtotal();
-}
 function updateSubtotal() {
-    let qty = parseInt(document.getElementById('qtyInput').value);
+    let qty = parseFloat(document.getElementById('qtyInput').value.replace(',', '.')) || 0;
     let harga = {{ $product->harga_per_satuan }};
     document.getElementById('subtotal').innerText = 'Rp' + (harga * qty).toLocaleString('id-ID');
 }
+
+const satuanProduk = @json($product->satuan);
+const qtyInput = document.getElementById('qtyInput');
+const minimalPembelian = {{ $product->minimal_pembelian }};
+
+if (["Mata", "Tanaman", "Rizome"].includes(satuanProduk)) {
+    qtyInput.setAttribute('type', 'number');
+    qtyInput.setAttribute('step', '1');
+    qtyInput.setAttribute('min', minimalPembelian);
+    qtyInput.addEventListener('input', function(e) {
+        // Hanya izinkan integer positif >= minimal pembelian, tapi biarkan kosong
+        let val = this.value.replace(/[^0-9]/g, '');
+        if (val !== "") {
+            val = parseInt(val, 10);
+            if (val < minimalPembelian) val = minimalPembelian;
+            this.value = val;
+        }
+        updateSubtotal();
+    });
+    qtyInput.addEventListener('blur', function(e) {
+        if (this.value === "") {
+            this.value = minimalPembelian;
+            updateSubtotal();
+        }
+    });
+} else {
+    qtyInput.setAttribute('min', minimalPembelian);
+    qtyInput.addEventListener('input', function(e) {
+        updateSubtotal();
+    });
+    qtyInput.addEventListener('blur', function(e) {
+        let val = this.value.replace(',', '.');
+        if (val === "" || isNaN(val)) {
+            this.value = minimalPembelian;
+        } else {
+            val = parseFloat(val);
+            if (val < minimalPembelian) val = minimalPembelian;
+            this.value = val;
+        }
+        updateSubtotal();
+    });
+}
+// Jika ada tombol +/-, pastikan juga memanggil updateSubtotal setelah value berubah
 </script>
 @endpush 
 @section('after_content')

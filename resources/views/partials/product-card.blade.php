@@ -17,7 +17,7 @@
             <div class="title" style="font-weight:500;font-size:15px;margin-bottom:6px;line-height:1.3;">{{ $product->nama }}</div>
             <div class="price" style="color:#388E3C;font-weight:bold;font-size:16px;margin-bottom:4px;">Rp{{ number_format($product->harga_per_satuan,0,',','.') }} / {{ $product->satuan }}</div>
             <div class="desc" style="font-size:12px;color:#757575;height:32px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ $product->deskripsi }}</div>
-            <div class="stock" style="font-size:12px;color:#888;margin-top:4px;">Stok: {{ $product->stok }}{{ $product->satuan }}</div>
+            <div class="stock" style="font-size:12px;color:#888;margin-top:4px;">Stok: {{ $product->stok - $product->stok_minimal }} {{ $product->satuan }}</div>
         </div>
     </div>
 </a> 

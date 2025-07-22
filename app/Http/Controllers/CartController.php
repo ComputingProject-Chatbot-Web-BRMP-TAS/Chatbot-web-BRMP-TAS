@@ -14,7 +14,11 @@ class CartController extends Controller
     {
         $user = Auth::user();
         $product = Product::findOrFail($produkId);
-        $qty = max(1, (int) $request->input('kuantitas', 1));
+        if (in_array($product->satuan, ['Mata', 'Tanaman', 'Rizome'])) {
+            $qty = max($product->minimal_pembelian, (int) $request->input('kuantitas', $product->minimal_pembelian));
+        } else {
+            $qty = max($product->minimal_pembelian, (float) $request->input('kuantitas', $product->minimal_pembelian));
+        }
 
         // Cari cart aktif user, jika belum ada buat baru
         $cart = Cart::firstOrCreate([
@@ -36,7 +40,7 @@ class CartController extends Controller
                 'cart_id' => $cart->cart_id,
                 'product_id' => $product->produk_id,
                 'kuantitas' => $qty,
-                'harga_satuan' => $product->harga,
+                'harga_satuan' => $product->harga_per_satuan,
             ]);
         }
 
