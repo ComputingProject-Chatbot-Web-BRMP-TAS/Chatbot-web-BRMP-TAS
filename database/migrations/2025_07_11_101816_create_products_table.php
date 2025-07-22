@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('nama');
             $table->enum('jenis_kategori', ['Tanaman Pemanis', 'Tanaman Serat', 'Tanaman Tembakau', 'Tanaman Minyak Industri']);
             $table->text('deskripsi');
-            $table->integer('stok_minimal');
-            $table->integer('stok')->default(0);
+            $table->decimal('stok');
+            $table->decimal('stok_minimal');
             $table->string('satuan');
             $table->integer('harga_per_satuan');
             $table->string('gambar1');

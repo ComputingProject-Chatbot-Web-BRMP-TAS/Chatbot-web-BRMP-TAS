@@ -306,8 +306,8 @@
             </h2>
             @if($products->count() > 0)
             <div class="product-grid" id="productsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,20px);">
-                @foreach($products as $produk)
-                    @include('partials.product-card', ['produk' => $produk])
+                @foreach($products as $product)
+                    @include('partials.product-card', ['produk' => $product])
                 @endforeach
             </div>
 

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('shipping_address');
             $table->text('shipping_note')->nullable();
             $table->integer('total_harga');
-            $table->string('status');
+            $table->string('status_order');
             $table->string('delivery_method');
             $table->dateTime('order_date')->change();
             $table->dateTime('estimated_delivery_date')->nullable()->change();

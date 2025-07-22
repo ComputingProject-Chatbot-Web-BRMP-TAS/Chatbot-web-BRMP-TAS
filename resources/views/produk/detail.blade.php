@@ -20,7 +20,7 @@
         <div class="product-detail-modern-center">
             <div class="product-detail-title">{{ $product->nama }}</div>
             <div class="product-detail-price">Rp{{ number_format($product->harga_per_satuan, 0, ',', '.') }} / {{ $product->satuan }}</div>
-            <div class="product-detail-stock">Stok: {{ $product->stok }}{{ $product->satuan }}</div>
+            <div class="product-detail-stock">Stok: {{ $product->stok - $product->stok_minimal }}{{ $product->satuan }}</div>
             <div class="product-detail-info-list">
                 <div><span class="label">Kategori:</span> <span class="value">{{ $product->jenis_kategori }}</span></div>
             </div>
@@ -32,9 +32,8 @@
                 <form method="POST" action="{{ Auth::check() ? route('cart.add', $product->produk_id) : route('login') }}">
                     @csrf
                     <div class="product-detail-card-qty">
-                        <button type="button" class="qty-btn" onclick="decrementQty(event)">-</button>
-                        <input type="text" id="qtyInput" name="kuantitas" value="1" min="1" readonly style="width:40px;text-align:center;background:#fff;cursor:default;">
-                        <button type="button" class="qty-btn" onclick="incrementQty(event)">+</button>
+                        <input type="text" id="qtyInput" name="kuantitas" value="1" min="1" style="width:60px;text-align:center;background:#fff;">
+                        <span style="margin-left:8px;">{{ $product->satuan }}</span>
                     </div>
                     <div id="stockWarning" style="color:#d32f2f;font-size:0.98rem;display:none;margin-bottom:8px;">Stok tidak mencukupi</div>
                     <div class="product-detail-card-subtotal">
