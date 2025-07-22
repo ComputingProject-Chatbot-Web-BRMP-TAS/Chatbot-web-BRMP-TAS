@@ -287,9 +287,10 @@
     <div class="payment-header">
         <div class="payment-deadline">
             <span style="font-weight:600;">⏰ BAYAR SEBELUM {{ $deadline }}</span>
+            <div id="countdown-timer" style="font-size:2rem;font-weight:800;color:#f8f9fa;margin-top:8px;"></div>
         </div>
         <div class="payment-amount">
-            IDR {{ number_format($transaction->total_harga, 0, ',', '.') }}
+            Rp {{ number_format($transaction->total_harga, 0, ',', '.') }}
         </div>
     </div>
 
@@ -431,3 +432,37 @@
     </div>
 </div>
 @endsection
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Ambil deadline dari server (format: d M Y Pukul H:i)
+    var deadlineString = @json($deadline);
+    // Ubah ke format yang bisa diparse JS
+    // Contoh: "23 Jul 2025 Pukul 23:21" => "23 Jul 2025 23:21"
+    var match = deadlineString.match(/^(\d{1,2} \w{3,9} \d{4}) Pukul (\d{2}:\d{2})/);
+    if (!match) return;
+    var dateStr = match[1] + ' ' + match[2];
+    // Parse ke Date (asumsi zona waktu lokal user)
+    var deadline = new Date(dateStr.replace(/ /g, '-').replace(/-/,' '));
+    // Fallback jika parsing gagal
+    if (isNaN(deadline.getTime())) {
+      // Coba format lain
+      deadline = new Date(match[1] + 'T' + match[2] + ':00');
+    }
+    function updateCountdown() {
+      var now = new Date();
+      var diff = deadline - now;
+      if (diff <= 0) {
+        document.getElementById('countdown-timer').innerHTML = 'Waktu pembayaran telah habis';
+        clearInterval(timerInterval);
+        return;
+      }
+      var hours = Math.floor(diff / (1000 * 60 * 60));
+      var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      document.getElementById('countdown-timer').innerHTML =
+        'Sisa waktu Pembayaran: ' + hours.toString().padStart(2,'0') + ':' + minutes.toString().padStart(2,'0') + ':' + seconds.toString().padStart(2,'0');
+    }
+    updateCountdown();
+    var timerInterval = setInterval(updateCountdown, 1000);
+  });
+</script>

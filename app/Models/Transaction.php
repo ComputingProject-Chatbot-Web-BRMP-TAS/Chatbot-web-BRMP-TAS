@@ -73,8 +73,6 @@ class Transaction extends Model
                     return 'Menunggu Pembayaran';
                 case 'diproses':
                     return 'Pesanan Diproses';
-                case 'dikemas':
-                    return 'Pesanan Dikemas';
                 case 'dikirim':
                     return 'Pesanan Dikirim';
                 case 'selesai':
@@ -91,8 +89,6 @@ class Transaction extends Model
             switch ($this->status_order) {
                 case 'diproses':
                     return 'Pesanan Diproses';
-                case 'dikemas':
-                    return 'Pesanan Dikemas';
                 case 'dikirim':
                     return 'Pesanan Dikirim';
                 case 'selesai':
@@ -130,8 +126,6 @@ class Transaction extends Model
                     return 'menunggu-pembayaran';
                 case 'diproses':
                     return 'pesanan-diproses';
-                case 'dikemas':
-                    return 'pesanan-dikemas';
                 case 'dikirim':
                     return 'pesanan-dikirim';
                 case 'selesai':
@@ -147,8 +141,6 @@ class Transaction extends Model
             switch ($this->status_order) {
                 case 'diproses':
                     return 'pesanan-diproses';
-                case 'dikemas':
-                    return 'pesanan-dikemas';
                 case 'dikirim':
                     return 'pesanan-dikirim';
                 case 'selesai':

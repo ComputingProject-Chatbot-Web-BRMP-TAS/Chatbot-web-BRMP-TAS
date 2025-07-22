@@ -48,7 +48,7 @@ class PaymentController extends Controller
         $shipping = 0;
         $insurance = 0;
         $grand_total = $total + $shipping + $insurance;
-        $deadline = Carbon::now('Asia/Jakarta')->addDay()->format('d M Y \\P\\u\\k\\u\\l H:i');
+        $deadline = Carbon::parse($transaction->order_date)->addDay()->format('d M Y \\P\\u\\k\\u\\l H:i');
         $shipping_method = session('checkout_shipping_method', 'Standard');
 
         return view('payment', [

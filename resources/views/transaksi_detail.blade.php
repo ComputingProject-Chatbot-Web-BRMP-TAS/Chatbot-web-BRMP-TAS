@@ -534,6 +534,44 @@
         </div>
         <span class="transaksi-detail-status">{{ $transaction->display_status }}</span>
     </div>
+    @if($transaction->status_order === 'menunggu_pembayaran')
+    <div id="countdown-section" style="margin-bottom:24px;display:flex;flex-direction:column;align-items:center;">
+        <div style="font-size:1.1rem;font-weight:700;color:#222;margin-bottom:8px;">Sisa Waktu Pembayaran</div>
+        <div id="countdown-timer" style="font-size:2rem;font-weight:800;color:#d32f2f;background:#fff3e0;border:2px solid #ff9800;padding:10px 28px;border-radius:10px;box-shadow:0 2px 8px rgba(255,152,0,0.08);margin-bottom:8px;"></div>
+        <div id="countdown-desc" style="font-size:0.98rem;color:#666;text-align:center;max-width:350px;">Pastikan pembayaran dan upload bukti dilakukan sebelum waktu habis. Jika waktu habis, transaksi akan otomatis dibatalkan oleh sistem.</div>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var orderDate = @json($transaction->order_date->format('Y-m-d H:i:s'));
+        var deadline = new Date(new Date(orderDate.replace(/-/g,'/')).getTime() + 24*60*60*1000);
+        function updateCountdown() {
+          var now = new Date();
+          var diff = deadline - now;
+          var timerDiv = document.getElementById('countdown-timer');
+          var descDiv = document.getElementById('countdown-desc');
+          if (diff <= 0) {
+            timerDiv.innerHTML = 'WAKTU HABIS';
+            timerDiv.style.color = '#b71c1c';
+            timerDiv.style.background = '#ffebee';
+            timerDiv.style.border = '2px solid #b71c1c';
+            descDiv.innerHTML = '<b style="color:#b71c1c;">Waktu pembayaran telah habis. Transaksi akan dibatalkan otomatis oleh sistem.</b>';
+            clearInterval(timerInterval);
+            return;
+          }
+          var hours = Math.floor(diff / (1000 * 60 * 60));
+          var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          var seconds = Math.floor((diff % (1000 * 60)) / 1000);
+          timerDiv.innerHTML = hours.toString().padStart(2,'0') + ':' + minutes.toString().padStart(2,'0') + ':' + seconds.toString().padStart(2,'0');
+          timerDiv.style.color = '#d32f2f';
+          timerDiv.style.background = '#fff3e0';
+          timerDiv.style.border = '2px solid #ff9800';
+          descDiv.innerHTML = 'Pastikan pembayaran dan upload bukti dilakukan sebelum waktu habis. Jika waktu habis, transaksi akan otomatis dibatalkan oleh sistem.';
+        }
+        updateCountdown();
+        var timerInterval = setInterval(updateCountdown, 1000);
+      });
+    </script>
+    @endif
     
     <div class="delivery-info">
         <div class="info-item">

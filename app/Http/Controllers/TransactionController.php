@@ -45,7 +45,6 @@ class TransactionController extends Controller
                         'menunggu_pembayaran',
                         'menunggu_konfirmasi_pembayaran',
                         'diproses',
-                        'dikemas',
                         'dikirim'
                     ]);
                     break;

@@ -206,13 +206,6 @@
     box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
 }
 
-.transaksi-card .transaksi-status.pesanan-dikemas {
-    background: linear-gradient(135deg, #fef3c7, #fde68a);
-    color: #92400e;
-    border-color: #d97706;
-    box-shadow: 0 2px 8px rgba(217, 119, 6, 0.2);
-}
-
 .transaksi-card .transaksi-status.pesanan-dikirim {
     background: linear-gradient(135deg, #dbeafe, #93c5fd);
     color: #1e40af;
