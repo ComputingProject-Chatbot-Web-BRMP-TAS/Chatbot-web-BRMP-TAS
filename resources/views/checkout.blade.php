@@ -1,6 +1,10 @@
+@php
+    ($hideAppbar = true)
+@endphp
 @extends('layouts.app')
 
 @section('content')
+@include('partials.appbar_fokus')
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
 <style>
     body {
@@ -345,6 +349,17 @@
   </div>
 </div>
 
+<!-- Modal Konfirmasi Kembali Ke Keranjang -->
+<div id="modal-konfirmasi-kembali" style="display:none;position:fixed;z-index:2000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);align-items:center;justify-content:center;">
+  <div style="background:#fff;padding:32px 24px;border-radius:16px;max-width:400px;width:90vw;box-shadow:0 4px 24px rgba(0,0,0,0.10);text-align:center;">
+    <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:12px;">Kembali Ke Keranjang?</h2>
+    <p style="color:#444;margin-bottom:24px;">Perubahan yang Anda lakukan di halaman ini tidak akan disimpan</p>
+    <button id="tetap-di-halaman" style="width:100%;background:#19b15e;color:#fff;font-weight:700;padding:12px 0;border:none;border-radius:8px;font-size:1.1rem;margin-bottom:12px;">Tetap Di Halaman Ini</button>
+    <br>
+    <button id="kembali-hapus-perubahan" style="background:none;border:none;color:#19b15e;font-weight:700;font-size:1rem;">Kembali & Hapus Perubahan</button>
+  </div>
+</div>
+
 <script>
 // Buat instance modalEditAlamat secara global hanya sekali
 window.modalEditAlamatInstance = null;
@@ -382,5 +397,21 @@ function editAlamat(e) {
         window.modalEditAlamatInstance.show();
     }
 }
+
+// Modal konfirmasi kembali ke keranjang
+function showModalKonfirmasi() {
+    document.getElementById('modal-konfirmasi-kembali').style.display = 'flex';
+}
+function hideModalKonfirmasi() {
+    document.getElementById('modal-konfirmasi-kembali').style.display = 'none';
+}
+document.addEventListener('DOMContentLoaded', function() {
+    var logo = document.getElementById('logo-brmp');
+    if (logo) logo.onclick = function(e) { e.preventDefault(); showModalKonfirmasi(); };
+    document.getElementById('tetap-di-halaman').onclick = function() { hideModalKonfirmasi(); };
+    document.getElementById('kembali-hapus-perubahan').onclick = function() {
+        window.location.href = '/cart'; // Ganti dengan route keranjang yang benar jika perlu
+    };
+});
 </script>
 @endsection
