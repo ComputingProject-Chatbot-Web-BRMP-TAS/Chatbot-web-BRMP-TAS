@@ -295,7 +295,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="section" style="margin-bottom:24px;">
             <h2 style="font-weight:bold; margin-bottom:18px;">
                 @if(isset($q) && $q)
@@ -310,7 +310,7 @@
                     @include('partials.product-card', ['produk' => $produk])
                 @endforeach
             </div>
-            
+
             <!-- Tombol Lebih Banyak -->
             <div id="loadMoreContainer" style="text-align:center;margin-top:30px;">
                 <button id="loadMoreBtn" class="btn-green" style="background:#4CAF50;color:#fff;border:none;border-radius:8px;padding:12px 32px;font-weight:600;transition:all 0.3s ease;">
@@ -340,22 +340,22 @@
 
     document.getElementById('loadMoreBtn').addEventListener('click', function() {
         if (isLoading) return;
-        
+
         isLoading = true;
         const btn = this;
         const originalText = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Memuat...';
         btn.disabled = true;
-        
+
         fetch(`/load-more-products?offset=${currentOffset}`)
             .then(response => response.json())
             .then(data => {
                 // Tambahkan produk baru ke grid
                 document.getElementById('productsGrid').insertAdjacentHTML('beforeend', data.html);
-                
+
                 // Update offset berdasarkan total produk yang sudah dimuat
                 currentOffset = data.totalLoaded;
-                
+
                 // Sembunyikan tombol jika sudah tidak ada produk lagi
                 if (!data.hasMore) {
                     document.getElementById('loadMoreContainer').style.display = 'none';
@@ -373,3 +373,33 @@
     });
     </script>
 @endsection
+
+<!-- Bubble WhatsApp Button -->
+<style>
+.whatsapp-bubble {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    background: #25D366;
+    color: white;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.2s;
+    font-size: 32px;
+}
+.whatsapp-bubble:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+    transform: scale(1.08);
+    background: #20ba5a;
+}
+</style>
+<a href="https://wa.me/6281331162878?text=saya%20ada%20keluhan" class="whatsapp-bubble" target="_blank" title="Chat via WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</a>
