@@ -140,6 +140,7 @@ const searchAlamat = document.getElementById('searchAlamat');
 if (searchAlamat) {
   searchAlamat.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
+      e.preventDefault();
       let query = this.value.trim();
       if (!query) return;
       fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)

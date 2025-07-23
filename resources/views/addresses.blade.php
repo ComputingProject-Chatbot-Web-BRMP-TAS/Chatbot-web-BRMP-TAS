@@ -260,8 +260,6 @@ modalTambahAlamat.addEventListener('shown.bs.modal', function () {
 });
 
 document.getElementById('btnTambahAlamatBaru').onclick = function() {
-    var modal = new bootstrap.Modal(document.getElementById('modalTambahAlamat'));
-    modal.show();
     // Tidak perlu lagi inisialisasi peta di sini
 };
 
@@ -281,6 +279,7 @@ const searchAlamat = document.getElementById('searchAlamat');
 if (searchAlamat) {
   searchAlamat.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
+      e.preventDefault();
       let query = this.value.trim();
       if (!query) return;
       fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
@@ -397,6 +396,7 @@ const editSearchAlamat = document.getElementById('editSearchAlamat');
 if (editSearchAlamat) {
   editSearchAlamat.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
+        e.preventDefault();
       let query = this.value.trim();
       if (!query) return;
       fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
@@ -457,6 +457,31 @@ modalEditAlamat.addEventListener('shown.bs.modal', function () {
         if(editLeafletMap) editLeafletMap.invalidateSize();
     }, 100);
 });
+});
+// --- Tambahan perbaikan agar modal tambah alamat tidak ngestuck ---
+document.addEventListener('DOMContentLoaded', function() {
+  const modalTambahAlamat = document.getElementById('modalTambahAlamat');
+  const step1 = document.getElementById('step1Alamat');
+  const step2 = document.getElementById('step2Alamat');
+  if(modalTambahAlamat) {
+    // Reset step/modal hanya pada event hidden.bs.modal
+    modalTambahAlamat.addEventListener('hidden.bs.modal', function () {
+      if(step1 && step2) {
+        step1.style.display = 'block';
+        step2.style.display = 'none';
+      }
+      // Jika ada input yang perlu direset, reset di sini
+      const form = document.getElementById('formTambahAlamat');
+      if(form) form.reset();
+      // Reset tampilan alamat terpilih
+      const alamatTerpilih = document.getElementById('alamatTerpilih');
+      if(alamatTerpilih) alamatTerpilih.innerText = 'Pilih lokasi di peta';
+      // Reset marker dan map ke posisi default jika perlu
+      if(typeof leafletMap !== 'undefined' && leafletMap) {
+        leafletMap.setView([-7.977, 112.634], 16);
+      }
+    });
+  }
 });
 </script>
 @endsection 
