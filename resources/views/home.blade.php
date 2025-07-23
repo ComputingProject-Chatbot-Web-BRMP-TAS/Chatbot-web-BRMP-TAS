@@ -400,6 +400,6 @@
     background: #20ba5a;
 }
 </style>
-<a href="https://wa.me/6281331162878?text=saya%20ada%20keluhan" class="whatsapp-bubble" target="_blank" title="Chat via WhatsApp">
+<a href="https://wa.me/6281331162878?text=Halo%2C%20saya%20punya%20keluhan%20atau%20pertanyaan%20yang%20ingin%20saya%20sampaikan." class="whatsapp-bubble" target="_blank" title="Chat via WhatsApp">
     <i class="fab fa-whatsapp"></i>
 </a>
