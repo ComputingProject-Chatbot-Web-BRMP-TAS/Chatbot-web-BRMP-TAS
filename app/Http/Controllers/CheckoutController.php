@@ -31,27 +31,28 @@ class CheckoutController extends Controller
     public function processCheckout(Request $request)
     {
         $checkedItems = json_decode($request->input('checked_items', '[]'), true);
-        
+
         if (empty($checkedItems)) {
             return redirect()->route('cart')->with('error', 'Pilih minimal satu barang untuk checkout');
         }
-        
+
         // Cek apakah user sudah punya alamat
         $user = Auth::user();
         $hasAddress = \App\Models\Address::where('user_id', $user->id)->exists();
         if (!$hasAddress) {
-            return redirect()->route('addresses')->with('error', 'Silakan tambahkan alamat pengiriman terlebih dahulu sebelum checkout.');
+            // Jangan redirect ke addresses, cukup return error agar frontend bisa handle (tampilkan modal)
+            return back()->with('error', 'Silakan tambahkan alamat pengiriman terlebih dahulu sebelum checkout.');
         }
-        
+
         // Ambil data cart items yang dipilih
         $cartItems = CartItem::whereIn('cart_item_id', $checkedItems)
             ->with('product')
             ->get();
-        
+
         // Format data untuk session
         $cart = [];
         $total = 0;
-        
+
         foreach ($cartItems as $item) {
             $cart[] = [
                 'cart_item_id' => $item->cart_item_id,
@@ -64,11 +65,11 @@ class CheckoutController extends Controller
             ];
             $total += $item->harga_satuan * $item->kuantitas;
         }
-        
+
         // Simpan ke session
         session(['checkout_cart' => $cart]);
         session(['checkout_total' => $total]);
-        
+
         return redirect()->route('checkout.show');
     }
 
@@ -89,12 +90,12 @@ class CheckoutController extends Controller
         $cart = session('checkout_cart', []);
         $total = session('checkout_total', 0);
         $shipping_method = $request->input('shipping_method', 'Standard');
-        
+
         // Validasi data checkout
         if (empty($cart) || empty($total)) {
             return redirect()->route('cart')->with('error', 'Silakan checkout ulang dari keranjang.');
         }
-        
+
         // Cek apakah user sudah punya alamat
         $selectedId = session('checkout_address_id');
         if ($selectedId) {
@@ -102,16 +103,16 @@ class CheckoutController extends Controller
         } else {
             $address = Address::where('user_id', $user->id)->where('is_primary', true)->first();
         }
-        
+
         if (!$address) {
             return redirect()->route('addresses')->with('error', 'Silakan pilih alamat pengiriman terlebih dahulu.');
         }
-        
+
         // Hitung ongkir dan asuransi (untuk sementara 0)
         $ongkir = 0;
         $asuransi = 0;
         $order_date = Carbon::now('Asia/Jakarta');
-        
+
         // Tentukan estimasi tanggal pengiriman berdasarkan metode pengiriman
         $estimated_delivery_date = null;
         switch (strtolower($shipping_method)) {
@@ -136,7 +137,7 @@ class CheckoutController extends Controller
             default:
                 $estimated_delivery_date = $order_date->copy()->addDays(4);
         }
-        
+
         // Buat transaksi baru dengan status 'menunggu_pembayaran'
         $transaction = Transaction::create([
             'user_id' => $user->id,
@@ -151,7 +152,7 @@ class CheckoutController extends Controller
             'delivery_method' => $shipping_method,
             'estimated_delivery_date' => $estimated_delivery_date,
         ]);
-        
+
         // Buat detail item transaksi
         foreach ($cart as $item) {
             TransactionItem::create([
@@ -162,15 +163,15 @@ class CheckoutController extends Controller
                 'subtotal' => $item['subtotal'],
             ]);
         }
-        
+
         // Hapus item dari cart setelah transaksi dibuat
         $cartItemIds = collect($cart)->pluck('cart_item_id')->toArray();
         CartItem::whereIn('cart_item_id', $cartItemIds)->delete();
-        
+
         // Simpan data ke session untuk halaman payment
         session(['checkout_shipping_method' => $shipping_method]);
         session(['current_transaction_id' => $transaction->transaksi_id]);
-        
+
         // Redirect ke halaman payment
         return redirect()->route('payment.show')->with('success', 'Transaksi berhasil dibuat! Silakan lakukan pembayaran.');
     }

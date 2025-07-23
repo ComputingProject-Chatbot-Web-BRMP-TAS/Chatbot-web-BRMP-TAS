@@ -95,7 +95,8 @@ Route::get('/cart', function () {
     $cart = \App\Models\Cart::where('user_id', $user->id)->first();
     $items = $cart ? $cart->cartItems()->with('product')->get() : collect();
     $total = $items->sum(function($item) { return $item->kuantitas * $item->harga_satuan; });
-    return view('cart', compact('items', 'total'));
+    $hasAddress = \App\Models\Address::where('user_id', $user->id)->exists();
+    return view('cart', compact('items', 'total', 'hasAddress'));
 })->name('cart');
 
 Route::get('/produk/{produk_id}', function ($produk_id) {

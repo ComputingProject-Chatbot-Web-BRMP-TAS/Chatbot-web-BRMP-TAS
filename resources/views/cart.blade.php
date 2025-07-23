@@ -201,7 +201,7 @@
         }
     }
 </style>
-<div class="container py-4"> 
+<div class="container py-4">
     <div class="cart-title">
         Keranjang
         <span style="font-size:1.1rem;font-weight:600;color:#388e3c;margin-left:10px;">
@@ -237,7 +237,7 @@
                             </a>
                         </div>
                         <div style="color:#388e3c;font-weight:500;display:flex;align-items:center;gap:8px;">
-                            Rp{{ number_format($item->harga_satuan,0,',','.') }} x 
+                            Rp{{ number_format($item->harga_satuan,0,',','.') }} x
                             <input type="text" id="qtyInput{{ $item->cart_item_id }}" name="kuantitas" value="{{ $item->kuantitas }}" min="{{ $item->product->minimal_pembelian }}" style="width:48px;text-align:center;background:#fff;border:1.5px solid #bfc9d1;font-weight:600;border-radius:6px;" onchange="updateQtyDirect({{ $item->cart_item_id }}, {{ $item->product->minimal_pembelian }})">
                             <span style="margin-left:4px;">{{ $item->product->satuan }}</span>
                         </div>
@@ -266,6 +266,7 @@
         </div>
     </div>
 </div>
+@include('partials.modal_tambah_alamat')
 <script>
 // Helper untuk localStorage
 function getCheckedCartItems() {
@@ -355,6 +356,12 @@ function submitCheckout() {
     let checkedItems = Array.from(document.querySelectorAll('.cart-item-checkbox:checked')).map(cb => cb.value);
     if (checkedItems.length === 0) {
         alert('Pilih minimal satu barang untuk checkout');
+        return;
+    }
+    let hasAddress = @json($hasAddress);
+    if (!hasAddress) {
+        var modal = new bootstrap.Modal(document.getElementById('modalTambahAlamat'));
+        modal.show();
         return;
     }
     // Set nilai ke hidden input
