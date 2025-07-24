@@ -13,6 +13,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Controllers\ComplaintController;
 
 Route::get('/', function (Request $request) {
     $q = $request->input('q');
@@ -352,3 +353,8 @@ Route::get('/debug/transaction-items', function() {
 Route::get('/debug/payments', function() {
     return response()->json(\App\Models\Payment::all());
 });
+
+Route::get('/komplain', [ComplaintController::class, 'create'])->name('complaint.create');
+Route::post('/komplain', [ComplaintController::class, 'store'])->name('complaint.store');
+Route::get('/admin/komplain', [ComplaintController::class, 'index'])->name('complaint.index');
+Route::get('/admin/komplain/{id}', [ComplaintController::class, 'show'])->name('complaint.show');
