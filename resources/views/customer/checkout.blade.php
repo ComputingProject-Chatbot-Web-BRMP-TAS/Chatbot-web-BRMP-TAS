@@ -4,7 +4,7 @@
 @extends('layouts.app')
 
 @section('content')
-@include('partials.appbar_fokus')
+@include('customer.partials.appbar_fokus')
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
 <style>
     body {
@@ -170,72 +170,72 @@
                     use Carbon\Carbon;
                     $today = Carbon::now('Asia/Jakarta');
                 @endphp
-                <form class="mt-3">
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="shipping_method" id="shipping_reguler" value="reguler" checked>
-                        <label class="form-check-label" for="shipping_reguler">
-                            Reguler
-                            <div style="font-size:0.95em;color:#888;font-weight:400;">
-                                Estimasi: {{ $today->copy()->addDays(2)->translatedFormat('d M Y') }} - {{ $today->copy()->addDays(5)->translatedFormat('d M Y') }}
-                            </div>
-                        </label>
+                <form action="{{ route('checkout.next') }}" method="POST" class="mt-3">
+                    @csrf
+                    <div id="shipping-method-radio-group">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="shipping_method" id="shipping_reguler" value="reguler" checked>
+                            <label class="form-check-label" for="shipping_reguler">
+                                Reguler
+                                <div style="font-size:0.95em;color:#888;font-weight:400;">
+                                    Estimasi: {{ $today->copy()->addDays(2)->translatedFormat('d M Y') }} - {{ $today->copy()->addDays(5)->translatedFormat('d M Y') }}
+                                </div>
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="shipping_method" id="shipping_kargo" value="kargo">
+                            <label class="form-check-label" for="shipping_kargo">
+                                Kargo
+                                <div style="font-size:0.95em;color:#888;font-weight:400;">
+                                    Estimasi: {{ $today->copy()->addDays(3)->translatedFormat('d M Y') }} - {{ $today->copy()->addDays(7)->translatedFormat('d M Y') }}
+                                </div>
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="shipping_method" id="shipping_pickup" value="pickup">
+                            <label class="form-check-label" for="shipping_pickup">
+                                Pickup di Tempat
+                            </label>
+                        </div>
                     </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="shipping_method" id="shipping_kargo" value="kargo">
-                        <label class="form-check-label" for="shipping_kargo">
-                            Kargo
-                            <div style="font-size:0.95em;color:#888;font-weight:400;">
-                                Estimasi: {{ $today->copy()->addDays(3)->translatedFormat('d M Y') }} - {{ $today->copy()->addDays(7)->translatedFormat('d M Y') }}
-                            </div>
-                        </label>
+                    <div class="mt-2" style="color:#388e3c;">
+                        <i class="bi bi-shield-check"></i> Aman dengan Garansi Pembelian
                     </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="shipping_method" id="shipping_pickup" value="pickup">
-                        <label class="form-check-label" for="shipping_pickup">
-                            Pickup di Tempat
-                        </label>
-                    </div>
-                </form>
-                <div class="mt-2" style="color:#388e3c;">
-                    <i class="bi bi-shield-check"></i> Aman dengan Garansi Pembelian
                 </div>
+                {{-- Hapus blok Metode Pembayaran (unggah foto bukti pembayaran) --}}
             </div>
-            {{-- Hapus blok Metode Pembayaran (unggah foto bukti pembayaran) --}}
-        </div>
-        <div class="checkout-summary">
-            <div class="checkout-summary-title">Ringkasan Pesanan</div>
-            @if(count($cart) > 0)
-                @foreach($cart as $item)
-                <div class="order-item-row">
-                    <div class="order-item-img">
-                        @if($item['image'])
-                            <img src="{{ asset('images/' . $item['image']) }}" alt="{{ $item['name'] }}">
-                        @endif
+            <div class="checkout-summary">
+                <div class="checkout-summary-title">Ringkasan Pesanan</div>
+                @if(count($cart) > 0)
+                    @foreach($cart as $item)
+                    <div class="order-item-row">
+                        <div class="order-item-img">
+                            @if($item['image'])
+                                <img src="{{ asset('images/' . $item['image']) }}" alt="{{ $item['name'] }}">
+                            @endif
+                        </div>
+                        <div class="order-item-info">
+                            <div class="order-item-name">{{ $item['name'] }}</div>
+                            <div class="order-item-price">Rp{{ number_format($item['price'],0,',','.') }}</div>
+                        </div>
                     </div>
-                    <div class="order-item-info">
-                        <div class="order-item-name">{{ $item['name'] }}</div>
-                        <div class="order-item-price">Rp{{ number_format($item['price'],0,',','.') }}</div>
+                    <div class="order-item-sub">
+                        <span>{{ $item['quantity'] }} {{ $item['unit'] }}</span>
+                        <span>Rp{{ number_format($item['subtotal'],0,',','.') }}</span>
                     </div>
-                </div>
+                    @endforeach
+                @else
+                    <div class="text-muted">Tidak ada item untuk checkout</div>
+                @endif
                 <div class="order-item-sub">
-                    <span>{{ $item['quantity'] }} item</span>
-                    <span>Rp{{ number_format($item['subtotal'],0,',','.') }}</span>
+                    <span>Pengiriman</span>
+                    <span class="text-muted">Di tahap selanjutnya</span>
                 </div>
-                @endforeach
-            @else
-                <div class="text-muted">Tidak ada item untuk checkout</div>
-            @endif
-            <div class="order-item-sub">
-                <span>Pengiriman</span>
-                <span class="text-muted">Di tahap selanjutnya</span>
-            </div>
-            <hr>
-            <div class="order-item-sub" style="font-weight:700;">
-                <span>Total</span>
-                <span>Rp{{ number_format($total,0,',','.') }}</span>
-            </div>
-            <form action="{{ route('checkout.next') }}" method="POST" class="mt-3">
-                @csrf
+                <hr>
+                <div class="order-item-sub" style="font-weight:700;">
+                    <span>Total</span>
+                    <span>Rp{{ number_format($total,0,',','.') }}</span>
+                </div>
                 <button type="submit" class="btn">Bayar Sekarang <i class="bi bi-chevron-right"></i></button>
             </form>
         </div>
@@ -264,9 +264,9 @@
                         <div class="card @if($selectedId == $address->id) address-card-primary @else address-card-clickable @endif" style="border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,0.04);cursor:pointer;">
                             <div class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
                                 <div style="flex:1;">
-                                    <form id="formPilihAlamat{{ $address->id }}" method="POST" action="{{ route('checkout.set_address', $address->id) }}">
+                                    <form id="formPilihAlamat{{ $address->address_id }}" method="POST" action="{{ route('checkout.set_address', $address->address_id) }}">
                                         @csrf
-                                        <div onclick="document.getElementById('formPilihAlamat{{ $address->id }}').submit();" style="cursor:pointer;">
+                                        <div onclick="document.getElementById('formPilihAlamat{{ $address->address_id }}').submit();" style="cursor:pointer;">
                                             @if($address->is_primary)
                                                 <span class="badge bg-success mb-2">Utama</span><br>
                                             @endif

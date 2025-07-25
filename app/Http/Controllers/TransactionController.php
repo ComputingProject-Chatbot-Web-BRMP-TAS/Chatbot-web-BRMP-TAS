@@ -17,7 +17,7 @@ class TransactionController extends Controller
         $status = $request->input('status');
         
         // Query dasar
-        $query = Transaction::where('user_id', $user->id)
+        $query = Transaction::where('user_id', $user->user_id)
             ->with(['transactionItems.product', 'payments']);
         
         // Filter berdasarkan pencarian
@@ -41,7 +41,7 @@ class TransactionController extends Controller
         if ($status && $status !== 'semua') {
             switch ($status) {
                 case 'berlangsung':
-                    $query->whereIn('status_order', [
+                    $query->whereIn('order_status', [
                         'menunggu_pembayaran',
                         'menunggu_konfirmasi_pembayaran',
                         'diproses',
@@ -49,16 +49,16 @@ class TransactionController extends Controller
                     ]);
                     break;
                 case 'selesai':
-                    $query->where('status_order', 'selesai');
+                    $query->where('order_status', 'selesai');
                     break;
                 case 'tidak_berhasil':
-                    $query->where('status_order', 'dibatalkan');
+                    $query->where('order_status', 'dibatalkan');
                     break;
                 case 'menunggu_pembayaran':
-                    $query->where('status_order', 'menunggu_pembayaran');
+                    $query->where('order_status', 'menunggu_pembayaran');
                     break;
                 case 'menunggu_konfirmasi':
-                    $query->where('status_order', 'menunggu_konfirmasi_pembayaran');
+                    $query->where('order_status', 'menunggu_konfirmasi_pembayaran');
                     break;
             }
         }
@@ -66,16 +66,16 @@ class TransactionController extends Controller
         // Ambil transaksi user beserta item dan produk
         $transactions = $query->orderByDesc('order_date')->orderByDesc('transaction_id')->get();
         
-        return view('transaksi', compact('transactions', 'search', 'status'));
+        return view('customer.transaksi', compact('transactions', 'search', 'status'));
     }
 
     public function detail($id)
     {
         $user = Auth::user();
         $transaction = \App\Models\Transaction::with(['transactionItems.product', 'payments', 'shippingAddress'])
-            ->where('user_id', $user->id)
+            ->where('user_id', $user->user_id)
             ->where('transaction_id', $id)
             ->firstOrFail();
-        return view('transaksi_detail', compact('transaction'));
+        return view('customer.transaksi_detail', compact('transaction'));
     }
 } 

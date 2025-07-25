@@ -9,7 +9,7 @@ class ComplaintController extends Controller
 {
     public function create()
     {
-        return view('complaint.create');
+        return view('customer.complaint.create');
     }
 
     public function store(Request $request)

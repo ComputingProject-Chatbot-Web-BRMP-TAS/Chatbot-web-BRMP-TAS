@@ -2,7 +2,7 @@
 @extends('layouts.app')
 
 @section('content')
-@include('partials.appbar_fokus')
+@include('customer.partials.appbar_fokus')
 <style>
 .payment-container {
     max-width: 1200px;

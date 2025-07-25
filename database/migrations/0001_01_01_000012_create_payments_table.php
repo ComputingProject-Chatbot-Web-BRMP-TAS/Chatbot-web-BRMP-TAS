@@ -17,7 +17,7 @@ return new class extends Migration
             $table->dateTime('payment_date');
             $table->integer('amount_paid');
             $table->string('photo_proof_payment')->nullable();
-            $table->string('status_payment');
+            $table->string('payment_status');
             $table->timestamps();
         });
     }

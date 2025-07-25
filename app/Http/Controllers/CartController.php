@@ -22,7 +22,7 @@ class CartController extends Controller
 
         // Cari cart aktif user, jika belum ada buat baru
         $cart = Cart::firstOrCreate([
-            'user_id' => $user->id
+            'user_id' => $user->user_id
         ]);
 
         // Cek apakah produk sudah ada di cart_items

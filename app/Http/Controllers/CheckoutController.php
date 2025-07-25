@@ -17,15 +17,15 @@ class CheckoutController extends Controller
         $user = Auth::user();
         $selectedId = session('checkout_address_id');
         if ($selectedId) {
-            $address = Address::where('user_id', $user->id)->where('id', $selectedId)->first();
+            $address = Address::where('user_id', $user->user_id)->where('address_id', $selectedId)->first();
         } else {
-            $address = Address::where('user_id', $user->id)->where('is_primary', true)->first();
+            $address = Address::where('user_id', $user->user_id)->where('is_primary', true)->first();
         }
-        $addresses = Address::where('user_id', $user->id)->get();
+        $addresses = Address::where('user_id', $user->user_id)->get();
         // Ambil data cart dari session jika ada
         $cart = session('checkout_cart', []);
         $total = session('checkout_total', 0);
-        return view('checkout', compact('address', 'addresses', 'cart', 'total'));
+        return view('customer.checkout', compact('address', 'addresses', 'cart', 'total'));
     }
 
     public function processCheckout(Request $request)
@@ -38,7 +38,7 @@ class CheckoutController extends Controller
 
         // Cek apakah user sudah punya alamat
         $user = Auth::user();
-        $hasAddress = \App\Models\Address::where('user_id', $user->id)->exists();
+        $hasAddress = \App\Models\Address::where('user_id', $user->user_id)->exists();
         if (!$hasAddress) {
             // Jangan redirect ke addresses, cukup return error agar frontend bisa handle (tampilkan modal)
             return back()->with('error', 'Silakan tambahkan alamat pengiriman terlebih dahulu sebelum checkout.');
@@ -61,7 +61,8 @@ class CheckoutController extends Controller
                 'price' => $item->price_per_unit,
                 'quantity' => $item->quantity,
                 'subtotal' => $item->price_per_unit * $item->quantity,
-                'image' => $item->product->image1
+                'image' => $item->product->image1,
+                'unit' => $item->product->unit
             ];
             $total += $item->price_per_unit * $item->quantity;
         }
@@ -77,9 +78,9 @@ class CheckoutController extends Controller
     public function setAddress(Request $request, $addressId)
     {
         $user = Auth::user();
-        $address = Address::where('user_id', $user->id)->where('id', $addressId)->firstOrFail();
+        $address = Address::where('user_id', $user->user_id)->where('address_id', $addressId)->firstOrFail();
         // Simpan id alamat terpilih ke session
-        session(['checkout_address_id' => $address->id]);
+        session(['checkout_address_id' => $address->address_id]);
         // Redirect ke halaman checkout, alamat utama akan diganti dengan alamat terpilih
         return redirect()->route('checkout.show');
     }
@@ -89,7 +90,7 @@ class CheckoutController extends Controller
         $user = Auth::user();
         $cart = session('checkout_cart', []);
         $total = session('checkout_total', 0);
-        $shipping_method = $request->input('shipping_method', 'Standard');
+        $shipping_method = $request->input('shipping_method', 'reguler');
 
         // Validasi data checkout
         if (empty($cart) || empty($total)) {
@@ -99,9 +100,9 @@ class CheckoutController extends Controller
         // Cek apakah user sudah punya alamat
         $selectedId = session('checkout_address_id');
         if ($selectedId) {
-            $address = Address::where('user_id', $user->id)->where('id', $selectedId)->first();
+            $address = Address::where('user_id', $user->user_id)->where('address_id', $selectedId)->first();
         } else {
-            $address = Address::where('user_id', $user->id)->where('is_primary', true)->first();
+            $address = Address::where('user_id', $user->user_id)->where('is_primary', true)->first();
         }
 
         if (!$address) {
@@ -115,40 +116,29 @@ class CheckoutController extends Controller
 
         // Tentukan estimasi tanggal pengiriman berdasarkan metode pengiriman
         $estimated_delivery_date = null;
-        switch (strtolower($shipping_method)) {
-            case 'standard':
-                $estimated_delivery_date = $order_date->copy()->addDays(4);
+        switch ($shipping_method) {
+            case 'reguler':
+                $estimated_delivery_date = $order_date->copy()->addDays(5);
                 break;
             case 'kargo':
                 $estimated_delivery_date = $order_date->copy()->addDays(7);
                 break;
-            case 'reguler':
-                $estimated_delivery_date = $order_date->copy()->addDays(5);
-                break;
-            case 'instant':
+            case 'pickup':
                 $estimated_delivery_date = $order_date;
                 break;
-            case 'sameday':
-                $estimated_delivery_date = $order_date;
-                break;
-            case 'ekonomi':
-                $estimated_delivery_date = $order_date->copy()->addDays(8);
-                break;
-            default:
-                $estimated_delivery_date = $order_date->copy()->addDays(4);
         }
 
         // Buat transaksi baru dengan status 'menunggu_pembayaran'
         $transaction = Transaction::create([
-            'user_id' => $user->id,
-            'shipping_address_id' => $address->id,
+            'user_id' => $user->user_id,
+            'shipping_address_id' => $address->address_id,
             'recipient_name' => $address->recipient_name,
             'shipping_address' => $address->address,
             'recipient_phone' => $address->recipient_phone,
             'shipping_note' => $address->note,
             'order_date' => $order_date,
             'total_price' => $total + $ongkir + $asuransi,
-            'status_order' => 'menunggu_pembayaran',
+            'order_status' => 'menunggu_pembayaran',
             'delivery_method' => $shipping_method,
             'estimated_delivery_date' => $estimated_delivery_date,
         ]);

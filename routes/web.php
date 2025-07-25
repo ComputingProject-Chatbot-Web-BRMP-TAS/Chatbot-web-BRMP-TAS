@@ -94,10 +94,10 @@ Route::get('/login', function () {
 Route::get('/cart', function () {
     if (!Auth::check()) return redirect()->route('login');
     $user = Auth::user();
-    $cart = \App\Models\Cart::where('user_id', $user->id)->first();
+    $cart = \App\Models\Cart::where('user_id', $user->user_id)->first();
     $items = $cart ? $cart->cartItems()->with('product')->get() : collect();
-    $total = $items->sum(function($item) { return $item->kuantitas * $item->harga_satuan; });
-    $hasAddress = \App\Models\Address::where('user_id', $user->id)->exists();
+    $total = $items->sum(function($item) { return $item->quantity * $item->price_per_unit; });
+    $hasAddress = \App\Models\Address::where('user_id', $user->user_id)->exists();
     return view('customer.cart', compact('items', 'total', 'hasAddress'));
 })->name('cart');
 
@@ -205,7 +205,7 @@ Route::post('/profile/upload-foto', function (\Illuminate\Http\Request $request)
         'foto_profil' => 'required|image|mimes:jpeg,png,jpg|max:10240',
     ]);
     $file = $request->file('foto_profil');
-    $filename = 'user_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+    $filename = 'user_' . $user->user_id . '_' . time() . '.' . $file->getClientOriginalExtension();
     $path = $file->storeAs('public/foto_profil', $filename);
     $user->foto_profil = $filename;
     $user->save();
@@ -264,27 +264,27 @@ Route::delete('/cart/delete/{cart_item}', function($cart_item) {
 Route::post('/cart/update-qty/{cart_item}', function(\Illuminate\Http\Request $request, $cart_item) {
     $item = \App\Models\CartItem::findOrFail($cart_item);
     $product = $item->product; // relasi ke produk
-    $minimalPembelian = $product->minimal_pembelian ?? 1;
-    $satuan = strtolower($product->satuan ?? '');
-    $inputQty = $request->input('kuantitas', $minimalPembelian);
+    $minimalPembelian = $product->minimum_purchase ?? 1;
+    $satuan = strtolower($product->unit ?? '');
+    $inputQty = $request->input('quantity', $minimalPembelian);
     if (in_array($satuan, ['mata', 'tanaman', 'rizome'])) {
         $qty = max($minimalPembelian, (int) $inputQty);
     } else {
         $qty = max($minimalPembelian, (float) $inputQty);
     }
-    $item->kuantitas = $qty;
+    $item->quantity = $qty;
     $item->save();
     return response()->json([
         'success' => true,
-        'kuantitas' => $item->kuantitas,
-        'subtotal' => number_format($item->harga_satuan * $item->kuantitas, 0, ',', '.')
+        'quantity' => $item->quantity,
+        'subtotal' => number_format($item->price_per_unit * $item->quantity, 0, ',', '.')
     ]);
 })->name('cart.update_qty')->middleware('auth');
 
 Route::post('/cart/checkout', function(\Illuminate\Http\Request $request) {
     $checked = $request->input('checked_items', []);
     $items = \App\Models\CartItem::whereIn('cart_item_id', $checked)->with('product')->get();
-    $total = $items->sum(function($item) { return $item->kuantitas * $item->harga_satuan; });
+    $total = $items->sum(function($item) { return $item->quantity * $item->price_per_unit; });
     // Simulasi: tampilkan halaman ringkasan checkout (atau redirect ke pembayaran, dsb)
     return view('customer.cart', [
         'items' => $items,

@@ -528,21 +528,21 @@
                     <div class="transaksi-row">
                         <span class="transaksi-total">Total Belanja Rp {{ number_format($trx->total_price,0,',','.') }}</span>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            @if($trx->status_order === 'menunggu_pembayaran' && !$trx->payments->count())
+                            @if($trx->order_status === 'menunggu_pembayaran' && !$trx->payments->count())
                                 <a href="{{ route('transaksi.detail', $trx->transaction_id) }}" class="btn btn-outline-warning btn-sm" onclick="event.stopPropagation();">
                                     📤 Upload Bukti
                                 </a>
                             @endif
                             @php
                                 $hasPayments = $trx->payments && $trx->payments->count() > 0;
-                                $allRejected = $hasPayments && $trx->payments->every(function($p) { return $p->status_payment === 'rejected'; });
+                                $allRejected = $hasPayments && $trx->payments->every(function($p) { return $p->payment_status === 'rejected'; });
                             @endphp
                             @if($allRejected)
                                 <a href="{{ route('transaksi.detail', $trx->transaction_id) }}" class="btn btn-outline-danger btn-sm" onclick="event.stopPropagation();">
                                     🔁 Upload Ulang Bukti
                                 </a>
                             @endif
-                            @if($trx->status_order === 'selesai')
+                                @if($trx->order_status === 'selesai')
                                 <a href="#" class="btn btn-outline-success btn-sm" onclick="event.stopPropagation();">Beli Lagi</a>
                             @endif
                         </div>

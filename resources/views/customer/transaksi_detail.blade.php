@@ -641,8 +641,8 @@
         @php
             $payments = $transaction->payments;
             $hasPayments = $payments && count($payments) > 0;
-            $allRejected = $hasPayments && $payments->every(function($p) { return $p->status_payment === 'rejected'; });
-            $showUploadForm = (!$hasPayments && $transaction->status_order === 'menunggu_pembayaran') || $allRejected;
+            $allRejected = $hasPayments && $payments->every(function($p) { return $p->payment_status === 'rejected'; });
+            $showUploadForm = (!$hasPayments && $transaction->order_status === 'menunggu_pembayaran') || $allRejected;
             $latestPayment = $hasPayments ? $payments->last() : null;
         @endphp
         @if($hasPayments && !$allRejected)
@@ -659,7 +659,7 @@
                 <div class="payment-item">
                     <div class="label">✅ Status Pembayaran</div>
                     <div class="value">
-                        <span class="payment-status">{{ $payment->status_payment }}</span>
+                        <span class="payment-status">{{ $payment->payment_status }}</span>
                     </div>
                 </div>
             </div>

@@ -23,7 +23,7 @@ class Transaction extends Model
         'shipping_note',
         'order_date',
         'total_price',
-        'status_order',
+        'order_status',
         'delivery_method',
         'estimated_delivery_date',
     ];
@@ -61,13 +61,13 @@ class Transaction extends Model
         }
 
         // If payment is rejected, show "Pembayaran Ditolak"
-        if ($payment->status_payment === 'rejected') {
+        if ($payment->payment_status === 'rejected') {
             return 'Pembayaran Ditolak';
         }
 
         // If payment is pending, show order status
-        if ($payment->status_payment === 'pending') {
-            switch ($this->status_order) {
+        if ($payment->payment_status === 'pending') {
+            switch ($this->order_status) {
                 case 'menunggu_konfirmasi_pembayaran':
                     return 'Menunggu Konfirmasi Pembayaran';
                 case 'menunggu_pembayaran':
@@ -86,8 +86,8 @@ class Transaction extends Model
         }
 
         // If payment is approved, show order status
-        if ($payment->status_payment === 'approved') {
-            switch ($this->status_order) {
+        if ($payment->payment_status === 'approved') {
+            switch ($this->order_status) {
                 case 'diproses':
                     return 'Pesanan Diproses';
                 case 'dikirim':
@@ -115,12 +115,12 @@ class Transaction extends Model
             return 'menunggu-pembayaran';
         }
 
-        if ($payment->status_payment === 'rejected') {
+        if ($payment->payment_status === 'rejected') {
             return 'pembayaran-ditolak';
         }
 
-        if ($payment->status_payment === 'pending') {
-            switch ($this->status_order) {
+        if ($payment->payment_status === 'pending') {
+            switch ($this->order_status) {
                 case 'menunggu_konfirmasi_pembayaran':
                     return 'menunggu-konfirmasi-pembayaran';
                 case 'menunggu_pembayaran':
@@ -138,8 +138,8 @@ class Transaction extends Model
             }
         }
 
-        if ($payment->status_payment === 'approved') {
-            switch ($this->status_order) {
+        if ($payment->payment_status === 'approved') {
+            switch ($this->order_status) {
                 case 'diproses':
                     return 'pesanan-diproses';
                 case 'dikirim':

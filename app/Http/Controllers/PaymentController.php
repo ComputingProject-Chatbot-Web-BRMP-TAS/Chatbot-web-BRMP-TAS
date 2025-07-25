@@ -51,7 +51,7 @@ class PaymentController extends Controller
         $deadline = Carbon::parse($transaction->order_date)->addDay()->format('d M Y \\P\\u\\k\\u\\l H:i');
         $shipping_method = session('checkout_shipping_method', 'Standard');
 
-        return view('payment', [
+        return view('customer.payment', [
             'transaction' => $transaction,
             'address' => $address,
             'cart' => $cart,
@@ -90,7 +90,7 @@ class PaymentController extends Controller
         }
         
         // Cek apakah sudah ada payment untuk transaksi ini yang statusnya BUKAN rejected
-        $hasNonRejectedPayment = $transaction->payments()->where('status_payment', '!=', 'rejected')->exists();
+        $hasNonRejectedPayment = $transaction->payments()->where('payment_status', '!=', 'rejected')->exists();
         if ($hasNonRejectedPayment) {
             return redirect()->route('transaksi.detail', $transaction->transaction_id)->with('error', 'Bukti pembayaran sudah diupload dan sedang diproses untuk transaksi ini.');
         }
@@ -105,12 +105,12 @@ class PaymentController extends Controller
             'payment_date' => now('Asia/Jakarta'),
             'amount_paid' => $transaction->total_price,
             'photo_proof_payment' => $filename,
-            'status_payment' => 'pending',
+            'payment_status' => 'pending',
         ]);
         
         // Update status order menjadi "menunggu_konfirmasi_pembayaran"
         $transaction->update([
-            'status_order' => 'menunggu_konfirmasi_pembayaran'
+            'order_status' => 'menunggu_konfirmasi_pembayaran'
         ]);
         
         // Bersihkan session checkout jika ada
