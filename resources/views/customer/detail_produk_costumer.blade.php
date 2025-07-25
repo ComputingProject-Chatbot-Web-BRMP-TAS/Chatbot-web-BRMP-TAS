@@ -5,40 +5,40 @@
     <div class="product-detail-modern-container">
         <div class="product-detail-modern-left">
             <div class="product-detail-main-image-wrapper">
-                <img src="{{ asset('images/' . $product->gambar1) }}" alt="{{ $product->nama }}" class="product-detail-main-image">
+                <img src="{{ asset('images/' . $product->image1) }}" alt="{{ $product->product_name }}" class="product-detail-main-image">
             </div>
             <div class="product-detail-thumbs">
-                <img src="{{ asset('images/' . $product->gambar1) }}" alt="thumb1" class="selected">
-                @if($product->gambar2)
-                    <img src="{{ asset('images/' . $product->gambar2) }}" alt="thumb2">
+                <img src="{{ asset('images/' . $product->image1) }}" alt="thumb1" class="selected">
+                @if($product->image2)
+                    <img src="{{ asset('images/' . $product->image2) }}" alt="thumb2">
                 @endif
-                @if($product->gambar_certificate)
-                    <img src="{{ asset('images/' . $product->gambar_certificate) }}" alt="certificate">
+                @if($product->image_certificate)
+                    <img src="{{ asset('images/' . $product->image_certificate) }}" alt="certificate">
                 @endif
             </div>
         </div>
         <div class="product-detail-modern-center">
-            <div class="product-detail-title">{{ $product->nama }}</div>
-            <div class="product-detail-price">Rp{{ number_format($product->harga_per_satuan, 0, ',', '.') }} / {{ $product->satuan }}</div>
-            <div class="product-detail-stock">Stok: {{ $product->stok - $product->stok_minimal }} {{ $product->satuan }}</div>
+            <div class="product-detail-title">{{ $product->product_name }}</div>
+            <div class="product-detail-price">Rp{{ number_format($product->price_per_unit, 0, ',', '.') }} / {{ $product->unit }}</div>
+            <div class="product-detail-stock">Stok: {{ $product->stock - $product->minimum_stock }} {{ $product->unit }}</div>
             <div class="product-detail-info-list">
-                <div><span class="label">Kategori:</span> <span class="value">{{ $product->jenis_kategori }}</span></div>
+                <div><span class="label">Kategori:</span> <span class="value">{{ $product->plantType?->plant_type_name ?? '-' }}</span></div>  
             </div>
-            <div class="product-detail-desc">{{ $product->deskripsi }}</div>
+            <div class="product-detail-desc">{{ $product->description }}</div>
         </div>
         <div class="product-detail-modern-right">
             <div class="product-detail-card">
                 <div class="product-detail-card-title">Atur jumlah dan catatan</div>
-                <form method="POST" action="{{ Auth::check() ? route('cart.add', $product->produk_id) : route('login') }}">
+                <form method="POST" action="{{ Auth::check() ? route('cart.add', $product->product_id) : route('login') }}">
                     @csrf
                     <div class="product-detail-card-qty">
-                        <input type="text" id="qtyInput" name="kuantitas" value="{{ $product->minimal_pembelian }}" min="{{ $product->minimal_pembelian }}" style="width:60px;text-align:center;background:#fff;">
-                        <span style="margin-left:8px;">{{ $product->satuan }}</span>
+                        <input type="text" id="qtyInput" name="quantity" value="{{ $product->minimum_purchase }}" min="{{ $product->minimum_purchase }}" style="width:60px;text-align:center;background:#fff;">
+                        <span style="margin-left:8px;">{{ $product->unit }}</span>
                     </div>
                     <div id="stockWarning" style="color:#d32f2f;font-size:0.98rem;display:none;margin-bottom:8px;">Stok tidak mencukupi</div>
                     <div class="product-detail-card-subtotal">
                         Subtotal
-                        <span id="subtotal">Rp{{ number_format($product->harga_per_satuan, 0, ',', '.') }}</span>
+                        <span id="subtotal">Rp{{ number_format($product->price_per_unit, 0, ',', '.') }}</span>
                     </div>
                     <button class="btn-green w-100" style="margin-bottom:10px;" type="submit">+ Keranjang</button>
                 </form>
@@ -272,46 +272,46 @@
 <script>
 function updateSubtotal() {
     let qty = parseFloat(document.getElementById('qtyInput').value.replace(',', '.')) || 0;
-    let harga = {{ $product->harga_per_satuan }};
+    let harga = {{ $product->price_per_unit }};
     document.getElementById('subtotal').innerText = 'Rp' + (harga * qty).toLocaleString('id-ID');
 }
 
-const satuanProduk = @json($product->satuan);
+const unitProduk = @json($product->unit);
 const qtyInput = document.getElementById('qtyInput');
-const minimalPembelian = {{ $product->minimal_pembelian }};
+const minimumPurchase = {{ $product->minimum_purchase }};
 
-if (["Mata", "Tanaman", "Rizome"].includes(satuanProduk)) {
+if (["Mata", "Tanaman", "Rizome"].includes(unitProduk)) {
     qtyInput.setAttribute('type', 'number');
     qtyInput.setAttribute('step', '1');
-    qtyInput.setAttribute('min', minimalPembelian);
+    qtyInput.setAttribute('min', minimumPurchase);
     qtyInput.addEventListener('input', function(e) {
         // Hanya izinkan integer positif >= minimal pembelian, tapi biarkan kosong
         let val = this.value.replace(/[^0-9]/g, '');
         if (val !== "") {
             val = parseInt(val, 10);
-            if (val < minimalPembelian) val = minimalPembelian;
+            if (val < minimumPurchase) val = minimumPurchase;
             this.value = val;
         }
         updateSubtotal();
     });
     qtyInput.addEventListener('blur', function(e) {
         if (this.value === "") {
-            this.value = minimalPembelian;
+            this.value = minimumPurchase;
             updateSubtotal();
         }
     });
 } else {
-    qtyInput.setAttribute('min', minimalPembelian);
+    qtyInput.setAttribute('min', minimumPurchase);
     qtyInput.addEventListener('input', function(e) {
         updateSubtotal();
     });
     qtyInput.addEventListener('blur', function(e) {
         let val = this.value.replace(',', '.');
         if (val === "" || isNaN(val)) {
-            this.value = minimalPembelian;
+            this.value = minimumPurchase;
         } else {
             val = parseFloat(val);
-            if (val < minimalPembelian) val = minimalPembelian;
+            if (val < minimumPurchase) val = minimumPurchase;
             this.value = val;
         }
         updateSubtotal();
@@ -321,5 +321,5 @@ if (["Mata", "Tanaman", "Rizome"].includes(satuanProduk)) {
 </script>
 @endpush 
 @section('after_content')
-    @include('partials.mitra_footer')
+    @include('customer.partials.mitra_footer')
 @endsection

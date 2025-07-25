@@ -189,9 +189,9 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <!-- Modal Tambah Alamat Baru (2 langkah) -->
-@include('partials.modal_tambah_alamat')
+@include('customer.partials.modal_tambah_alamat')
 <!-- Modal Edit Alamat (2 langkah) -->
-@include('partials.modal_edit_alamat')
+@include('customer.partials.modal_edit_alamat')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 let leafletMap, lastCenter = {lat: -7.977, lng: 112.634}; // Default Malang

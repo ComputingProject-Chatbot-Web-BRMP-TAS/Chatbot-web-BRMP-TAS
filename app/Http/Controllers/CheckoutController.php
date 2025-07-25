@@ -56,14 +56,14 @@ class CheckoutController extends Controller
         foreach ($cartItems as $item) {
             $cart[] = [
                 'cart_item_id' => $item->cart_item_id,
-                'product_id' => $item->product->produk_id,
-                'name' => $item->product->nama,
-                'price' => $item->harga_satuan,
-                'qty' => $item->kuantitas,
-                'subtotal' => $item->harga_satuan * $item->kuantitas,
-                'image' => $item->product->gambar
+                'product_id' => $item->product->product_id,
+                'name' => $item->product->product_name,
+                'price' => $item->price_per_unit,
+                'quantity' => $item->quantity,
+                'subtotal' => $item->price_per_unit * $item->quantity,
+                'image' => $item->product->image1
             ];
-            $total += $item->harga_satuan * $item->kuantitas;
+            $total += $item->price_per_unit * $item->quantity;
         }
 
         // Simpan ke session
@@ -147,7 +147,7 @@ class CheckoutController extends Controller
             'recipient_phone' => $address->recipient_phone,
             'shipping_note' => $address->note,
             'order_date' => $order_date,
-            'total_harga' => $total + $ongkir + $asuransi,
+            'total_price' => $total + $ongkir + $asuransi,
             'status_order' => 'menunggu_pembayaran',
             'delivery_method' => $shipping_method,
             'estimated_delivery_date' => $estimated_delivery_date,
@@ -156,9 +156,9 @@ class CheckoutController extends Controller
         // Buat detail item transaksi
         foreach ($cart as $item) {
             TransactionItem::create([
-                'transaction_id' => $transaction->transaksi_id,
+                'transaction_id' => $transaction->transaction_id,
                 'product_id' => $item['product_id'],
-                'quantity' => $item['qty'],
+                'quantity' => $item['quantity'],
                 'unit_price' => $item['price'],
                 'subtotal' => $item['subtotal'],
             ]);
@@ -170,7 +170,7 @@ class CheckoutController extends Controller
 
         // Simpan data ke session untuk halaman payment
         session(['checkout_shipping_method' => $shipping_method]);
-        session(['current_transaction_id' => $transaction->transaksi_id]);
+        session(['current_transaction_id' => $transaction->transaction_id]);
 
         // Redirect ke halaman payment
         return redirect()->route('payment.show')->with('success', 'Transaksi berhasil dibuat! Silakan lakukan pembayaran.');

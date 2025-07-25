@@ -25,14 +25,14 @@ class TransactionController extends Controller
             $query->where(function($q) use ($search) {
                 // Cari pada nama produk
                 $q->whereHas('transactionItems.product', function($q2) use ($search) {
-                    $q2->whereRaw('LOWER(nama) LIKE ?', ['%' . strtolower($search) . '%']);
+                    $q2->whereRaw('LOWER(product_name) LIKE ?', ['%' . strtolower($search) . '%']);
                 })
                 // Cari pada transaksi_id
-                ->orWhere('transaksi_id', 'like', "%$search%")
+                ->orWhere('transaction_id', 'like', "%$search%")
                 // Cari pada order_date (format yyyy-mm-dd atau d M Y)
                 ->orWhere('order_date', 'like', "%$search%")
-                // Cari pada total_harga
-                ->orWhere('total_harga', 'like', "%$search%")
+                // Cari pada total_price
+                ->orWhere('total_price', 'like', "%$search%")
                 ;
             });
         }
@@ -64,7 +64,7 @@ class TransactionController extends Controller
         }
         
         // Ambil transaksi user beserta item dan produk
-        $transactions = $query->orderByDesc('order_date')->orderByDesc('transaksi_id')->get();
+        $transactions = $query->orderByDesc('order_date')->orderByDesc('transaction_id')->get();
         
         return view('transaksi', compact('transactions', 'search', 'status'));
     }
@@ -74,7 +74,7 @@ class TransactionController extends Controller
         $user = Auth::user();
         $transaction = \App\Models\Transaction::with(['transactionItems.product', 'payments', 'shippingAddress'])
             ->where('user_id', $user->id)
-            ->where('transaksi_id', $id)
+            ->where('transaction_id', $id)
             ->firstOrFail();
         return view('transaksi_detail', compact('transaction'));
     }

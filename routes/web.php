@@ -14,6 +14,7 @@ use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\ComplaintController;
+use App\Models\PlantTypes;
 
 Route::get('/', function (Request $request) {
     $q = $request->input('q');
@@ -37,10 +38,10 @@ Route::get('/', function (Request $request) {
         // Tampilkan 10produk secara acak untuk section Produk Pilihan
         $products = Product::inRandomOrder()->take(10)->get();
         // Simpan ID produk yang sudah ditampilkan ke session
-        session(['displayed_products' => $products->pluck('produk_id')->toArray()]);
+        session(['displayed_products' => $products->pluck('product_id')->toArray()]);
     }
-    $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
-    return view('home', compact('products', 'q', 'latestProducts'));
+    $latestProducts = Product::orderBy('product_id', 'desc')->take(5)->pluck('product_id')->toArray();
+    return view('customer.home', compact('products', 'q', 'latestProducts'));
 });
 
 // Route untuk load more produk
@@ -52,20 +53,20 @@ Route::get('/load-more-products', function (Request $request) {
     $displayedProducts = session('displayed_products', []);
 
     // Ambil produk yang belum ditampilkan
-    $products = Product::whereNotIn('produk_id', $displayedProducts)
+    $products = Product::whereNotIn('product_id', $displayedProducts)
                       ->inRandomOrder()
                       ->take($limit)
                       ->get();
 
     // Update session dengan produk yang baru ditampilkan
-    $newDisplayedProducts = array_merge($displayedProducts, $products->pluck('produk_id')->toArray());
+    $newDisplayedProducts = array_merge($displayedProducts, $products->pluck('product_id')->toArray());
     session(['displayed_products' => $newDisplayedProducts]);
 
     $totalProducts = Product::count();
 
     $html = '';
     foreach ($products as $produk) {
-        $html .= view('partials.product-card', compact('produk'))->render();
+        $html .= view('customer.partials.product-card', compact('produk'))->render();
     }
 
     return response()->json([
@@ -97,19 +98,19 @@ Route::get('/cart', function () {
     $items = $cart ? $cart->cartItems()->with('product')->get() : collect();
     $total = $items->sum(function($item) { return $item->kuantitas * $item->harga_satuan; });
     $hasAddress = \App\Models\Address::where('user_id', $user->id)->exists();
-    return view('cart', compact('items', 'total', 'hasAddress'));
+    return view('customer.cart', compact('items', 'total', 'hasAddress'));
 })->name('cart');
 
-Route::get('/produk/{produk_id}', function ($produk_id) {
-    $product = \App\Models\Product::findOrFail($produk_id);
-    $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
-    return view('produk.detail', compact('product', 'latestProducts'));
+Route::get('/produk/{product_id}', function ($product_id) {
+    $product = \App\Models\Product::findOrFail($product_id);
+    $latestProducts = Product::orderBy('product_id', 'desc')->take(5)->pluck('product_id')->toArray();
+    return view('customer.detail_produk_costumer', compact('product', 'latestProducts'));
 })->name('produk.detail');
 
 Route::get('/produk-baru', function () {
-    $products = Product::orderBy('produk_id', 'desc')->take(5)->get();
-    $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
-    return view('produk_baru', compact('products', 'latestProducts'));
+    $products = Product::orderBy('product_id', 'desc')->take(5)->get();
+    $latestProducts = Product::orderBy('product_id', 'desc')->take(5)->pluck('product_id')->toArray();
+    return view('customer.produk_baru', compact('products', 'latestProducts'));
 })->name('produk.baru');
 
 Route::post('/register', function (Request $request) {
@@ -174,7 +175,7 @@ Route::post('/email/verification-notification', function (Request $request) {
 
 Route::get('/profile', function () {
     if (!Auth::check()) return redirect('/login');
-    return view('profile');
+    return view('customer.profile');
 })->middleware(['auth', 'verified'])->name('profile');
 
 Route::post('/profile/update', function (Request $request) {
@@ -220,9 +221,16 @@ Route::get('/kategori/{kategori}', function($kategori) {
     ];
     if (!isset($map[$kategori])) abort(404);
     [$jenis_kategori, $judul] = $map[$kategori];
-    $products = Product::where('jenis_kategori', $jenis_kategori)->get();
-    $latestProducts = Product::orderBy('produk_id', 'desc')->take(5)->pluck('produk_id')->toArray();
-    return view('kategori', compact('products', 'latestProducts', 'judul'));
+    $plantTypes = PlantTypes::where('comodity', $jenis_kategori)->get();
+    $plantTypeIds = request('plant_types', []);
+    $products = Product::whereHas('plantType', function($q) use ($jenis_kategori, $plantTypeIds) {
+        $q->where('comodity', $jenis_kategori);
+        if (!empty($plantTypeIds)) {
+            $q->whereIn('plant_type_id', $plantTypeIds);
+        }
+    })->get();
+    $latestProducts = Product::orderBy('product_id', 'desc')->take(5)->pluck('product_id')->toArray();
+    return view('customer.kategori', compact('products', 'latestProducts', 'judul', 'plantTypes'));
 });
 
 Route::middleware('auth')->group(function () {
@@ -244,7 +252,7 @@ Route::post('/checkout/next', [CheckoutController::class, 'next'])->name('checko
 Route::post('/checkout/set-address/{addressId}', [CheckoutController::class, 'setAddress'])->name('checkout.set_address');
 
 Route::get('/artikel', function () {
-    return view('article');
+    return view('customer.article');
 })->name('article');
 
 Route::delete('/cart/delete/{cart_item}', function($cart_item) {
@@ -278,7 +286,7 @@ Route::post('/cart/checkout', function(\Illuminate\Http\Request $request) {
     $items = \App\Models\CartItem::whereIn('cart_item_id', $checked)->with('product')->get();
     $total = $items->sum(function($item) { return $item->kuantitas * $item->harga_satuan; });
     // Simulasi: tampilkan halaman ringkasan checkout (atau redirect ke pembayaran, dsb)
-    return view('cart', [
+    return view('customer.cart', [
         'items' => $items,
         'total' => $total,
         'checkout_mode' => true

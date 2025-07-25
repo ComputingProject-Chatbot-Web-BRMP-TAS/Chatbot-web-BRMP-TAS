@@ -15,10 +15,10 @@ class ComplaintController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'deskripsi' => 'required|string',
-            'bukti_gambar' => 'required|image|mimes:jpeg,png,jpg|max:4096',
+            'description' => 'required|string',
+            'photo_proof' => 'required|image|mimes:jpeg,png,jpg|max:4096',
         ]);
-        $validated['bukti_gambar'] = $request->file('bukti_gambar')->store('bukti_komplain', 'public');
+        $validated['photo_proof'] = $request->file('photo_proof')->store('bukti_komplain', 'public');
         $validated['user_id'] = Auth::id();
         Complaint::create($validated);
         return redirect()->back()->with('success', 'Komplain berhasil dikirim! Balasan komplain akan dikirim melalui Whatsapp');

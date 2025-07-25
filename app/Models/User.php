@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
+    const ROLE_ADMIN = 'admin';
+    const ROLE_CUSTOMER = 'customer';
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -17,6 +19,8 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var list<string>
      */
+    protected $table = 'users';
+    protected $primaryKey = 'user_id';
     protected $fillable = [
         'name',
         'email',
@@ -25,7 +29,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'gender',
         'birth_date',
         'foto_profil',
+        'email_verified_at',
         'phone_verified_at',
+        'role',
+        'is_active',
+        'created_at',
+        'updated_at',
     ];
 
     /**
@@ -54,7 +63,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function addresses()
     {
-        return $this->hasMany(Address::class);
+        return $this->hasMany(Address::class, 'user_id', 'user_id');
     }
 
     public function getProfilePhotoUrlAttribute()
@@ -68,5 +77,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isPhoneVerified()
     {
         return !is_null($this->phone_verified_at);
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === self::ROLE_ADMIN;
     }
 }

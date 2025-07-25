@@ -344,8 +344,8 @@
 
                     <div class="products-grid" id="productsGrid">
                         @forelse($products as $product)
-                            <a href="{{ route('produk.detail', $product->produk_id) }}" class="product-card" data-price="{{ $product->harga }}">
-                                @if(in_array($product->produk_id, $latestProducts))
+                            <a href="{{ route('produk.detail', $product->product_id) }}" class="product-card" data-price="{{ $product->price_per_unit }}">
+                                @if(in_array($product->product_id, $latestProducts))
                                     <div class="product-badge">Baru</div>
                                 @endif
                                 <button class="heart-icon" onclick="event.preventDefault();">
@@ -353,14 +353,14 @@
                                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                                     </svg>
                                 </button>
-                                @if($product->gambar)
-                                    <img src="{{ asset('images/' . $product->gambar) }}" class="product-image" alt="{{ $product->nama }}">
+                                @if($product->image1)
+                                    <img src="{{ asset('images/' . $product->image1) }}" class="product-image" alt="{{ $product->product_name }}">
                                 @else
                                     <img src="https://via.placeholder.com/200x200?text=No+Image" class="product-image" alt="No Image">
                                 @endif
                                 <div class="product-info">
-                                    <div class="product-title">{{ $product->nama }}</div>
-                                    <div class="product-price">Rp{{ number_format($product->harga, 0, ',', '.') }}</div>
+                                    <div class="product-title">{{ $product->product_name }}</div>
+                                    <div class="product-price">Rp{{ number_format($product->price_per_unit, 0, ',', '.') }}</div>
                                     <div class="product-location">Kategori: {{ $product->jenis_kategori }}</div>
                                 </div>
                             </a>
@@ -375,7 +375,7 @@
 </div>
 
 @section('after_content')
-    @include('partials.mitra_footer')
+    @include('customer.partials.mitra_footer')
 @endsection
 
 <script>

@@ -23,11 +23,11 @@
                     @csrf
                     <div class="mb-3">
                         <label class="form-label">Deskripsi Komplain</label>
-                        <textarea name="deskripsi" class="form-control" rows="4" required>{{ old('deskripsi') }}</textarea>
+                        <textarea name="description" class="form-control" rows="4" required>{{ old('description') }}</textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Upload Gambar Bukti <span class="text-danger">*</span></label>
-                        <input type="file" name="bukti_gambar" class="form-control" accept="image/*" required>
+                        <input type="file" name="photo_proof" class="form-control" accept="image/*" required>
                     </div>
                     <button type="submit" class="btn btn-success w-100">Kirim Komplain</button>
                 </form>

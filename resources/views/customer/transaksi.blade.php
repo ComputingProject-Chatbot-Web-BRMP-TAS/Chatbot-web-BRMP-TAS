@@ -495,7 +495,7 @@
             @endif
             
             @foreach($transactions as $trx)
-                <a href="{{ route('transaksi.detail', $trx->transaksi_id) }}" style="text-decoration:none;color:inherit;">
+                <a href="{{ route('transaksi.detail', $trx->transaction_id) }}" style="text-decoration:none;color:inherit;">
                 <div class="transaksi-card">
                     <div class="transaksi-row">
                         <span class="transaksi-date">{{ $trx->order_date->format('d M Y') }}</span>
@@ -509,9 +509,9 @@
                         @if($firstItem)
                             <div>
                                 @if($search && $firstItem->product)
-                                    {!! str_ireplace($search, '<span class="search-highlight">' . $search . '</span>', $firstItem->product->nama) !!}
+                                    {!! str_ireplace($search, '<span class="search-highlight">' . $search . '</span>', $firstItem->product->product_name) !!}
                                 @else
-                                    {{ $firstItem->product->nama ?? '-' }}
+                                    {{ $firstItem->product->product_name ?? '-' }}
                                 @endif
                                 <span class="quantity-badge">({{ $firstItem->quantity }} barang)</span>
                                 @if($itemCount > 1)
@@ -526,10 +526,10 @@
                         @endif
                     </div>
                     <div class="transaksi-row">
-                        <span class="transaksi-total">Total Belanja Rp {{ number_format($trx->total_harga,0,',','.') }}</span>
+                        <span class="transaksi-total">Total Belanja Rp {{ number_format($trx->total_price,0,',','.') }}</span>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             @if($trx->status_order === 'menunggu_pembayaran' && !$trx->payments->count())
-                                <a href="{{ route('transaksi.detail', $trx->transaksi_id) }}" class="btn btn-outline-warning btn-sm" onclick="event.stopPropagation();">
+                                <a href="{{ route('transaksi.detail', $trx->transaction_id) }}" class="btn btn-outline-warning btn-sm" onclick="event.stopPropagation();">
                                     📤 Upload Bukti
                                 </a>
                             @endif
@@ -538,7 +538,7 @@
                                 $allRejected = $hasPayments && $trx->payments->every(function($p) { return $p->status_payment === 'rejected'; });
                             @endphp
                             @if($allRejected)
-                                <a href="{{ route('transaksi.detail', $trx->transaksi_id) }}" class="btn btn-outline-danger btn-sm" onclick="event.stopPropagation();">
+                                <a href="{{ route('transaksi.detail', $trx->transaction_id) }}" class="btn btn-outline-danger btn-sm" onclick="event.stopPropagation();">
                                     🔁 Upload Ulang Bukti
                                 </a>
                             @endif

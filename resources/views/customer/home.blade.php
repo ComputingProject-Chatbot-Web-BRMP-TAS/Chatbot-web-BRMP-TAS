@@ -307,7 +307,7 @@
             @if($products->count() > 0)
             <div class="product-grid" id="productsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,20px);">
                 @foreach($products as $product)
-                    @include('partials.product-card', ['produk' => $product])
+                    @include('customer.partials.product-card', ['produk' => $product])
                 @endforeach
             </div>
 
@@ -327,7 +327,7 @@
 @endsection
 
 @section('after_content')
-    @include('partials.mitra_footer')
+    @include('customer.partials.mitra_footer')
     <script>
     let currentOffset = {{ $products->count() }};
     let totalProducts = {{ \App\Models\Product::count() }};

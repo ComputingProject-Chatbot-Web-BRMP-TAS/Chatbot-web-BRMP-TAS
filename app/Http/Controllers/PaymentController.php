@@ -92,7 +92,7 @@ class PaymentController extends Controller
         // Cek apakah sudah ada payment untuk transaksi ini yang statusnya BUKAN rejected
         $hasNonRejectedPayment = $transaction->payments()->where('status_payment', '!=', 'rejected')->exists();
         if ($hasNonRejectedPayment) {
-            return redirect()->route('transaksi.detail', $transaction->transaksi_id)->with('error', 'Bukti pembayaran sudah diupload dan sedang diproses untuk transaksi ini.');
+            return redirect()->route('transaksi.detail', $transaction->transaction_id)->with('error', 'Bukti pembayaran sudah diupload dan sedang diproses untuk transaksi ini.');
         }
         
         $file = $request->file('bukti_pembayaran');
@@ -101,9 +101,9 @@ class PaymentController extends Controller
         
         // Buat payment baru dengan status 'pending'
         $payment = Payment::create([
-            'transaction_id' => $transaction->transaksi_id,
+            'transaction_id' => $transaction->transaction_id,
             'payment_date' => now('Asia/Jakarta'),
-            'amount_paid' => $transaction->total_harga,
+            'amount_paid' => $transaction->total_price,
             'photo_proof_payment' => $filename,
             'status_payment' => 'pending',
         ]);
@@ -117,6 +117,6 @@ class PaymentController extends Controller
         session()->forget(['checkout_cart', 'checkout_total', 'checkout_shipping_method', 'current_transaction_id']);
         
         // Redirect ke halaman detail transaksi
-        return redirect()->route('transaksi.detail', $transaction->transaksi_id)->with('success', 'Bukti pembayaran berhasil diupload! Status order berubah menjadi "Menunggu Konfirmasi Pembayaran".');
+        return redirect()->route('transaksi.detail', $transaction->transaction_id)->with('success', 'Bukti pembayaran berhasil diupload! Status order berubah menjadi "Menunggu Konfirmasi Pembayaran".');
     }
 }

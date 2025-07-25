@@ -21,10 +21,10 @@
                         <td>{{ $complaint->id }}</td>
                         <td>{{ $complaint->user->name ?? '-' }}</td>
                         <td>{{ $complaint->user->phone ?? '-' }}</td>
-                        <td style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $complaint->deskripsi }}</td>
+                        <td style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $complaint->description }}</td>
                         <td>
-                            @if($complaint->bukti_gambar)
-                                <img src="{{ asset('storage/'.$complaint->bukti_gambar) }}" alt="Bukti" style="width:48px;height:48px;object-fit:cover;border-radius:8px;">
+                            @if($complaint->photo_proof)
+                                <img src="{{ asset('storage/'.$complaint->photo_proof) }}" alt="Bukti" style="width:48px;height:48px;object-fit:cover;border-radius:8px;">
                             @else
                                 -
                             @endif

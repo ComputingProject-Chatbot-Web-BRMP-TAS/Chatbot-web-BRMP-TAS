@@ -10,12 +10,12 @@
             </div>
             <div class="mb-4">
                 <b>Deskripsi Komplain:</b>
-                <div style="background:#f8f9fa;border-radius:12px;padding:18px 16px;font-size:1.15rem;margin-top:8px;min-height:80px;">{{ $complaint->deskripsi }}</div>
+                <div style="margin-top:8px;min-height:80px;">{{ $complaint->description }}</div>
             </div>
             <div class="mb-4 text-center">
                 <b>Bukti Gambar:</b><br>
-                @if($complaint->bukti_gambar)
-                    <img src="{{ asset('storage/'.$complaint->bukti_gambar) }}" alt="Bukti Komplain" style="max-width:100%;max-height:340px;border-radius:14px;margin-top:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+                @if($complaint->photo_proof)
+                    <img src="{{ asset('storage/'.$complaint->photo_proof) }}" alt="Bukti Komplain" style="max-width:100%;max-height:340px;border-radius:14px;margin-top:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
                 @else
                     <div style="color:#888;">Tidak ada gambar</div>
                 @endif

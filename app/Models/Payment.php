@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
+    protected $table = 'payments';
     protected $primaryKey = 'payment_id';
     
     protected $casts = [
@@ -22,6 +23,6 @@ class Payment extends Model
 
     public function transaction()
     {
-        return $this->belongsTo(Transaction::class, 'transaction_id', 'transaksi_id');
+        return $this->belongsTo(Transaction::class, 'transaction_id', 'transaction_id');
     }
 } 

@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('carts', function (Blueprint $table) {
-            $table->id('cart_id');
-            $table->unsignedBigInteger('user_id');
+        Schema::create('plant_types', function (Blueprint $table) {
+            $table->id('plant_type_id');
+            $table->string('plant_type_name');
+            $table->enum('comodity', ['Tanaman Pemanis', 'Tanaman Serat', 'Tanaman Tembakau', 'Tanaman Minyak Industri']);
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('carts');
+        Schema::dropIfExists('plant_types');
     }
 };

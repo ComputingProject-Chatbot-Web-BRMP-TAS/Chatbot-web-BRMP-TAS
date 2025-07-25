@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('cart_items', function (Blueprint $table) {
             $table->id('cart_item_id');
-            $table->unsignedBigInteger('cart_id');
-            $table->unsignedBigInteger('product_id');
-            $table->decimal('kuantitas');
-            $table->integer('harga_satuan');
+            $table->foreignId('cart_id')->constrained('carts', 'cart_id')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('products', 'product_id')->onDelete('cascade');
+            $table->decimal('quantity');
+            $table->integer('price_per_unit');
             $table->timestamps();
-            $table->foreign('cart_id')->references('cart_id')->on('carts')->onDelete('cascade');
-            $table->foreign('product_id')->references('produk_id')->on('products')->onDelete('cascade');
         });
     }
 

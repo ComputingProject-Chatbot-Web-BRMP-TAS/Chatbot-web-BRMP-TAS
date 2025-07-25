@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TransactionItem extends Model
 {
+    protected $table = 'transaction_items';
     protected $primaryKey = 'transaction_item_id';
     protected $fillable = [
         'transaction_id',
@@ -17,11 +18,11 @@ class TransactionItem extends Model
 
     public function transaction()
     {
-        return $this->belongsTo(Transaction::class, 'transaction_id', 'transaksi_id');
+        return $this->belongsTo(Transaction::class, 'transaction_id', 'transaction_id');
     }
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'produk_id');
+        return $this->belongsTo(Product::class, 'product_id', 'product_id');
     }
 } 

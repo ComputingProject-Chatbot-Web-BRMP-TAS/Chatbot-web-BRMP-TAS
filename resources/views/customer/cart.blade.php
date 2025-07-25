@@ -229,19 +229,19 @@
                 @foreach($items as $item)
                 <div class="cart-item-box">
                     <input type="checkbox" class="cart-item-checkbox" name="checked_items[]" value="{{ $item->cart_item_id }}" onchange="updateSummary()" checked>
-                    <img src="{{ asset('images/' . $item->product->gambar) }}" alt="{{ $item->product->nama }}" style="width:70px;height:70px;object-fit:cover;border-radius:12px;">
+                    <img src="{{ asset('images/' . $item->product->gambar) }}" alt="{{ $item->product->product_name }}" style="width:70px;height:70px;object-fit:cover;border-radius:12px;">
                     <div style="flex:1;">
                         <div style="font-weight:600;font-size:1.1rem;">
-                            <a href="/produk/{{ $item->product->produk_id }}" style="color:#222; text-decoration:none; font-weight:600;">
-                                {{ $item->product->nama }}
+                            <a href="/produk/{{ $item->product->product_id }}" style="color:#222; text-decoration:none; font-weight:600;">
+                                {{ $item->product->product_name }}
                             </a>
                         </div>
                         <div style="color:#388e3c;font-weight:500;display:flex;align-items:center;gap:8px;">
-                            Rp{{ number_format($item->harga_satuan,0,',','.') }} x
-                            <input type="text" id="qtyInput{{ $item->cart_item_id }}" name="kuantitas" value="{{ $item->kuantitas }}" min="{{ $item->product->minimal_pembelian }}" style="width:48px;text-align:center;background:#fff;border:1.5px solid #bfc9d1;font-weight:600;border-radius:6px;" onchange="updateQtyDirect({{ $item->cart_item_id }}, {{ $item->product->minimal_pembelian }})">
-                            <span style="margin-left:4px;">{{ $item->product->satuan }}</span>
+                            Rp{{ number_format($item->price_per_unit,0,',','.') }} x
+                            <input type="text" id="qtyInput{{ $item->cart_item_id }}" name="quantity" value="{{ $item->quantity }}" min="{{ $item->product->minimum_purchase }}" style="width:48px;text-align:center;background:#fff;border:1.5px solid #bfc9d1;font-weight:600;border-radius:6px;" onchange="updateQtyDirect({{ $item->cart_item_id }}, {{ $item->product->minimum_purchase }})">
+                            <span style="margin-left:4px;">{{ $item->product->unit }}</span>
                         </div>
-                        <div style="color:#757575;font-size:0.98rem;">Subtotal: Rp<span class="item-subtotal" id="subtotal{{ $item->cart_item_id }}">{{ number_format($item->harga_satuan * $item->kuantitas,0,',','.') }}</span></div>
+                        <div style="color:#757575;font-size:0.98rem;">Subtotal: Rp<span class="item-subtotal" id="subtotal{{ $item->cart_item_id }}">{{ number_format($item->price_per_unit * $item->quantity,0,',','.') }}</span></div>
                     </div>
                     <form method="POST" action="{{ route('cart.delete', $item->cart_item_id) }}" style="margin-left:10px;">
                         @csrf
@@ -266,7 +266,7 @@
         </div>
     </div>
 </div>
-@include('partials.modal_tambah_alamat')
+@include('customer.partials.modal_tambah_alamat')
 <script>
 // Helper untuk localStorage
 function getCheckedCartItems() {
@@ -323,9 +323,9 @@ function toggleAll(source) {
 function updateQtyDirect(cartItemId, minimalPembelian) {
     let input = document.getElementById('qtyInput'+cartItemId);
     let val = input.value.replace(',', '.');
-    let satuan = input.nextElementSibling ? input.nextElementSibling.innerText.trim() : '';
+    let unit = input.nextElementSibling ? input.nextElementSibling.innerText.trim() : '';
     let qty;
-    if (["Mata", "Tanaman", "Rizome"].includes(satuan)) {
+    if (["Mata", "Tanaman", "Rizome"].includes(unit)) {
         qty = parseInt(val);
         if (isNaN(qty) || qty < minimalPembelian) qty = minimalPembelian;
         input.value = qty;
@@ -335,7 +335,7 @@ function updateQtyDirect(cartItemId, minimalPembelian) {
         input.value = qty;
     }
     let formData = new FormData();
-    formData.append('kuantitas', qty);
+    formData.append('quantity', qty);
     formData.append('_token', '{{ csrf_token() }}');
     fetch(`{{ url('/cart/update-qty') }}/${cartItemId}`, {
         method: 'POST',
@@ -344,7 +344,7 @@ function updateQtyDirect(cartItemId, minimalPembelian) {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            input.value = data.kuantitas;
+            input.value = data.quantity;
             document.getElementById('subtotal'+cartItemId).innerText = data.subtotal;
             updateSummary();
         }
@@ -388,6 +388,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @section('after_content')
-    @include('partials.mitra_footer')
+    @include('customer.partials.mitra_footer')
 @endsection
 @endsection

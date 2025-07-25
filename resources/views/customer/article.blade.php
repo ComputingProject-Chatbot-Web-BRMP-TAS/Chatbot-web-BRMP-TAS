@@ -30,5 +30,5 @@
 @endsection
 
 @section('after_content')
-    @include('partials.mitra_footer')
+    @include('customer.partials.mitra_footer')
 @endsection

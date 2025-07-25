@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    public function addToCart(Request $request, $produkId)
+    public function addToCart(Request $request, $productId)
     {
         $user = Auth::user();
-        $product = Product::findOrFail($produkId);
-        if (in_array($product->satuan, ['Mata', 'Tanaman', 'Rizome'])) {
-            $qty = max($product->minimal_pembelian, (int) $request->input('kuantitas', $product->minimal_pembelian));
+        $product = Product::findOrFail($productId);
+        if (in_array($product->unit, ['Mata', 'Tanaman', 'Rizome'])) {
+            $qty = max($product->minimum_purchase, (int) $request->input('quantity', $product->minimum_purchase));
         } else {
-            $qty = max($product->minimal_pembelian, (float) $request->input('kuantitas', $product->minimal_pembelian));
+            $qty = max($product->minimum_purchase, (float) $request->input('quantity', $product->minimum_purchase));
         }
 
         // Cari cart aktif user, jika belum ada buat baru
@@ -27,20 +27,20 @@ class CartController extends Controller
 
         // Cek apakah produk sudah ada di cart_items
         $cartItem = CartItem::where('cart_id', $cart->cart_id)
-            ->where('product_id', $product->produk_id)
+            ->where('product_id', $product->product_id)
             ->first();
 
         if ($cartItem) {
-            // Update kuantitas
-            $cartItem->kuantitas += $qty;
+            // Update quantity
+            $cartItem->quantity += $qty;
             $cartItem->save();
         } else {
             // Tambah item baru
             CartItem::create([
                 'cart_id' => $cart->cart_id,
-                'product_id' => $product->produk_id,
-                'kuantitas' => $qty,
-                'harga_satuan' => $product->harga_per_satuan,
+                'product_id' => $product->product_id,
+                'quantity' => $qty,
+                'price_per_unit' => $product->price_per_unit,
             ]);
         }
 

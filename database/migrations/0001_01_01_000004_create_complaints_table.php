@@ -7,13 +7,11 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('complaints', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->text('deskripsi');
-            $table->string('bukti_gambar');
+            $table->id('complaint_id');
+            $table->foreignId('user_id')->constrained('users', 'user_id')->onDelete('cascade');
+            $table->text('description');
+            $table->string('photo_proof');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
     public function down()

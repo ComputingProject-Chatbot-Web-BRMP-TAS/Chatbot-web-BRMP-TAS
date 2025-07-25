@@ -526,7 +526,7 @@
         Kembali ke Daftar Transaksi
     </a>
     
-    <div class="transaksi-detail-title">Detail Transaksi #{{ $transaction->transaksi_id }}</div>
+    <div class="transaksi-detail-title">Detail Transaksi #{{ $transaction->transaction_id }}</div>
     
     <div class="transaksi-detail-info">
         <div class="date-info">
@@ -623,7 +623,7 @@
         <tbody>
             @foreach($transaction->transactionItems as $item)
             <tr>
-                <td class="product-name">{{ $item->product->nama ?? '-' }}</td>
+                <td class="product-name">{{ $item->product->product_name ?? '-' }}</td>
                 <td><span class="quantity-badge">{{ $item->quantity }}</span></td>
                 <td class="price-cell">IDR {{ number_format($item->unit_price,0,',','.') }}</td>
                 <td class="price-cell">IDR {{ number_format($item->subtotal,0,',','.') }}</td>
@@ -633,7 +633,7 @@
     </table>
     
     <div class="transaksi-detail-total">
-        Total Belanja: IDR {{ number_format($transaction->total_harga,0,',','.') }}
+        Total Belanja: IDR {{ number_format($transaction->total_price,0,',','.') }}
     </div>
     
     <div class="transaksi-detail-payment">
@@ -686,7 +686,7 @@
                 <div class="payment-instructions">
                     <div class="instructions-title">Petunjuk Pembayaran:</div>
                     <ul>
-                        <li>Transfer sejumlah <strong>IDR {{ number_format($transaction->total_harga,0,',','.') }}</strong></li>
+                        <li>Transfer sejumlah <strong>IDR {{ number_format($transaction->total_price,0,',','.') }}</strong></li>
                         <li>Simpan bukti transfer (screenshot atau foto)</li>
                         <li>Upload bukti transfer di bawah ini</li>
                         <li>Tim kami akan memverifikasi pembayaran Anda</li>
@@ -707,7 +707,7 @@
                 <div class="upload-form">
                     <form enctype="multipart/form-data" method="POST" action="{{ route('payment.upload_proof') }}">
                         @csrf
-                        <input type="hidden" name="transaction_id" value="{{ $transaction->transaksi_id }}">
+                        <input type="hidden" name="transaction_id" value="{{ $transaction->transaction_id }}">
                         <div class="mb-3">
                             <label for="buktiPembayaran" class="form-label">Pilih file gambar bukti transfer</label>
                             <input class="form-control" 

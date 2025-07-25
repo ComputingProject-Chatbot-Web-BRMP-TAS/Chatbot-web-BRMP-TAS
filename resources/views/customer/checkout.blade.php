@@ -218,7 +218,7 @@
                     </div>
                 </div>
                 <div class="order-item-sub">
-                    <span>{{ $item['qty'] }} item</span>
+                    <span>{{ $item['quantity'] }} item</span>
                     <span>Rp{{ number_format($item['subtotal'],0,',','.') }}</span>
                 </div>
                 @endforeach
@@ -241,8 +241,8 @@
         </div>
     </div>
 </div>
-@include('partials.modal_tambah_alamat')
-@include('partials.modal_edit_alamat')
+@include('customer.partials.modal_tambah_alamat')
+@include('customer.partials.modal_edit_alamat')
 <!-- Modal Ganti Alamat -->
 <div class="modal fade" id="modalGantiAlamat" tabindex="-1" aria-labelledby="modalGantiAlamatLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">

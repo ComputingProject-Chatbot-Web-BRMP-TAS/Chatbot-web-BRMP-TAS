@@ -290,7 +290,7 @@
             <div id="countdown-timer" style="font-size:2rem;font-weight:800;color:#f8f9fa;margin-top:8px;"></div>
         </div>
         <div class="payment-amount">
-            Rp {{ number_format($transaction->total_harga, 0, ',', '.') }}
+            Rp {{ number_format($transaction->total_price, 0, ',', '.') }}
         </div>
     </div>
 
@@ -368,7 +368,7 @@
                 <div class="transaction-info">
                     <div class="transaction-number">
                         <span class="text-muted">ID Transaksi:</span>
-                        <strong>#{{ $transaction->transaksi_id }}</strong>
+                        <strong>#{{ $transaction->transaction_id }}</strong>
                     </div>
                     <div class="transaction-number">
                         <span class="text-muted">Tanggal Pesanan:</span>
@@ -389,8 +389,8 @@
                     @foreach($transaction->transactionItems as $item)
                         <div class="product-item">
                             <div class="product-details">
-                                <div class="product-name">{{ $item->product->nama ?? '-' }}</div>
-                                <div class="product-quantity">{{ $item->quantity }} × IDR {{ number_format($item->unit_price, 0, ',', '.') }}</div>
+                                <div class="product-name">{{ $item->product->product_name ?? '-' }}</div>
+                                <div class="product-quantity">{{ $item->quantity }} × IDR {{ number_format($item->price_per_unit, 0, ',', '.') }}</div>
                             </div>
                             <div class="product-price">IDR {{ number_format($item->subtotal, 0, ',', '.') }}</div>
                         </div>
@@ -400,7 +400,7 @@
                 <div class="subtotal-section">
                     <div class="cost-item">
                         <span class="cost-label">Subtotal</span>
-                        <span class="cost-value fw-bold">IDR {{ number_format($transaction->total_harga, 0, ',', '.') }}</span>
+                        <span class="cost-value fw-bold">IDR {{ number_format($transaction->total_price, 0, ',', '.') }}</span>
                     </div>
                 </div>
 
@@ -415,13 +415,13 @@
                     </div>
                     <div class="cost-item">
                         <span class="cost-label fw-semibold">Total Biaya</span>
-                        <span class="cost-value fw-bold">IDR {{ number_format($transaction->total_harga, 0, ',', '.') }}</span>
+                        <span class="cost-value fw-bold">IDR {{ number_format($transaction->total_price, 0, ',', '.') }}</span>
                     </div>
                 </div>
 
                 <div class="total-section">
                     <div class="total-amount">
-                        💰 IDR {{ number_format($transaction->total_harga, 0, ',', '.') }}
+                        💰 IDR {{ number_format($transaction->total_price, 0, ',', '.') }}
                     </div>
                     <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">
                         Jumlah Total yang Harus Dibayar

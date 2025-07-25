@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
-    protected $primaryKey = 'transaksi_id';
+    protected $table = 'transactions';
+    protected $primaryKey = 'transaction_id';
     
     protected $casts = [
         'order_date' => 'datetime',
@@ -21,7 +22,7 @@ class Transaction extends Model
         'recipient_phone',
         'shipping_note',
         'order_date',
-        'total_harga',
+        'total_price',
         'status_order',
         'delivery_method',
         'estimated_delivery_date',
@@ -29,22 +30,22 @@ class Transaction extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
     public function shippingAddress()
     {
-        return $this->belongsTo(Address::class, 'shipping_address_id');
+        return $this->belongsTo(Address::class, 'shipping_address_id', 'address_id');
     }
 
     public function payments()
     {
-        return $this->hasMany(Payment::class, 'transaction_id', 'transaksi_id');
+        return $this->hasMany(Payment::class, 'transaction_id', 'transaction_id');
     }
 
     public function transactionItems()
     {
-        return $this->hasMany(TransactionItem::class, 'transaction_id', 'transaksi_id');
+        return $this->hasMany(TransactionItem::class, 'transaction_id', 'transaction_id');
     }
 
     /**

@@ -19,7 +19,7 @@
 </head>
 <body>
     @if(empty($hideAppbar) || !$hideAppbar)
-        @include('partials.appbar')
+        @include('customer.partials.appbar')
     @endif
     @php
         $routeName = Route::currentRouteName();

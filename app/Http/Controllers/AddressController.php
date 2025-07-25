@@ -12,7 +12,7 @@ class AddressController extends Controller
     public function index()
     {
         $addresses = Auth::user()->addresses()->get();
-        return view('addresses', compact('addresses'));
+        return view('customer.addresses', compact('addresses'));
     }
 
     // Simpan alamat baru

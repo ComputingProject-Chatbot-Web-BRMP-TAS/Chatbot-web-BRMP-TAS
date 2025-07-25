@@ -13,14 +13,12 @@ return new class extends Migration
     {
         Schema::create('transaction_items', function (Blueprint $table) {
             $table->id('transaction_item_id');
-            $table->unsignedBigInteger('transaction_id');
-            $table->unsignedBigInteger('product_id');
+            $table->foreignId('transaction_id')->constrained('transactions', 'transaction_id')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('products', 'product_id')->onDelete('cascade');
             $table->decimal('quantity');
             $table->integer('unit_price');
             $table->integer('subtotal');
             $table->timestamps();
-            $table->foreign('transaction_id')->references('transaksi_id')->on('transactions')->onDelete('cascade');
-            $table->foreign('product_id')->references('produk_id')->on('products')->onDelete('cascade');
         });
     }
 

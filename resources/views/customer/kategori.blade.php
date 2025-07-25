@@ -109,24 +109,17 @@
             <div class="col-lg-2 col-md-3">
                 <div class="filter-sidebar">
                     <div class="filter-title">Filter</div>
-                    <div class="filter-section">
-                        <div class="filter-option">
-                            <input type="checkbox" id="pemanis">
-                            <label for="pemanis">Tanaman Pemanis</label>
+                    <form method="GET" id="filterForm">
+                        <input type="hidden" name="kategori" value="{{ request()->route('kategori') }}">
+                        <div class="filter-section">
+                            @foreach($plantTypes as $type)
+                                <div class="filter-option">
+                                    <input type="checkbox" id="plant_type_{{ $type->plant_type_id }}" name="plant_types[]" value="{{ $type->plant_type_id }}" onchange="document.getElementById('filterForm').submit()" {{ in_array($type->plant_type_id, (array) request('plant_types', [])) ? 'checked' : '' }}>
+                                    <label for="plant_type_{{ $type->plant_type_id }}">{{ $type->plant_type_name }}</label>
+                                </div>
+                            @endforeach
                         </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="serat">
-                            <label for="serat">Tanaman Serat</label>
-                        </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="tembakau">
-                            <label for="tembakau">Tanaman Tembakau</label>
-                        </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="minyak">
-                            <label for="minyak">Tanaman Minyak Industri</label>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
             <!-- Products Section -->
@@ -147,7 +140,7 @@
                     @if($products->count() > 0)
                         <div class="products-grid" id="productsGrid">
                             @foreach($products as $product)
-                                @include('partials.product-card', ['product' => $product])
+                                @include('customer.partials.product-card', ['product' => $product])
                             @endforeach
                         </div>
                     @else
@@ -162,7 +155,7 @@
     </div>
 </div>
 @section('after_content')
-    @include('partials.mitra_footer')
+    @include('customer.partials.mitra_footer')
 @endsection
 <script>
 function sortProducts() {

@@ -12,21 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->id('transaksi_id');
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('shipping_address_id')->nullable();
+            $table->id('transaction_id');
+            $table->foreignId('user_id')->constrained('users', 'user_id')->onDelete('cascade');
+            $table->foreignId('shipping_address_id')->constrained('addresses', 'address_id')->onDelete('cascade');
             $table->string('recipient_name');
             $table->string('recipient_phone');
             $table->text('shipping_address');
             $table->text('shipping_note')->nullable();
-            $table->integer('total_harga');
-            $table->string('status_order');
+            $table->integer('total_price');
+            $table->string('order_status');
             $table->string('delivery_method');
             $table->dateTime('order_date');
             $table->dateTime('estimated_delivery_date')->nullable();
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('shipping_address_id')->references('id')->on('addresses')->onDelete('set null');
         });
     }
 
