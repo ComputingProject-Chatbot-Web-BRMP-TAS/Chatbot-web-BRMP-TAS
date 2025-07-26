@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\customer;
 
 use Illuminate\Http\Request;
 use App\Models\Payment;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Http\Controllers\Controller;
 
 class PaymentController extends Controller
 {
@@ -119,4 +120,4 @@ class PaymentController extends Controller
         // Redirect ke halaman detail transaksi
         return redirect()->route('transaksi.detail', $transaction->transaction_id)->with('success', 'Bukti pembayaran berhasil diupload! Status order berubah menjadi "Menunggu Konfirmasi Pembayaran".');
     }
-}
+} 

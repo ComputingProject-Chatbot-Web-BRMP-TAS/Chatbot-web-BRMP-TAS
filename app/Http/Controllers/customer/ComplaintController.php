@@ -1,9 +1,11 @@
 <?php
-namespace App\Http\Controllers;
+
+namespace App\Http\Controllers\customer;
 
 use Illuminate\Http\Request;
 use App\Models\Complaint;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 
 class ComplaintController extends Controller
 {

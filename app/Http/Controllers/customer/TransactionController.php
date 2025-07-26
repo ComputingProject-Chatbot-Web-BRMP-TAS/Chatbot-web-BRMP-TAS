@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\customer;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 
 class TransactionController extends Controller
 {
@@ -72,7 +73,7 @@ class TransactionController extends Controller
     public function detail($id)
     {
         $user = Auth::user();
-        $transaction = \App\Models\Transaction::with(['transactionItems.product', 'payments', 'shippingAddress'])
+        $transaction = Transaction::with(['transactionItems.product', 'payments', 'shippingAddress'])
             ->where('user_id', $user->user_id)
             ->where('transaction_id', $id)
             ->firstOrFail();

@@ -1,13 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\customer;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Address;
-use App\Models\CartItem;
+use App\Models\Product;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
+use App\Models\Address;
+use App\Models\CartItem;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 
 class CheckoutController extends Controller
@@ -38,7 +41,7 @@ class CheckoutController extends Controller
 
         // Cek apakah user sudah punya alamat
         $user = Auth::user();
-        $hasAddress = \App\Models\Address::where('user_id', $user->user_id)->exists();
+        $hasAddress = Address::where('user_id', $user->user_id)->exists();
         if (!$hasAddress) {
             // Jangan redirect ke addresses, cukup return error agar frontend bisa handle (tampilkan modal)
             return back()->with('error', 'Silakan tambahkan alamat pengiriman terlebih dahulu sebelum checkout.');
@@ -165,4 +168,4 @@ class CheckoutController extends Controller
         // Redirect ke halaman payment
         return redirect()->route('payment.show')->with('success', 'Transaksi berhasil dibuat! Silakan lakukan pembayaran.');
     }
-}
+} 

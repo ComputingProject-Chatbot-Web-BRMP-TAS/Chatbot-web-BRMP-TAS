@@ -513,7 +513,7 @@
                                 @else
                                     {{ $firstItem->product->product_name ?? '-' }}
                                 @endif
-                                <span class="quantity-badge">({{ $firstItem->quantity }} barang)</span>
+                                <span class="quantity-badge">({{ $firstItem->quantity }} {{$firstItem->product->unit}})</span>
                                 @if($itemCount > 1)
                                     <span style="color:#6b7280; font-size:0.98em; font-weight:500; margin-left:8px;">+ {{ $itemCount - 1 }} produk lainnya</span>
                                 @endif

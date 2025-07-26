@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\customer;
 
 use Illuminate\Http\Request;
 use App\Models\Address;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 
 class AddressController extends Controller
 {
@@ -49,18 +50,8 @@ class AddressController extends Controller
         if ($address->user_id !== Auth::id()) {
             abort(403);
         }
-        $wasPrimary = $address->is_primary;
         $address->delete();
-        // Jika yang dihapus adalah primary, set salah satu alamat lain user jadi primary
-        if ($wasPrimary) {
-            $next = Auth::user()->addresses()->first();
-            if ($next) {
-                $next->is_primary = true;
-                $next->save();
-            }
-        }
-        $redirectTo = request('redirect_to', url()->previous() ?? route('addresses'));
-        return redirect($redirectTo)->with('success', 'Alamat berhasil dihapus.');
+        return redirect()->route('addresses')->with('success', 'Alamat berhasil dihapus!');
     }
 
     // Set alamat utama
@@ -69,13 +60,13 @@ class AddressController extends Controller
         if ($address->user_id !== Auth::id()) {
             abort(403);
         }
-        // Reset semua alamat user ke is_primary = false
         Auth::user()->addresses()->update(['is_primary' => false]);
         $address->is_primary = true;
         $address->save();
-        return redirect()->route('addresses')->with('success', 'Alamat utama diperbarui.');
+        return redirect()->route('addresses')->with('success', 'Alamat utama berhasil diubah!');
     }
 
+    // Update alamat
     public function update(Request $request, Address $address)
     {
         if ($address->user_id !== Auth::id()) {
@@ -103,4 +94,4 @@ class AddressController extends Controller
         $redirectTo = $request->input('redirect_to', route('addresses'));
         return redirect($redirectTo);
     }
-}
+} 
