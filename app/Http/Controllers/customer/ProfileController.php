@@ -38,7 +38,7 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         $request->validate([
-            'foto_profil' => 'required|image|mimes:jpeg,png,jpg|max:10240',
+            'foto_profil' => 'required|image|mimes:jpg,jpeg,png|max:10240',
         ]);
         $file = $request->file('foto_profil');
         $filename = 'user_' . $user->user_id . '_' . time() . '.' . $file->getClientOriginalExtension();

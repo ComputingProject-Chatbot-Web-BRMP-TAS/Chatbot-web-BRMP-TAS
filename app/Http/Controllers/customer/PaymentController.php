@@ -69,7 +69,7 @@ class PaymentController extends Controller
     public function uploadProof(Request $request)
     {
         $request->validate([
-            'bukti_pembayaran' => 'required|image|mimes:jpeg,png,jpg|max:10240',
+            'bukti_pembayaran' => 'required|image|mimes:jpg,jpeg,png|max:10240',
         ]);
         
         // Ambil transaction_id dari form atau session

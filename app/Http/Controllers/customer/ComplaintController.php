@@ -18,7 +18,7 @@ class ComplaintController extends Controller
     {
         $validated = $request->validate([
             'description' => 'required|string',
-            'photo_proof' => 'required|image|mimes:jpeg,png,jpg|max:4096',
+            'photo_proof' => 'required|image|mimes:jpg,jpeg,png|max:10240',
         ]);
         $validated['photo_proof'] = $request->file('photo_proof')->store('bukti_komplain', 'public');
         $validated['user_id'] = Auth::id();
