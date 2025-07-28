@@ -17,7 +17,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PlantTypeSeeder::class,
             ProductSeeder::class,
-            
+            RegProvincesSeeder::class,
+            RegRegenciesSeeder::class
         ]);
     }
 }
