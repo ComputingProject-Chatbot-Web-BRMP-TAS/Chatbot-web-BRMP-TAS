@@ -103,6 +103,16 @@ Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 've
 Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 // =====================
+// API Routes
+// =====================
+Route::get('/api/wilayah/cities/{provinceId}', function ($provinceId) {
+    $cities = \App\Models\RegRegencies::where('province_id', $provinceId)
+        ->orderBy('name')
+        ->get(['id', 'name']);
+    return response()->json($cities);
+});
+
+// =====================
 // Debug & Dev Tools
 // =====================
 Route::get('/debug/transactions', [DebugController::class, 'transactions']);

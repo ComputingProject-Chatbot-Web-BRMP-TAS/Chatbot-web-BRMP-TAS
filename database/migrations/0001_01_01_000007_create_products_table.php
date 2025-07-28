@@ -21,9 +21,9 @@ return new class extends Migration
             $table->string('unit');
             $table->integer('price_per_unit');
             $table->decimal('minimum_purchase')->default(0);
-            $table->string('image1');
-            $table->string('image2');
-            $table->string('image_certificate');
+            $table->string('image1')->nullable();
+            $table->string('image2')->nullable();
+            $table->string('image_certificate')->nullable();
 
             $table->timestamps();
         });

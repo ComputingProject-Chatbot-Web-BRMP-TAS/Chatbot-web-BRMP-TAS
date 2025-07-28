@@ -159,183 +159,153 @@
         }
     }
 </style>
-<div class="container py-4">
-    <div class="checkout-title">Checkout</div>
-    <div class="checkout-main">
-        <div class="checkout-left">
-            <div class="checkout-card">
-                <div class="checkout-section-title">Alamat Pengiriman</div>
-                @if($address)
-                    <div class="fw-bold">{{ $address->address ?? '-' }}</div>
-                    <div>{{ $address->recipient_name ?? '-' }}</div>
-                    <div>{{ $address->recipient_phone ?? '-' }}</div>
-                    @if(!empty($address->note))
-                        <div class="text-muted"><small>Catatan: {{ $address->note }}</small></div>
-                    @endif
-                    <button type="button" class="btn btn-sm btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#modalGantiAlamat">Ganti</button>
-                @else
-                    <div class="text-muted">Belum ada alamat utama</div>
-                    <a href="{{ route('addresses') }}" class="btn btn-sm btn-success mt-2">Tambah Alamat</a>
-                @endif
-            </div>
-            <div class="checkout-card">
-                <div class="checkout-section-title">Pengiriman</div>
-                <div>Pilih metode pengiriman</div>
-                @php
-                    use Carbon\Carbon;
-                    $today = Carbon::now('Asia/Jakarta');
-                @endphp
-                <div class="mt-3">
-                    <div id="shipping-method-radio-group">
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="radio" name="shipping_method" id="shipping_reguler" value="reguler" checked>
-                            <label class="form-check-label" for="shipping_reguler">
-                                Reguler
-                                <div style="font-size:0.95em;color:#888;font-weight:400;">
-                                    Estimasi: {{ $today->copy()->addDays(2)->translatedFormat('d M Y') }} - {{ $today->copy()->addDays(5)->translatedFormat('d M Y') }}
-                                </div>
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="radio" name="shipping_method" id="shipping_kargo" value="kargo">
-                            <label class="form-check-label" for="shipping_kargo">
-                                Kargo
-                                <div style="font-size:0.95em;color:#888;font-weight:400;">
-                                    Estimasi: {{ $today->copy()->addDays(3)->translatedFormat('d M Y') }} - {{ $today->copy()->addDays(7)->translatedFormat('d M Y') }}
-                                </div>
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="radio" name="shipping_method" id="shipping_pickup" value="pickup">
-                            <label class="form-check-label" for="shipping_pickup">
-                                Pickup di Tempat
-                            </label>
-                        </div>
-                    </div>
-                    <div class="mt-2" style="color:#388e3c;">
-                        <i class="bi bi-shield-check"></i> Aman dengan Garansi Pembelian
-                    </div>
-                </div>
-                {{-- Hapus blok Metode Pembayaran (unggah foto bukti pembayaran) --}}
-            </div>
 
-            <div class="checkout-card">
-                @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill"></i>
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
-                <div class="checkout-section-title">
-                    Kepentingan
-                    <span style="color: #dc3545; font-size: 0.9rem; font-weight: 500;">(WAJIB DIISI)</span>
-                </div>
-                <div class="mb-3">
-                    <label for="purchase_purpose" class="form-label fw-bold">Keperluan Pembelian</label>
-                    <textarea
-                        class="form-control"
-                        id="purchase_purpose"
-                        name="purchase_purpose"
-                        rows="3"
-                        placeholder="Masukkan keperluan pembelian benih..."
-                        required
-                    ></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="planting_location" class="form-label fw-bold">Lokasi Tanam</label>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="province" class="form-label">Provinsi</label>
-                            <select class="form-select" id="province" name="province" required>
-                                <option value="">Pilih Provinsi</option>
-                                <option value="jawa_timur">Jawa Timur</option>
-                                <option value="jawa_barat">Jawa Barat</option>
-                                <option value="jawa_tengah">Jawa Tengah</option>
-                                <option value="banten">Banten</option>
-                                <option value="dki_jakarta">DKI Jakarta</option>
-                                <option value="yogyakarta">DI Yogyakarta</option>
-                                <option value="bali">Bali</option>
-                                <option value="lampung">Lampung</option>
-                                <option value="sumatera_selatan">Sumatera Selatan</option>
-                                <option value="sumatera_utara">Sumatera Utara</option>
-                                <option value="riau">Riau</option>
-                                <option value="sumatera_barat">Sumatera Barat</option>
-                                <option value="aceh">Aceh</option>
-                                <option value="kalimantan_barat">Kalimantan Barat</option>
-                                <option value="kalimantan_tengah">Kalimantan Tengah</option>
-                                <option value="kalimantan_selatan">Kalimantan Selatan</option>
-                                <option value="kalimantan_timur">Kalimantan Timur</option>
-                                <option value="kalimantan_utara">Kalimantan Utara</option>
-                                <option value="sulawesi_selatan">Sulawesi Selatan</option>
-                                <option value="sulawesi_utara">Sulawesi Utara</option>
-                                <option value="sulawesi_tengah">Sulawesi Tengah</option>
-                                <option value="sulawesi_tenggara">Sulawesi Tenggara</option>
-                                <option value="sulawesi_barat">Sulawesi Barat</option>
-                                <option value="gorontalo">Gorontalo</option>
-                                <option value="maluku">Maluku</option>
-                                <option value="maluku_utara">Maluku Utara</option>
-                                <option value="papua">Papua</option>
-                                <option value="papua_barat">Papua Barat</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="city" class="form-label">Kota/Kabupaten</label>
-                            <select class="form-select" id="city" name="city" required>
-                                <option value="">Pilih Kota/Kabupaten</option>
-                                <!-- Options will be populated via JavaScript based on selected province -->
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="checkout-summary">
-            <div class="checkout-summary-title">Ringkasan Pesanan</div>
-            @if(count($cart) > 0)
-                @foreach($cart as $item)
-                <div class="order-item-row">
-                    <div class="order-item-img">
-                        @if($item['image'])
-                            <img src="{{ asset('images/' . $item['image']) }}" alt="{{ $item['name'] }}">
+<form action="{{ route('checkout.next') }}" method="POST">
+    @csrf
+    <div class="container py-4">
+        <div class="checkout-title">Checkout</div>
+        <div class="checkout-main">
+            <div class="checkout-left">
+                <div class="checkout-card">
+                    <div class="checkout-section-title">Alamat Pengiriman</div>
+                    @if($address)
+                        <div class="fw-bold">{{ $address->address ?? '-' }}</div>
+                        <div>{{ $address->recipient_name ?? '-' }}</div>
+                        <div>{{ $address->recipient_phone ?? '-' }}</div>
+                        @if(!empty($address->note))
+                            <div class="text-muted"><small>Catatan: {{ $address->note }}</small></div>
                         @endif
-                    </div>
-                    <div class="order-item-info">
-                        <div class="order-item-name">{{ $item['name'] }}</div>
-                        <div class="order-item-price">Rp{{ number_format($item['price'],0,',','.') }}</div>
+                        <button type="button" class="btn btn-sm btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#modalGantiAlamat">Ganti</button>
+                    @else
+                        <div class="text-muted">Belum ada alamat utama</div>
+                        <a href="{{ route('addresses') }}" class="btn btn-sm btn-success mt-2">Tambah Alamat</a>
+                    @endif
+                </div>
+
+                <div class="checkout-card">
+                    <div class="checkout-section-title">Pengiriman</div>
+                    <div>Pilih metode pengiriman</div>
+                    @php
+                        use Carbon\Carbon;
+                        $today = Carbon::now('Asia/Jakarta');
+                    @endphp
+                    <div class="mt-3">
+                        <div id="shipping-method-radio-group">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="shipping_method" id="shipping_reguler" value="reguler" checked>
+                                <label class="form-check-label" for="shipping_reguler">
+                                    Reguler
+                                    <div style="font-size:0.95em;color:#888;font-weight:400;">
+                                        Estimasi: {{ $today->copy()->addDays(2)->translatedFormat('d M Y') }} - {{ $today->copy()->addDays(5)->translatedFormat('d M Y') }}
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="shipping_method" id="shipping_kargo" value="kargo">
+                                <label class="form-check-label" for="shipping_kargo">
+                                    Kargo
+                                    <div style="font-size:0.95em;color:#888;font-weight:400;">
+                                        Estimasi: {{ $today->copy()->addDays(3)->translatedFormat('d M Y') }} - {{ $today->copy()->addDays(7)->translatedFormat('d M Y') }}
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="shipping_method" id="shipping_pickup" value="pickup">
+                                <label class="form-check-label" for="shipping_pickup">
+                                    Pickup di Tempat
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mt-2" style="color:#388e3c;">
+                            <i class="bi bi-shield-check"></i> Aman dengan Garansi Pembelian
+                        </div>
                     </div>
                 </div>
-                <div class="order-item-sub">
-                    <span>{{ $item['quantity'] }} {{ $item['unit'] }}</span>
-                    <span>Rp{{ number_format($item['subtotal'],0,',','.') }}</span>
+
+                <div class="checkout-card">
+                    @if(session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            {{ session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+                    <div class="checkout-section-title">
+                        Kepentingan
+                        <span style="color: #dc3545; font-size: 0.9rem; font-weight: 500;">(WAJIB DIISI)</span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="purchase_purpose" class="form-label fw-bold">Keperluan Pembelian</label>
+                        <textarea
+                            class="form-control"
+                            id="purchase_purpose"
+                            name="purchase_purpose"
+                            rows="3"
+                            placeholder="Masukkan keperluan pembelian benih..."
+                            required
+                        ></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="planting_location" class="form-label fw-bold">Lokasi Tanam</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="province" class="form-label">Provinsi</label>
+                                <select class="form-select" id="province" name="province" required>
+                                    <option value="">Pilih Provinsi</option>
+                                    @foreach(\App\Models\RegProvinces::orderBy('name')->get() as $provinsi)
+                                        <option value="{{ $provinsi->id }}">{{ $provinsi->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="city" class="form-label">Kota/Kabupaten</label>
+                                <select class="form-select" id="city" name="city" required>
+                                    <option value="">Pilih Kota/Kabupaten</option>
+                                    <!-- Options will be populated via JavaScript based on selected province -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                @endforeach
-            @else
-                <div class="text-muted">Tidak ada item untuk checkout</div>
-            @endif
-            <div class="order-item-sub">
-                <span>Pengiriman</span>
-                <span class="text-muted">Di tahap selanjutnya</span>
-            </div>
-            <hr>
-            <div class="order-item-sub" style="font-weight:700;">
-                <span>Total</span>
-                <span>Rp{{ number_format($total,0,',','.') }}</span>
             </div>
 
-            <form action="{{ route('checkout.next') }}" method="POST">
-                @csrf
-                <input type="hidden" name="shipping_method" id="shipping_method_hidden" value="reguler">
-                <input type="hidden" name="purchase_purpose" id="purchase_purpose_hidden">
-                <input type="hidden" name="province" id="province_hidden">
-                <input type="hidden" name="city" id="city_hidden">
+            <div class="checkout-summary">
+                <div class="checkout-summary-title">Ringkasan Pesanan</div>
+                @if(count($cart) > 0)
+                    @foreach($cart as $item)
+                    <div class="order-item-row">
+                        <div class="order-item-img">
+                            @if($item['image'])
+                                <img src="{{ asset('images/' . $item['image']) }}" alt="{{ $item['name'] }}">
+                            @endif
+                        </div>
+                        <div class="order-item-info">
+                            <div class="order-item-name">{{ $item['name'] }}</div>
+                            <div class="order-item-price">Rp{{ number_format($item['price'],0,',','.') }}</div>
+                        </div>
+                    </div>
+                    <div class="order-item-sub">
+                        <span>{{ $item['quantity'] }} {{ $item['unit'] }}</span>
+                        <span>Rp{{ number_format($item['subtotal'],0,',','.') }}</span>
+                    </div>
+                    @endforeach
+                @else
+                    <div class="text-muted">Tidak ada item untuk checkout</div>
+                @endif
+                <div class="order-item-sub">
+                    <span>Pengiriman</span>
+                    <span class="text-muted">Di tahap selanjutnya</span>
+                </div>
+                <hr>
+                <div class="order-item-sub" style="font-weight:700;">
+                    <span>Total</span>
+                    <span>Rp{{ number_format($total,0,',','.') }}</span>
+                </div>
                 <button type="submit" class="btn">Bayar Sekarang <i class="bi bi-chevron-right"></i></button>
-            </form>
+            </div>
         </div>
     </div>
-</div>
+</form>
 @include('customer.partials.modal_tambah_alamat')
 @include('customer.partials.modal_edit_alamat')
 <!-- Modal Ganti Alamat -->
@@ -482,238 +452,37 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeProvinceCityDropdown();
 });
 
-// Province and city data
-const provinceCityData = {
-    'jawa_timur': [
-        'Kota Malang', 'Kota Surabaya', 'Kota Batu', 'Kabupaten Malang', 'Kabupaten Pasuruan',
-        'Kabupaten Probolinggo', 'Kabupaten Lumajang', 'Kabupaten Jember', 'Kabupaten Banyuwangi',
-        'Kabupaten Bondowoso', 'Kabupaten Situbondo', 'Kabupaten Sidoarjo', 'Kabupaten Mojokerto',
-        'Kabupaten Jombang', 'Kabupaten Nganjuk', 'Kabupaten Madiun', 'Kabupaten Magetan',
-        'Kabupaten Ngawi', 'Kabupaten Bojonegoro', 'Kabupaten Tuban', 'Kabupaten Lamongan',
-        'Kabupaten Gresik', 'Kabupaten Bangkalan', 'Kabupaten Sampang', 'Kabupaten Pamekasan',
-        'Kabupaten Sumenep', 'Kota Kediri', 'Kota Blitar', 'Kota Madiun', 'Kota Mojokerto',
-        'Kota Pasuruan', 'Kota Probolinggo', 'Kota Blitar', 'Kota Kediri', 'Kota Madiun',
-        'Kota Mojokerto', 'Kota Pasuruan', 'Kota Probolinggo'
-    ],
-    'jawa_barat': [
-        'Kota Bandung', 'Kota Bogor', 'Kota Bekasi', 'Kota Cimahi', 'Kota Cirebon',
-        'Kota Depok', 'Kota Sukabumi', 'Kota Tasikmalaya', 'Kabupaten Bandung',
-        'Kabupaten Bandung Barat', 'Kabupaten Bekasi', 'Kabupaten Bogor', 'Kabupaten Ciamis',
-        'Kabupaten Cianjur', 'Kabupaten Cirebon', 'Kabupaten Garut', 'Kabupaten Indramayu',
-        'Kabupaten Karawang', 'Kabupaten Kuningan', 'Kabupaten Majalengka', 'Kabupaten Pangandaran',
-        'Kabupaten Purwakarta', 'Kabupaten Subang', 'Kota Banjar'
-    ],
-    'jawa_tengah': [
-        'Kota Semarang', 'Kota Salatiga', 'Kota Surakarta', 'Kota Magelang', 'Kota Pekalongan',
-        'Kota Tegal', 'Kabupaten Banjarnegara', 'Kabupaten Banyumas', 'Kabupaten Batang',
-        'Kabupaten Blora', 'Kabupaten Boyolali', 'Kabupaten Brebes', 'Kabupaten Cilacap',
-        'Kabupaten Demak', 'Kabupaten Grobogan', 'Kabupaten Jepara', 'Kabupaten Karanganyar',
-        'Kabupaten Kebumen', 'Kabupaten Kendal', 'Kabupaten Klaten', 'Kabupaten Kudus',
-        'Kabupaten Magelang', 'Kabupaten Pati', 'Kabupaten Pekalongan', 'Kabupaten Pemalang',
-        'Kabupaten Purbalingga', 'Kabupaten Purworejo', 'Kabupaten Rembang', 'Kabupaten Semarang',
-        'Kabupaten Sragen', 'Kabupaten Sukoharjo', 'Kabupaten Tegal', 'Kabupaten Temanggung',
-        'Kabupaten Wonogiri', 'Kabupaten Wonosobo'
-    ],
-    'dki_jakarta': [
-        'Jakarta Pusat', 'Jakarta Utara', 'Jakarta Barat', 'Jakarta Selatan', 'Jakarta Timur',
-        'Kepulauan Seribu'
-    ],
-    'banten': [
-        'Kota Serang', 'Kota Cilegon', 'Kota Tangerang', 'Kota Tangerang Selatan',
-        'Kabupaten Serang', 'Kabupaten Lebak', 'Kabupaten Pandeglang', 'Kabupaten Tangerang'
-    ],
-    'yogyakarta': [
-        'Kota Yogyakarta', 'Kabupaten Sleman', 'Kabupaten Bantul', 'Kabupaten Kulon Progo',
-        'Kabupaten Gunungkidul'
-    ]
-};
+async function loadCities(provinceId) {
+    try {
+        const response = await fetch(`/api/wilayah/cities/${provinceId}`);
+        const cities = await response.json();
+        return cities;
+    } catch (error) {
+        console.error('Error loading cities:', error);
+        return [];
+    }
+}
 
 function initializeProvinceCityDropdown() {
     const provinceSelect = document.getElementById('province');
     const citySelect = document.getElementById('city');
 
     if (provinceSelect && citySelect) {
-        provinceSelect.addEventListener('change', function() {
+        provinceSelect.addEventListener('change', async function() {
             const selectedProvince = this.value;
             citySelect.innerHTML = '<option value="">Pilih Kota/Kabupaten</option>';
 
-            if (selectedProvince && provinceCityData[selectedProvince]) {
-                provinceCityData[selectedProvince].forEach(city => {
+            if (selectedProvince) {
+                const cities = await loadCities(selectedProvince);
+                cities.forEach(city => {
                     const option = document.createElement('option');
-                    option.value = city.toLowerCase().replace(/\s+/g, '_');
-                    option.textContent = city;
+                    option.value = city.id;
+                    option.textContent = city.name;
                     citySelect.appendChild(option);
                 });
             }
         });
     }
 }
-
-// Function to validate form data
-function validateForm() {
-    let isValid = true;
-    let errorMessage = '';
-
-    // Clear previous error states
-    clearValidationErrors();
-
-    // Validate purchase purpose
-    const purchasePurpose = document.getElementById('purchase_purpose');
-    if (!purchasePurpose || !purchasePurpose.value.trim()) {
-        isValid = false;
-        errorMessage += '- Keperluan Pembelian harus diisi\n';
-        if (purchasePurpose) {
-            purchasePurpose.classList.add('is-invalid');
-            showFieldError(purchasePurpose, 'Keperluan Pembelian harus diisi');
-        }
-    }
-
-    // Validate province
-    const province = document.getElementById('province');
-    if (!province || !province.value) {
-        isValid = false;
-        errorMessage += '- Provinsi harus dipilih\n';
-        if (province) {
-            province.classList.add('is-invalid');
-            showFieldError(province, 'Provinsi harus dipilih');
-        }
-    }
-
-    // Validate city
-    const city = document.getElementById('city');
-    if (!city || !city.value) {
-        isValid = false;
-        errorMessage += '- Kota/Kabupaten harus dipilih\n';
-        if (city) {
-            city.classList.add('is-invalid');
-            showFieldError(city, 'Kota/Kabupaten harus dipilih');
-        }
-    }
-
-    if (!isValid) {
-        // Scroll to first error field
-        const firstErrorField = document.querySelector('.is-invalid');
-        if (firstErrorField) {
-            firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-
-        // Show alert
-        setTimeout(() => {
-            alert('Tolong lengkapi data terlebih dahulu:\n' + errorMessage);
-        }, 100);
-
-        return false;
-    }
-
-    return true;
-}
-
-// Function to clear validation errors
-function clearValidationErrors() {
-    const errorFields = document.querySelectorAll('.is-invalid');
-    errorFields.forEach(field => {
-        field.classList.remove('is-invalid');
-    });
-
-    const errorMessages = document.querySelectorAll('.invalid-feedback');
-    errorMessages.forEach(message => {
-        message.remove();
-    });
-}
-
-// Function to show field error
-function showFieldError(field, message) {
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'invalid-feedback';
-    errorDiv.textContent = message;
-    field.parentNode.appendChild(errorDiv);
-}
-
-// Function to update hidden fields before form submission
-function updateHiddenFields() {
-    // Get shipping method
-    const selectedShippingMethod = document.querySelector('input[name="shipping_method"]:checked');
-    if (selectedShippingMethod) {
-        document.getElementById('shipping_method_hidden').value = selectedShippingMethod.value;
-    } else {
-        // Default to 'reguler' if no method is selected
-        document.getElementById('shipping_method_hidden').value = 'reguler';
-    }
-
-    // Get purchase purpose
-    const purchasePurpose = document.getElementById('purchase_purpose');
-    if (purchasePurpose) {
-        document.getElementById('purchase_purpose_hidden').value = purchasePurpose.value;
-    }
-
-    // Get province
-    const province = document.getElementById('province');
-    if (province) {
-        document.getElementById('province_hidden').value = province.value;
-    }
-
-    // Get city
-    const city = document.getElementById('city');
-    if (city) {
-        document.getElementById('city_hidden').value = city.value;
-    }
-}
-
-// Add event listener to form submission
-document.addEventListener('DOMContentLoaded', function() {
-    const checkoutForm = document.querySelector('form[action*="checkout.next"]');
-    if (checkoutForm) {
-        checkoutForm.addEventListener('submit', function(e) {
-            // Validate form first
-            if (!validateForm()) {
-                e.preventDefault();
-                return false;
-            }
-
-            // Update hidden fields if validation passes
-            updateHiddenFields();
-        });
-    }
-
-    // Add event listeners to clear validation errors when user starts typing/selecting
-    const purchasePurpose = document.getElementById('purchase_purpose');
-    if (purchasePurpose) {
-        purchasePurpose.addEventListener('input', function() {
-            if (this.classList.contains('is-invalid')) {
-                this.classList.remove('is-invalid');
-                const errorMessage = this.parentNode.querySelector('.invalid-feedback');
-                if (errorMessage) {
-                    errorMessage.remove();
-                }
-            }
-        });
-    }
-
-    const province = document.getElementById('province');
-    if (province) {
-        province.addEventListener('change', function() {
-            if (this.classList.contains('is-invalid')) {
-                this.classList.remove('is-invalid');
-                const errorMessage = this.parentNode.querySelector('.invalid-feedback');
-                if (errorMessage) {
-                    errorMessage.remove();
-                }
-            }
-        });
-    }
-
-    const city = document.getElementById('city');
-    if (city) {
-        city.addEventListener('change', function() {
-            if (this.classList.contains('is-invalid')) {
-                this.classList.remove('is-invalid');
-                const errorMessage = this.parentNode.querySelector('.invalid-feedback');
-                if (errorMessage) {
-                    errorMessage.remove();
-                }
-            }
-        });
-    }
-});
 </script>
 @endsection

@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('recipient_phone');
             $table->text('shipping_address');
             $table->text('shipping_note')->nullable();
+            $table->text('purchase_purpose')->nullable();
+            $table->string('province_id')->nullable();
+            $table->string('regency_id')->nullable();
             $table->integer('total_price');
             $table->string('order_status');
             $table->string('delivery_method');

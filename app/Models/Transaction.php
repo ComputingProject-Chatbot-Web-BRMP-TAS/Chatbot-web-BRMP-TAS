@@ -21,6 +21,9 @@ class Transaction extends Model
         'shipping_address',
         'recipient_phone',
         'shipping_note',
+        'purchase_purpose',
+        'province_id',
+        'regency_id',
         'order_date',
         'total_price',
         'order_status',
@@ -46,6 +49,16 @@ class Transaction extends Model
     public function transactionItems()
     {
         return $this->hasMany(TransactionItem::class, 'transaction_id', 'transaction_id');
+    }
+
+    public function province()
+    {
+        return $this->belongsTo(RegProvinces::class, 'province_id', 'id');
+    }
+
+    public function regency()
+    {
+        return $this->belongsTo(RegRegencies::class, 'regency_id', 'id');
     }
 
     /**
