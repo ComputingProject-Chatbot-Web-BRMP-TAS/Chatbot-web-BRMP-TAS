@@ -100,6 +100,20 @@ class CheckoutController extends Controller
             return redirect()->route('cart')->with('error', 'Silakan checkout ulang dari keranjang.');
         }
 
+        // Validasi shipping method
+        if (empty($shipping_method)) {
+            return redirect()->back()->with('error', 'Silakan pilih metode pengiriman.');
+        }
+
+        // Validasi form kepentingan
+        $purchase_purpose = $request->input('purchase_purpose');
+        $province = $request->input('province');
+        $city = $request->input('city');
+
+        if (empty($purchase_purpose) || empty($province) || empty($city)) {
+            return redirect()->back()->with('error', 'Tolong lengkapi data terlebih dahulu.');
+        }
+
         // Cek apakah user sudah punya alamat
         $selectedId = session('checkout_address_id');
         if ($selectedId) {
@@ -142,7 +156,7 @@ class CheckoutController extends Controller
             'order_date' => $order_date,
             'total_price' => $total + $ongkir + $asuransi,
             'order_status' => 'menunggu_pembayaran',
-            'delivery_method' => $shipping_method,
+            'delivery_method' => $shipping_method ?? 'reguler', // Pastikan tidak null
             'estimated_delivery_date' => $estimated_delivery_date,
         ]);
 
@@ -168,4 +182,4 @@ class CheckoutController extends Controller
         // Redirect ke halaman payment
         return redirect()->route('payment.show')->with('success', 'Transaksi berhasil dibuat! Silakan lakukan pembayaran.');
     }
-} 
+}
