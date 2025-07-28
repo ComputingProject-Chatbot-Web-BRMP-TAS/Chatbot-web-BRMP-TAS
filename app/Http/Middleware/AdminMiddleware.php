@@ -9,9 +9,16 @@ class AdminMiddleware
 {
     public function handle($request, Closure $next)
     {
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
-            return redirect('/ADMIN-BRMP-TAS/login')->withErrors(['email' => 'Akses hanya untuk admin.']);
+        // Jika belum login
+        if (!Auth::check()) {
+            return redirect('/ADMIN-BRMP-TAS/login')->withErrors(['email' => 'Silakan login terlebih dahulu.']);
         }
+
+        // Jika login tapi bukan admin
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'Akses hanya untuk admin.');
+        }
+
         return $next($request);
     }
-} 
+}

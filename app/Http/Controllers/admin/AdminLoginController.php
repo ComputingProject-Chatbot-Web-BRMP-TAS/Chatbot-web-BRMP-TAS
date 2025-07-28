@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -26,7 +26,7 @@ class AdminLoginController extends Controller
 
         if ($admin && Hash::check($request->password, $admin->password)) {
             Auth::login($admin);
-            return redirect('/ADMIN-BRMP-TAS/dashboard')->with('success', 'Berhasil login sebagai admin!');
+            return redirect('/ADMIN-BRMP-TAS')->with('success', 'Berhasil login sebagai admin!');
         }
 
         return back()->withErrors(['email' => 'Email atau password salah'])->withInput();

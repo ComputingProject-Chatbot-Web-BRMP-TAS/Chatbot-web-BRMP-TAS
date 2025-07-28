@@ -20,12 +20,12 @@ use App\Http\Controllers\customer\CheckoutController;
 use App\Http\Controllers\customer\ComplaintController;
 use App\Http\Controllers\customer\AuthController as CustomerAuthController;
 use App\Http\Controllers\customer\TransactionController;
-use App\Http\Controllers\Admin\AdminLoginController;
+use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\customer\ProfileController;
 use App\Http\Controllers\customer\ProductController;
 use App\Http\Controllers\customer\ArticleController;
 use App\Http\Controllers\customer\DebugController;
-use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\admin\AdminDashboardController;
 use App\Http\Controllers\customer\EmailVerificationController;
 
 // =====================
@@ -84,8 +84,12 @@ Route::get('/transaksi/{id}', [TransactionController::class, 'detail'])->middlew
 // =====================
 Route::get('/komplain', [ComplaintController::class, 'create'])->name('complaint.create');
 Route::post('/komplain', [ComplaintController::class, 'store'])->name('complaint.store');
-Route::get('/ADMIN-BRMP-TAS/komplain', [ComplaintController::class, 'index'])->middleware('admin')->name('complaint.index');
-Route::get('/ADMIN-BRMP-TAS/komplain/{id}', [ComplaintController::class, 'show'])->middleware('admin')->name('complaint.show');
+
+Route::middleware(['admin'])->prefix('ADMIN-BRMP-TAS')->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/komplain', [ComplaintController::class, 'index'])->name('complaint.index');
+    Route::get('/komplain/{id}', [ComplaintController::class, 'show'])->name('complaint.show');
+});
 
 // =====================
 // Admin Auth & Dashboard
@@ -93,7 +97,6 @@ Route::get('/ADMIN-BRMP-TAS/komplain/{id}', [ComplaintController::class, 'show']
 Route::get('/ADMIN-BRMP-TAS/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/ADMIN-BRMP-TAS/login', [AdminLoginController::class, 'login'])->name('admin.login.post');
 Route::post('/ADMIN-BRMP-TAS/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
-Route::get('/ADMIN-BRMP-TAS/dashboard', [AdminDashboardController::class, 'index'])->middleware('admin')->name('admin.dashboard');
 
 // =====================
 // Email Verification
