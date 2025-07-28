@@ -14,7 +14,7 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        Product::insert([
+        $products = [
             [
                 'product_name' => 'Benih Tebu Manis',
                 'plant_type_id' => 6, 
@@ -27,8 +27,6 @@ class ProductSeeder extends Seeder
                 'image1' => 'default.jpg',
                 'image2' => 'default2.jpg',
                 'image_certificate' => 'default_cert.jpg',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'product_name' => 'Benih Kapas',
@@ -42,8 +40,6 @@ class ProductSeeder extends Seeder
                 'image1' => 'default.jpg',
                 'image2' => 'default2.jpg',
                 'image_certificate' => 'default_cert.jpg',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'product_name' => 'Benih Tembakau Lokal',
@@ -57,8 +53,6 @@ class ProductSeeder extends Seeder
                 'image1' => 'default.jpg',
                 'image2' => 'default2.jpg',
                 'image_certificate' => 'default_cert.jpg',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'product_name' => 'Benih Kelapa Sawit',
@@ -72,9 +66,17 @@ class ProductSeeder extends Seeder
                 'image1' => 'default.jpg',
                 'image2' => 'default2.jpg',
                 'image_certificate' => 'default_cert.jpg',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
-        ]);
+        ];
+
+        foreach ($products as $product) {
+            Product::firstOrCreate(
+                ['product_name' => $product['product_name']],
+                array_merge($product, [
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ])
+            );
+        }
     }
 }

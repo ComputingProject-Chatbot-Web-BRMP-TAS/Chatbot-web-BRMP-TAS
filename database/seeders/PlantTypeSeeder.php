@@ -13,61 +13,50 @@ class PlantTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        PlantTypes::insert([
+        $plantTypes = [
             [
                 'plant_type_name' => 'Tembakau',
                 'comodity' => 'Tanaman Tembakau',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'plant_type_name' => 'Kapas',
                 'comodity' => 'Tanaman Serat',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'plant_type_name' => 'Wijen',
                 'comodity' => 'Tanaman Minyak Industri',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
-            // [
-            //     'plant_type_name' => 'Rosela Herbal',
-            //     'comodity' => 'Tanaman ...',
-            //     'created_at' => now(),
-            //     'updated_at' => now(),
-            // ],
             [
                 'plant_type_name' => 'Kenaf',
                 'comodity' => 'Tanaman Serat',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'plant_type_name' => 'Jarak Kepyar',
                 'comodity' => 'Tanaman Minyak Industri',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'plant_type_name' => 'Tebu',
                 'comodity' => 'Tanaman Pemanis',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'plant_type_name' => 'Abaka',
                 'comodity' => 'Tanaman Serat',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'plant_type_name' => 'Rami',
                 'comodity' => 'Tanaman Serat',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
-        ]);
+        ];
+
+        foreach ($plantTypes as $plantType) {
+            PlantTypes::firstOrCreate(
+                ['plant_type_name' => $plantType['plant_type_name']],
+                [
+                    'comodity' => $plantType['comodity'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+        }
     }
 }

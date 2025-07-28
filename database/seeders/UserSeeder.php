@@ -14,8 +14,9 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::insert([
-            [
+        // Check if users already exist to avoid duplicate key errors
+        if (!User::where('email', 'admin@test.com')->exists()) {
+            User::create([
                 'name' => 'Admin',
                 'email' => 'admin@test.com',
                 'password' => Hash::make('1234'),
@@ -23,8 +24,11 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'phone_verified_at' => now(),
                 'role' => 'admin'
-            ],
-            [
+            ]);
+        }
+
+        if (!User::where('email', 'user@test.com')->exists()) {
+            User::create([
                 'name' => 'User',
                 'email' => 'user@test.com',
                 'password' => Hash::make('1234'),
@@ -32,7 +36,7 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'phone_verified_at' => now(),
                 'role' => 'customer'
-            ],
-        ]);
+            ]);
+        }
     }
 }
