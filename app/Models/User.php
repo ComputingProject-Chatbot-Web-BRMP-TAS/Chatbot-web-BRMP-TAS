@@ -28,7 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone',
         'gender',
         'birth_date',
-        'foto_profil',
+        'profile_picture',
         'email_verified_at',
         'phone_verified_at',
         'role',
@@ -68,10 +68,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getProfilePhotoUrlAttribute()
     {
-        if ($this->foto_profil) {
-            return asset('storage/foto_profil/' . $this->foto_profil);
+        if ($this->profile_picture) {
+            return asset('storage/profile_pictures/' . $this->profile_picture);
         }
-        return null;
+        return asset('images/default-profile.png');
     }
 
     public function isPhoneVerified()

@@ -195,12 +195,12 @@
             </div>
             <form method="POST" action="{{ route('profile.upload_foto') }}" enctype="multipart/form-data" style="width:100%;">
                 @csrf
-                <input type="file" name="foto_profil" id="fotoProfilInput" accept="image/jpeg,image/png" style="display:none;" onchange="this.form.submit()">
+                <input type="file" name="profile_picture" id="fotoProfilInput" accept="image/jpeg,image/png" style="display:none;" onchange="this.form.submit()">
                 <button type="button" class="btn-upload" onclick="document.getElementById('fotoProfilInput').click()">Pilih Foto</button>
             </form>
-            @if ($errors->has('foto_profil'))
+            @if ($errors->has('profile_picture'))
                 <div style="color: #d32f2f; background: #fff3f3; border: 1px solid #f8d7da; padding: 10px 16px; border-radius: 8px; margin-bottom: 16px; text-align:center;">
-                    <strong>Gagal upload foto:</strong> {{ $errors->first('foto_profil') }}
+                    <strong>Gagal upload foto:</strong> {{ $errors->first('profile_picture') }}
                 </div>
             @endif
             @if (session('success'))

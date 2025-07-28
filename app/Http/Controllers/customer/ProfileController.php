@@ -38,12 +38,12 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         $request->validate([
-            'foto_profil' => 'required|image|mimes:jpg,jpeg,png|max:10240',
+            'profile_picture' => 'required|image|mimes:jpg,jpeg,png|max:10240',
         ]);
-        $file = $request->file('foto_profil');
+        $file = $request->file('profile_picture');
         $filename = 'user_' . $user->user_id . '_' . time() . '.' . $file->getClientOriginalExtension();
-        $file->storeAs('public/foto_profil', $filename);
-        $user->foto_profil = $filename;
+        $file->storeAs('public/profile_pictures', $filename);
+        $user->profile_picture = $filename;
         $user->save();
         return redirect()->route('profile')->with('success', 'Foto profil berhasil diupload!');
     }
@@ -100,4 +100,4 @@ class ProfileController extends Controller
         $user->save();
         return back()->with('success', 'Password berhasil diubah!');
     }
-} 
+}
