@@ -21,9 +21,6 @@
             <div class="product-detail-title">{{ $product->product_name }}</div>
             <div class="product-detail-price">Rp{{ number_format($product->price_per_unit, 0, ',', '.') }} / {{ $product->unit }}</div>
             <div class="product-detail-stock">Stok: {{ $product->stock - $product->minimum_stock }} {{ $product->unit }}</div>
-            <div class="product-detail-info-list">
-                <div><span class="label">Kategori:</span> <span class="value">{{ $product->plantType?->plant_type_name ?? '-' }}</span></div>  
-            </div>
             <div class="product-detail-desc">{{ $product->description }}</div>
         </div>
         <div class="product-detail-modern-right">
