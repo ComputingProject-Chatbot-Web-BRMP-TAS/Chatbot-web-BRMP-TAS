@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('content')
-<div class="container" style="margin-top:60px;max-width:1100px;">
+<div class="container" style="padding-top: 80px;max-width:1100px;">
     <h2 style="font-weight:700;margin-bottom:24px;">Daftar Komplain</h2>
     <div class="card shadow" style="border-radius:16px;">
         <div class="card-body p-4">

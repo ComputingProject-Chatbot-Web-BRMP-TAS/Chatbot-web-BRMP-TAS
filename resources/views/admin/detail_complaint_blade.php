@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('content')
-<div class="container" style="max-width:600px;margin-top:90px;">
+<div class="container" style="max-width:600px;padding-top: 80px;">
     <div class="card shadow" style="border-radius:20px;">
         <div class="card-body p-4">
             <h2 class="text-center mb-4" style="color:#388e3c;font-weight:700;">Detail Komplain</h2>
