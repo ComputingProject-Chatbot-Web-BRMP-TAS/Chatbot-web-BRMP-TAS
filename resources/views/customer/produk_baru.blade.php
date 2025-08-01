@@ -1,5 +1,9 @@
 @extends('layouts.app')
 @section('content')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+@php
+    $latestProducts = App\Models\Product::orderBy('product_id','desc')->take(5)->pluck('product_id')->toArray();
+@endphp
 <style>
 .kategori-banner {
     margin: 60px 0 20px 0;
@@ -344,9 +348,18 @@
 
                     <div class="products-grid" id="productsGrid">
                         @forelse($products as $product)
-                            <a href="{{ route('produk.detail', $product->product_id) }}" class="product-card" data-price="{{ $product->price_per_unit }}">
+                            @php
+                                $availableStock = $product->stock - $product->minimum_stock;
+                                $isOutOfStock = $availableStock <= 0;
+                            @endphp
+                            <a href="{{ route('produk.detail', $product->product_id) }}" class="product-card" data-price="{{ $product->price_per_unit }}" style="{{ $isOutOfStock ? 'opacity: 0.7; filter: grayscale(30%);' : '' }}">
                                 @if(in_array($product->product_id, $latestProducts))
                                     <div class="product-badge">Baru</div>
+                                @endif
+                                @if($isOutOfStock)
+                                    <div style="position:absolute;top:8px;right:8px;background:#d32f2f;color:white;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:500;z-index:10;box-shadow:0 2px 4px rgba(211,47,47,0.3);">
+                                        <i class="fas fa-times-circle" style="margin-right:2px;"></i>Stok Habis
+                                    </div>
                                 @endif
                                 <button class="heart-icon" onclick="event.preventDefault();">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -362,6 +375,12 @@
                                     <div class="product-title">{{ $product->product_name }}</div>
                                     <div class="product-price">Rp{{ number_format($product->price_per_unit, 0, ',', '.') }}</div>
                                     <div class="product-location">Kategori: {{ $product->jenis_kategori }}</div>
+                                    <div class="product-stock" style="font-size:12px;color:{{ $isOutOfStock ? '#d32f2f' : '#888' }};margin-top:4px;">
+                                        Stok: {{ $availableStock }} {{ $product->unit }}
+                                        @if($isOutOfStock)
+                                            <span style="font-weight:500;">(Habis)</span>
+                                        @endif
+                                    </div>
                                 </div>
                             </a>
                         @empty

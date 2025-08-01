@@ -1,4 +1,5 @@
 @extends('layouts.app')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 @section('content')
 <div class="product-detail-modern-bg">
@@ -20,25 +21,62 @@
         <div class="product-detail-modern-center">
             <div class="product-detail-title">{{ $product->product_name }}</div>
             <div class="product-detail-price">Rp{{ number_format($product->price_per_unit, 0, ',', '.') }} / {{ $product->unit }}</div>
-            <div class="product-detail-stock">Stok: {{ $product->stock - $product->minimum_stock }} {{ $product->unit }}</div>
+            @php
+                $availableStock = $product->stock - $product->minimum_stock;
+                $isOutOfStock = $availableStock <= 0;
+            @endphp
+            <div class="product-detail-stock {{ $isOutOfStock ? 'text-danger' : '' }}">
+                Stok: {{ $availableStock }} {{ $product->unit }}
+                @if($isOutOfStock)
+                    <span style="color: #d32f2f; font-weight: 500;">(Stok Habis)</span>
+                @endif
+            </div>
             <div class="product-detail-desc">{{ $product->description }}</div>
         </div>
         <div class="product-detail-modern-right">
+            @if(session('error'))
+                <div style="background:#ffebee;border:1px solid #f44336;border-radius:8px;padding:12px;margin-bottom:16px;color:#d32f2f;font-size:0.9rem;">
+                    <i class="fas fa-exclamation-triangle" style="margin-right:6px;"></i>
+                    {{ session('error') }}
+                </div>
+            @endif
+            @if(session('success'))
+                <div style="background:#e8f5e9;border:1px solid #4caf50;border-radius:8px;padding:12px;margin-bottom:16px;color:#2e7d32;font-size:0.9rem;">
+                    <i class="fas fa-check-circle" style="margin-right:6px;"></i>
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="product-detail-card">
                 <div class="product-detail-card-title">Atur jumlah dan catatan</div>
-                <form method="POST" action="{{ Auth::check() ? route('cart.add', $product->product_id) : route('login') }}">
-                    @csrf
-                    <div class="product-detail-card-qty">
-                        <input type="text" id="qtyInput" name="quantity" value="{{ $product->minimum_purchase }}" min="{{ $product->minimum_purchase }}" style="width:60px;text-align:center;background:#fff;">
-                        <span style="margin-left:8px;">{{ $product->unit }}</span>
+                @if($isOutOfStock)
+                    <div style="text-align: center; padding: 20px; color: #d32f2f; font-weight: 500;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 24px; margin-bottom: 8px;"></i>
+                        <div>Produk tidak tersedia</div>
+                        <div style="font-size: 0.9rem; margin-top: 4px; color: #666;">Stok telah habis</div>
                     </div>
-                    <div id="stockWarning" style="color:#d32f2f;font-size:0.98rem;display:none;margin-bottom:8px;">Stok tidak mencukupi</div>
-                    <div class="product-detail-card-subtotal">
-                        Subtotal
-                        <span id="subtotal">Rp{{ number_format($product->price_per_unit, 0, ',', '.') }}</span>
-                    </div>
-                    <button class="btn-green w-100" style="margin-bottom:10px;" type="submit">+ Keranjang</button>
-                </form>
+                @else
+                    <form method="POST" action="{{ Auth::check() ? route('cart.add', $product->product_id) : route('login') }}" id="addToCartForm">
+                        @csrf
+                        <div class="product-detail-card-qty">
+                            <input type="text" id="qtyInput" name="quantity" value="" placeholder="0" min="{{ $product->minimum_purchase }}" max="{{ $availableStock }}" style="width:60px;text-align:center;background:#fff;">
+                            <span style="margin-left:8px;">{{ $product->unit }}</span>
+                            <span style="margin-left:8px;color:#d32f2f;font-size:0.9rem;">*Minimal Pembelian {{ number_format($product->minimum_purchase, 0, ',', '') }}{{ $product->unit }}</span>
+                        </div>
+                        <div id="stockWarning" style="color:#d32f2f;font-size:0.98rem;display:none;margin-bottom:8px;">
+                            <i class="fas fa-exclamation-triangle" style="margin-right:4px;"></i>
+                            Stok tidak mencukupi
+                        </div>
+                        <div id="minPurchaseWarning" style="color:#d32f2f;font-size:0.98rem;display:none;margin-bottom:8px;">
+                            <i class="fas fa-exclamation-triangle" style="margin-right:4px;"></i>
+                            Minimal pembelian tidak terpenuhi
+                        </div>
+                        <div class="product-detail-card-subtotal">
+                            Subtotal
+                            <span id="subtotal">Rp0</span>
+                        </div>
+                        <button class="btn-green w-100" style="margin-bottom:10px;opacity:0.6;cursor:not-allowed;background:#ccc !important;color:#666 !important;" type="submit" id="addToCartBtn" disabled>+ Keranjang</button>
+                    </form>
+                @endif
             </div>
         </div>
     </div>
@@ -267,54 +305,141 @@
 @endpush
 @push('scripts')
 <script>
+@if(!$isOutOfStock)
 function updateSubtotal() {
     let qty = parseFloat(document.getElementById('qtyInput').value.replace(',', '.')) || 0;
     let harga = {{ $product->price_per_unit }};
+    let availableStock = {{ $availableStock }};
+    let minimumPurchase = {{ $product->minimum_purchase }};
+    
+    // Reset semua warning
+    document.getElementById('stockWarning').style.display = 'none';
+    document.getElementById('minPurchaseWarning').style.display = 'none';
+    
+    // Jika quantity kosong atau 0
+    if (qty === 0 || document.getElementById('qtyInput').value.trim() === '') {
+        document.getElementById('subtotal').innerText = 'Rp0';
+        const addToCartBtn = document.getElementById('addToCartBtn');
+        addToCartBtn.disabled = true;
+        addToCartBtn.style.opacity = '0.6';
+        addToCartBtn.style.cursor = 'not-allowed';
+        return;
+    }
+    
+    // Validasi minimal pembelian
+    if (qty < minimumPurchase) {
+        document.getElementById('minPurchaseWarning').style.display = 'block';
+        document.getElementById('minPurchaseWarning').innerText = 'Minimal pembelian: ' + {{ number_format($product->minimum_purchase, 0, ',', '') }} + ' {{ $product->unit }}';
+        // Jangan otomatis set ke minimal pembelian, biarkan user input manual
+        // qty = minimumPurchase;
+        // document.getElementById('qtyInput').value = qty;
+    }
+    
+    // Validasi stok
+    if (qty > availableStock) {
+        document.getElementById('stockWarning').style.display = 'block';
+        document.getElementById('stockWarning').innerText = 'Stok tidak mencukupi. Maksimal: ' + availableStock + ' {{ $product->unit }}';
+        qty = availableStock;
+        document.getElementById('qtyInput').value = qty;
+    }
+    
     document.getElementById('subtotal').innerText = 'Rp' + (harga * qty).toLocaleString('id-ID');
+    
+    // Disable/enable tombol berdasarkan validasi
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    if (qty < minimumPurchase || qty > availableStock || qty === 0) {
+        addToCartBtn.disabled = true;
+        addToCartBtn.style.opacity = '0.6';
+        addToCartBtn.style.cursor = 'not-allowed';
+        addToCartBtn.style.background = '#ccc';
+        addToCartBtn.style.color = '#666';
+    } else {
+        addToCartBtn.disabled = false;
+        addToCartBtn.style.opacity = '1';
+        addToCartBtn.style.cursor = 'pointer';
+        addToCartBtn.style.background = '#388e3c';
+        addToCartBtn.style.color = '#fff';
+    }
 }
 
 const unitProduk = @json($product->unit);
 const qtyInput = document.getElementById('qtyInput');
 const minimumPurchase = {{ $product->minimum_purchase }};
+const availableStock = {{ $availableStock }};
 
 if (["Mata", "Tanaman", "Rizome"].includes(unitProduk)) {
     qtyInput.setAttribute('type', 'number');
     qtyInput.setAttribute('step', '1');
     qtyInput.setAttribute('min', minimumPurchase);
+    qtyInput.setAttribute('max', availableStock);
     qtyInput.addEventListener('input', function(e) {
-        // Hanya izinkan integer positif >= minimal pembelian, tapi biarkan kosong
-        let val = this.value.replace(/[^0-9]/g, '');
+        let val = this.value;
         if (val !== "") {
             val = parseInt(val, 10);
-            if (val < minimumPurchase) val = minimumPurchase;
-            this.value = val;
+            if (isNaN(val)) {
+                this.value = "";
+            } else if (val > availableStock) {
+                val = availableStock;
+                this.value = val;
+            }
         }
         updateSubtotal();
     });
     qtyInput.addEventListener('blur', function(e) {
-        if (this.value === "") {
-            this.value = minimumPurchase;
+        if (this.value === "" || isNaN(this.value)) {
+            this.value = "";
             updateSubtotal();
         }
     });
 } else {
     qtyInput.setAttribute('min', minimumPurchase);
+    qtyInput.setAttribute('max', availableStock);
     qtyInput.addEventListener('input', function(e) {
         updateSubtotal();
     });
     qtyInput.addEventListener('blur', function(e) {
         let val = this.value.replace(',', '.');
         if (val === "" || isNaN(val)) {
-            this.value = minimumPurchase;
+            this.value = "";
         } else {
             val = parseFloat(val);
-            if (val < minimumPurchase) val = minimumPurchase;
-            this.value = val;
+            if (val > availableStock) {
+                val = availableStock;
+                this.value = val;
+            }
         }
         updateSubtotal();
     });
 }
-// Jika ada tombol +/-, pastikan juga memanggil updateSubtotal setelah value berubah
+
+// Inisialisasi subtotal saat halaman dimuat
+updateSubtotal();
+
+// Validasi form submission
+document.getElementById('addToCartForm').addEventListener('submit', function(e) {
+    let qty = parseFloat(document.getElementById('qtyInput').value.replace(',', '.')) || 0;
+    let minimumPurchase = {{ $product->minimum_purchase }};
+    let availableStock = {{ $availableStock }};
+    
+    if (qty === 0 || document.getElementById('qtyInput').value.trim() === '') {
+        e.preventDefault();
+        alert('Silakan masukkan jumlah yang ingin dibeli');
+        return false;
+    }
+    
+    if (qty < minimumPurchase) {
+        e.preventDefault();
+        alert('Minimal pembelian: ' + {{ number_format($product->minimum_purchase, 0, ',', '') }} + ' {{ $product->unit }}');
+        return false;
+    }
+    
+    if (qty > availableStock) {
+        e.preventDefault();
+        alert('Stok tidak mencukupi. Maksimal: ' + availableStock + ' {{ $product->unit }}');
+        return false;
+    }
+});
+@endif
 </script>
 @endpush 
 @section('after_content')

@@ -10,6 +10,7 @@ use App\Http\Controllers\customer\TransactionController;
 use App\Http\Controllers\customer\AuthController as CustomerAuthController;
 use App\Http\Controllers\customer\EmailVerificationController;
 use App\Http\Controllers\customer\ComplaintController;
+use App\Http\Controllers\customer\ProductController;
 
 // =====================
 // CUSTOMER ROUTES (Authenticated Users)
@@ -53,6 +54,9 @@ Route::group(['middleware' => 'auth'], function () {
     // Customer Transactions
     Route::get('/transaksi', [TransactionController::class, 'index'])->name('transaksi');
     Route::get('/transaksi/{id}', [TransactionController::class, 'detail'])->name('transaksi.detail');
+    
+    // Customer Product History
+    Route::get('/produk/history/{history_id}', [ProductController::class, 'historyDetail'])->name('produk.history.detail');
     
     // Customer Logout
     Route::post('/logout', [CustomerAuthController::class, 'logout'])->name('logout');

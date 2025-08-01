@@ -106,7 +106,7 @@
     <div class="navbar-left" style="display:flex;align-items:center;gap:18px;min-width:320px;">
         <a href="{{ route('admin.dashboard') }}" class="navbar-title">Admin BRMP</a>
         <span style="width:0px;"></span>
-        <a href="{{ route('admin.products') }}" class="navbar-menu-link" style="margin-right:0px;">Produk</a>
+        <a href="{{ route('admin.products.index') }}" class="navbar-menu-link" style="margin-right:0px;">Produk</a>
         <a href="{{ route('admin.transactions') }}" class="navbar-menu-link" style="margin-left:0px;">Transaksi</a>
         <a href="{{ route('admin.articles') }}" class="navbar-menu-link" style="margin-left:0px;">Artikel</a>
     </div>

@@ -202,6 +202,18 @@
     }
 </style>
 <div class="container py-4">
+    @if(session('error'))
+        <div style="background:#ffebee;border:1px solid #f44336;border-radius:8px;padding:12px;margin-bottom:16px;color:#d32f2f;font-size:0.9rem;margin-top:60px;">
+            <i class="fas fa-exclamation-triangle" style="margin-right:6px;"></i>
+            {{ session('error') }}
+        </div>
+    @endif
+    @if(session('success'))
+        <div style="background:#e8f5e9;border:1px solid #4caf50;border-radius:8px;padding:12px;margin-bottom:16px;color:#2e7d32;font-size:0.9rem;margin-top:60px;">
+            <i class="fas fa-check-circle" style="margin-right:6px;"></i>
+            {{ session('success') }}
+        </div>
+    @endif
     <div class="cart-title">
         Keranjang
         <span style="font-size:1.1rem;font-weight:600;color:#388e3c;margin-left:10px;">
@@ -227,8 +239,14 @@
                     <label for="checkAll" class="checkall-label">Pilih Semua</label>
                 </div>
                 @foreach($items as $item)
-                <div class="cart-item-box">
-                    <input type="checkbox" class="cart-item-checkbox" name="checked_items[]" value="{{ $item->cart_item_id }}" onchange="updateSummary()" checked>
+                @php
+                    $availableStock = $item->product->stock - $item->product->minimum_stock;
+                    $isOutOfStock = $availableStock <= 0;
+                    $isQuantityExceedStock = $item->quantity > $availableStock;
+                    $isQuantityBelowMin = $item->quantity < $item->product->minimum_purchase;
+                @endphp
+                <div class="cart-item-box" style="{{ $isOutOfStock || $isQuantityBelowMin ? 'opacity: 0.7;' : '' }}">
+                    <input type="checkbox" class="cart-item-checkbox" name="checked_items[]" value="{{ $item->cart_item_id }}" onchange="updateSummary()" checked {{ $isOutOfStock || $isQuantityBelowMin ? 'disabled' : '' }}>
                     <img src="{{ asset('images/' . $item->product->gambar) }}" alt="{{ $item->product->product_name }}" style="width:70px;height:70px;object-fit:cover;border-radius:12px;">
                     <div style="flex:1;">
                         <div style="font-weight:600;font-size:1.1rem;">
@@ -236,9 +254,22 @@
                                 {{ $item->product->product_name }}
                             </a>
                         </div>
+                        @if($isOutOfStock)
+                            <div style="color:#d32f2f;font-weight:500;font-size:0.9rem;margin-bottom:4px;">
+                                <i class="fas fa-exclamation-triangle"></i> Stok habis
+                            </div>
+                        @elseif($isQuantityExceedStock)
+                            <div style="color:#d32f2f;font-weight:500;font-size:0.9rem;margin-bottom:4px;">
+                                <i class="fas fa-exclamation-triangle"></i> Stok tidak mencukupi (maks: {{ $availableStock }} {{ $item->product->unit }})
+                            </div>
+                        @elseif($isQuantityBelowMin)
+                            <div style="color:#d32f2f;font-weight:500;font-size:0.9rem;margin-bottom:4px;">
+                                <i class="fas fa-exclamation-triangle"></i> Minimal pembelian: {{ number_format($item->product->minimum_purchase, 0, ',', '') }} {{ $item->product->unit }}
+                            </div>
+                        @endif
                         <div style="color:#388e3c;font-weight:500;display:flex;align-items:center;gap:8px;">
                             Rp{{ number_format($item->price_per_unit,0,',','.') }} x
-                            <input type="text" id="qtyInput{{ $item->cart_item_id }}" name="quantity" value="{{ $item->quantity }}" min="{{ $item->product->minimum_purchase }}" style="width:48px;text-align:center;background:#fff;border:1.5px solid #bfc9d1;font-weight:600;border-radius:6px;" onchange="updateQtyDirect({{ $item->cart_item_id }}, {{ $item->product->minimum_purchase }})">
+                            <input type="text" id="qtyInput{{ $item->cart_item_id }}" name="quantity" value="{{ $item->quantity }}" min="{{ $item->product->minimum_purchase }}" max="{{ $availableStock }}" style="width:48px;text-align:center;background:#fff;border:1.5px solid #bfc9d1;font-weight:600;border-radius:6px;" onchange="updateQtyDirect({{ $item->cart_item_id }}, {{ $item->product->minimum_purchase }})" {{ $isOutOfStock || $isQuantityBelowMin ? 'disabled' : '' }}>
                             <span style="margin-left:4px;">{{ $item->product->unit }}</span>
                         </div>
                         <div style="color:#757575;font-size:0.98rem;">Subtotal: Rp<span class="item-subtotal" id="subtotal{{ $item->cart_item_id }}">{{ number_format($item->price_per_unit * $item->quantity,0,',','.') }}</span></div>
@@ -286,6 +317,8 @@ function updateSummary() {
     let checkedCount = 0;
     let allChecked = true;
     let checkedIds = [];
+    let hasInvalidItems = false;
+    
     checkboxes.forEach(cb => {
         if (cb.checked) {
             let id = cb.value;
@@ -294,19 +327,26 @@ function updateSummary() {
             total += isNaN(subtotal) ? 0 : subtotal;
             checkedCount++;
             checkedIds.push(id);
+            
+            // Cek apakah item ini disabled (stok habis atau quantity di bawah minimal)
+            if (cb.disabled) {
+                hasInvalidItems = true;
+            }
         } else {
             allChecked = false;
         }
     });
+    
     setCheckedCartItems(checkedIds);
     document.getElementById('summaryTotal').innerText = 'Rp' + total.toLocaleString('id-ID');
     const checkoutBtn = document.getElementById('checkoutBtn');
-    checkoutBtn.disabled = checkedCount === 0;
-    if (checkedCount > 0) {
+    checkoutBtn.disabled = checkedCount === 0 || hasInvalidItems;
+    if (checkedCount > 0 && !hasInvalidItems) {
         checkoutBtn.classList.add('btn-active');
     } else {
         checkoutBtn.classList.remove('btn-active');
     }
+    
     // Sinkronisasi checkbox 'Pilih Semua'
     const checkAll = document.getElementById('checkAll');
     if (checkAll) {
@@ -325,18 +365,30 @@ function updateQtyDirect(cartItemId, minimalPembelian) {
     let val = input.value.replace(',', '.');
     let unit = input.nextElementSibling ? input.nextElementSibling.innerText.trim() : '';
     let qty;
+    
+    // Validasi input
     if (["Mata", "Tanaman", "Rizome"].includes(unit)) {
         qty = parseInt(val);
-        if (isNaN(qty) || qty < minimalPembelian) qty = minimalPembelian;
-        input.value = qty;
+        if (isNaN(qty) || qty < minimalPembelian) {
+            qty = minimalPembelian;
+            input.value = qty;
+            // Tampilkan pesan warning untuk minimal pembelian
+            alert('Minimal pembelian: ' + minimalPembelian.toLocaleString('id-ID') + ' ' + unit);
+        }
     } else {
         qty = parseFloat(val);
-        if (isNaN(qty) || qty < minimalPembelian) qty = minimalPembelian;
-        input.value = qty;
+        if (isNaN(qty) || qty < minimalPembelian) {
+            qty = minimalPembelian;
+            input.value = qty;
+            // Tampilkan pesan warning untuk minimal pembelian
+            alert('Minimal pembelian: ' + minimalPembelian.toLocaleString('id-ID') + ' ' + unit);
+        }
     }
+    
     let formData = new FormData();
     formData.append('quantity', qty);
     formData.append('_token', '{{ csrf_token() }}');
+    
     fetch(`{{ url('/cart/update-qty') }}/${cartItemId}`, {
         method: 'POST',
         body: formData
@@ -347,7 +399,19 @@ function updateQtyDirect(cartItemId, minimalPembelian) {
             input.value = data.quantity;
             document.getElementById('subtotal'+cartItemId).innerText = data.subtotal;
             updateSummary();
+        } else {
+            // Tampilkan pesan error
+            alert(data.message || 'Terjadi kesalahan saat mengupdate quantity');
+            // Reset ke nilai sebelumnya atau minimal pembelian
+            input.value = minimalPembelian;
+            updateSummary();
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan saat mengupdate quantity');
+        input.value = minimalPembelian;
+        updateSummary();
     });
 }
 function submitCheckout() {

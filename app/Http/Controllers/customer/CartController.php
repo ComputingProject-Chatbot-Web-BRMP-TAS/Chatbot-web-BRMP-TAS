@@ -27,10 +27,35 @@ class CartController extends Controller
     {
         $user = Auth::user();
         $product = Product::findOrFail($productId);
+        
+        // Cek stok tersedia
+        $availableStock = $product->stock - $product->minimum_stock;
+        if ($availableStock <= 0) {
+            return redirect()->back()->with('error', 'Maaf, stok produk ini telah habis.');
+        }
+        
+        // Validasi input quantity
+        $inputQty = $request->input('quantity', '');
+        
+        // Validasi quantity tidak kosong
+        if (empty($inputQty) || $inputQty == 0) {
+            return redirect()->back()->with('error', 'Silakan masukkan jumlah yang ingin dibeli');
+        }
+        
+        // Validasi minimal pembelian
+        if ($inputQty < $product->minimum_purchase) {
+            return redirect()->back()->with('error', 'Minimal pembelian: ' . number_format($product->minimum_purchase, 0, ',', '') . ' ' . $product->unit);
+        }
+        
         if (in_array($product->unit, ['Mata', 'Tanaman', 'Rizome'])) {
-            $qty = max($product->minimum_purchase, (int) $request->input('quantity', $product->minimum_purchase));
+            $qty = max($product->minimum_purchase, (int) $inputQty);
         } else {
-            $qty = max($product->minimum_purchase, (float) $request->input('quantity', $product->minimum_purchase));
+            $qty = max($product->minimum_purchase, (float) $inputQty);
+        }
+        
+        // Validasi quantity tidak melebihi stok tersedia
+        if ($qty > $availableStock) {
+            return redirect()->back()->with('error', 'Maaf, stok tidak mencukupi. Maksimal: ' . $availableStock . ' ' . $product->unit);
         }
 
         // Cari cart aktif user, jika belum ada buat baru
@@ -44,8 +69,14 @@ class CartController extends Controller
             ->first();
 
         if ($cartItem) {
+            // Cek total quantity setelah ditambah tidak melebihi stok
+            $totalQuantity = $cartItem->quantity + $qty;
+            if ($totalQuantity > $availableStock) {
+                return redirect()->back()->with('error', 'Maaf, stok tidak mencukupi untuk menambahkan ke keranjang.');
+            }
+            
             // Update quantity
-            $cartItem->quantity += $qty;
+            $cartItem->quantity = $totalQuantity;
             $cartItem->save();
         } else {
             // Tambah item baru
@@ -74,11 +105,46 @@ class CartController extends Controller
         $minimalPembelian = $product->minimum_purchase ?? 1;
         $satuan = strtolower($product->unit ?? '');
         $inputQty = $request->input('quantity', $minimalPembelian);
+        
+        // Cek stok tersedia
+        $availableStock = $product->stock - $product->minimum_stock;
+        if ($availableStock <= 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Maaf, stok produk ini telah habis.'
+            ]);
+        }
+        
+        // Validasi quantity tidak kosong
+        if (empty($inputQty) || $inputQty == 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Silakan masukkan jumlah yang ingin dibeli'
+            ]);
+        }
+        
+        // Validasi minimal pembelian
+        if ($inputQty < $minimalPembelian) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Minimal pembelian: ' . number_format($minimalPembelian, 0, ',', '') . ' ' . $product->unit
+            ]);
+        }
+        
         if (in_array($satuan, ['mata', 'tanaman', 'rizome'])) {
             $qty = max($minimalPembelian, (int) $inputQty);
         } else {
             $qty = max($minimalPembelian, (float) $inputQty);
         }
+        
+        // Validasi quantity tidak melebihi stok tersedia
+        if ($qty > $availableStock) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Maaf, stok tidak mencukupi. Maksimal: ' . $availableStock . ' ' . $product->unit
+            ]);
+        }
+        
         $item->quantity = $qty;
         $item->save();
         return response()->json([

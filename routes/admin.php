@@ -20,7 +20,15 @@ Route::group(['prefix' => 'ADMIN-BRMP-TAS'], function () {
         Route::get('/komplain/{id}', [ComplaintController::class, 'show'])->name('complaint.show');
         
         // Admin menu routes
-        Route::get('/products', [AdminDashboardController::class, 'products'])->name('admin.products');
+        Route::get('/products', [App\Http\Controllers\admin\ProductController::class, 'index'])->name('admin.products.index');
+        Route::get('/products/create', [App\Http\Controllers\admin\ProductController::class, 'create'])->name('admin.products.create');
+        Route::post('/products', [App\Http\Controllers\admin\ProductController::class, 'store'])->name('admin.products.store');
+        Route::get('/products/{id}', [App\Http\Controllers\admin\ProductController::class, 'show'])->name('admin.products.show');
+        Route::get('/products/{id}/edit', [App\Http\Controllers\admin\ProductController::class, 'edit'])->name('admin.products.edit');
+        Route::put('/products/{id}', [App\Http\Controllers\admin\ProductController::class, 'update'])->name('admin.products.update');
+        Route::delete('/products/{id}', [App\Http\Controllers\admin\ProductController::class, 'destroy'])->name('admin.products.destroy');
+        Route::get('/products/{id}/history', [App\Http\Controllers\admin\ProductController::class, 'history'])->name('admin.products.history');
+        
         Route::get('/transactions', [AdminDashboardController::class, 'transactions'])->name('admin.transactions');
         Route::get('/articles', [AdminDashboardController::class, 'articles'])->name('admin.articles');
         

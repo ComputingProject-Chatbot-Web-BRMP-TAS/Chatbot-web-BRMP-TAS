@@ -52,6 +52,24 @@ class CheckoutController extends Controller
             ->with('product')
             ->get();
 
+        // Validasi stok dan minimal pembelian untuk setiap item
+        foreach ($cartItems as $item) {
+            $availableStock = $item->product->stock - $item->product->minimum_stock;
+            $minimalPembelian = $item->product->minimum_purchase ?? 1;
+            
+            if ($availableStock <= 0) {
+                return redirect()->route('cart')->with('error', 'Produk "' . $item->product->product_name . '" stoknya telah habis. Silakan hapus dari keranjang.');
+            }
+            
+            if ($item->quantity < $minimalPembelian) {
+                return redirect()->route('cart')->with('error', 'Produk "' . $item->product->product_name . '" minimal pembelian: ' . number_format($minimalPembelian, 0, ',', '') . ' ' . $item->product->unit);
+            }
+            
+            if ($item->quantity > $availableStock) {
+                return redirect()->route('cart')->with('error', 'Produk "' . $item->product->product_name . '" stoknya tidak mencukupi. Maksimal: ' . $availableStock . ' ' . $item->product->unit);
+            }
+        }
+
         // Format data untuk session
         $cart = [];
         $total = 0;
@@ -98,6 +116,29 @@ class CheckoutController extends Controller
         // Validasi data checkout
         if (empty($cart) || empty($total)) {
             return redirect()->route('cart')->with('error', 'Silakan checkout ulang dari keranjang.');
+        }
+
+        // Validasi stok dan minimal pembelian lagi sebelum membuat transaksi
+        foreach ($cart as $item) {
+            $product = Product::find($item['product_id']);
+            if (!$product) {
+                return redirect()->route('cart')->with('error', 'Produk tidak ditemukan.');
+            }
+            
+            $availableStock = $product->stock - $product->minimum_stock;
+            $minimalPembelian = $product->minimum_purchase ?? 1;
+            
+            if ($availableStock <= 0) {
+                return redirect()->route('cart')->with('error', 'Produk "' . $product->product_name . '" stoknya telah habis. Silakan hapus dari keranjang.');
+            }
+            
+            if ($item['quantity'] < $minimalPembelian) {
+                return redirect()->route('cart')->with('error', 'Produk "' . $product->product_name . '" minimal pembelian: ' . number_format($minimalPembelian, 0, ',', '') . ' ' . $product->unit);
+            }
+            
+            if ($item['quantity'] > $availableStock) {
+                return redirect()->route('cart')->with('error', 'Produk "' . $product->product_name . '" stoknya tidak mencukupi. Maksimal: ' . $availableStock . ' ' . $product->unit);
+            }
         }
 
         // Validasi shipping method
@@ -163,7 +204,7 @@ class CheckoutController extends Controller
             'estimated_delivery_date' => $estimated_delivery_date,
         ]);
 
-        // Buat detail item transaksi
+        // Buat detail item transaksi dan kurangi stok
         foreach ($cart as $item) {
             TransactionItem::create([
                 'transaction_id' => $transaction->transaction_id,
@@ -172,6 +213,19 @@ class CheckoutController extends Controller
                 'unit_price' => $item['price'],
                 'subtotal' => $item['subtotal'],
             ]);
+            
+            // Kurangi stok produk dengan validasi
+            $product = Product::find($item['product_id']);
+            if ($product) {
+                // Validasi stok lagi sebelum mengurangi
+                if ($product->stock < $item['quantity']) {
+                    // Rollback transaksi jika stok tidak mencukupi
+                    $transaction->delete();
+                    return redirect()->route('cart')->with('error', 'Produk "' . $product->product_name . '" stoknya tidak mencukupi. Silakan coba lagi.');
+                }
+                $product->stock -= $item['quantity'];
+                $product->save();
+            }
         }
 
         // Hapus item dari cart setelah transaksi dibuat

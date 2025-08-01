@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\PlantTypes;
+use App\Models\ProductHistory;
 
 class ProductController extends Controller
 {
@@ -68,6 +69,18 @@ class ProductController extends Controller
         $product = Product::findOrFail($product_id);
         $latestProducts = Product::orderBy('product_id', 'desc')->take(5)->pluck('product_id')->toArray();
         return view('customer.detail_produk_costumer', compact('product', 'latestProducts'));
+    }
+
+    public function historyDetail($history_id)
+    {
+        $productHistory = ProductHistory::findOrFail($history_id);
+        $currentProduct = Product::find($productHistory->product_id);
+        $latestProducts = Product::orderBy('product_id', 'desc')->take(5)->pluck('product_id')->toArray();
+        
+        // Cek apakah produk masih tersedia
+        $isProductAvailable = $currentProduct && ($currentProduct->stock - $currentProduct->minimum_stock) > 0;
+        
+        return view('customer.detail_produk_history', compact('productHistory', 'currentProduct', 'latestProducts', 'isProductAvailable'));
     }
 
     public function baru()

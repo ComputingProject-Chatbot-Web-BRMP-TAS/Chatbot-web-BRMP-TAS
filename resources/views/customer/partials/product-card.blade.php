@@ -1,10 +1,17 @@
 @php
     $latestProducts = App\Models\Product::orderBy('product_id','desc')->take(5)->pluck('product_id')->toArray();
+    $availableStock = $product->stock - $product->minimum_stock;
+    $isOutOfStock = $availableStock <= 0;
 @endphp
 <a href="{{ route('produk.detail', $product->product_id) }}" style="text-decoration:none;color:inherit;">
-    <div class="product-card" style="position:relative;">
+    <div class="product-card" style="position:relative;{{ $isOutOfStock ? 'opacity: 0.7; filter: grayscale(30%);' : '' }}">
         @if(in_array($product->product_id, $latestProducts))
             <div class="product-badge">Baru</div>
+        @endif
+        @if($isOutOfStock)
+            <div style="position:absolute;top:8px;right:8px;background:#d32f2f;color:white;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:500;z-index:10;box-shadow:0 2px 4px rgba(211,47,47,0.3);">
+                <i class="fas fa-times-circle" style="margin-right:2px;"></i>Stok Habis
+            </div>
         @endif
         @if($product->image1)
             <img src="{{ asset('images/' . $product->image1) }}" alt="{{ $product->product_name }}" style="width:100%;height:140px;object-fit:cover;border-radius:12px 12px 0 0;">
@@ -17,7 +24,12 @@
             <div class="title" style="font-weight:500;font-size:15px;margin-bottom:6px;line-height:1.3;">{{ $product->product_name }}</div>
             <div class="price" style="color:#388E3C;font-weight:bold;font-size:16px;margin-bottom:4px;">Rp{{ number_format($product->price_per_unit,0,',','.') }} / {{ $product->unit }}</div>
             <div class="desc" style="font-size:12px;color:#757575;height:32px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ $product->description }}</div>
-            <div class="stock" style="font-size:12px;color:#888;margin-top:4px;">Stok: {{ $product->stock }} {{ $product->unit }}</div>
+            <div class="stock" style="font-size:12px;color:{{ $isOutOfStock ? '#d32f2f' : '#888' }};margin-top:4px;">
+                Stok: {{ $availableStock }} {{ $product->unit }}
+                @if($isOutOfStock)
+                    <span style="font-weight:500;">(Habis)</span>
+                @endif
+            </div>
         </div>
     </div>
 </a> 

@@ -14,11 +14,7 @@ class AdminDashboardController extends Controller
         return view('admin.dashboard');
     }
     
-    public function products()
-    {
-        $products = Product::with('plantType')->orderBy('created_at', 'desc')->get();
-        return view('admin.products', compact('products'));
-    }
+
     
     public function transactions()
     {

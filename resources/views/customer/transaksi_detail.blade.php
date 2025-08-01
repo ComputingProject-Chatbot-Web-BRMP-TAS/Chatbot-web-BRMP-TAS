@@ -133,74 +133,168 @@
     font-weight: 700;
 }
 
-.transaksi-detail-table {
-    width: 100%;
+/* Product Cards Styles */
+.product-cards-container {
     margin-bottom: 24px;
-    border-collapse: collapse;
-    background: rgba(255,255,255,0.9);
+}
+
+.product-card {
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
     border-radius: 16px;
-    overflow: hidden;
+    padding: 20px;
+    margin-bottom: 16px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: all 0.3s ease;
 }
 
-.transaksi-detail-table th, .transaksi-detail-table td {
-    padding: 16px 20px;
-    text-align: left;
-    border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+.product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    border-color: rgba(34, 197, 94, 0.4);
 }
 
-.transaksi-detail-table th {
-    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-    font-weight: 700;
-    color: #374151;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.click-indicator {
+    text-align: center;
+    margin-top: 8px;
     font-size: 0.85rem;
+    color: #666;
+    transition: color 0.3s ease;
 }
 
-.transaksi-detail-table td {
-    font-weight: 500;
-    color: #4b5563;
-    transition: background 0.2s ease;
+.product-card:hover + .click-indicator {
+    color: #16a34a;
 }
 
-.transaksi-detail-table tbody tr:hover {
-    background: rgba(22, 163, 74, 0.05);
+.product-image-placeholder {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    flex-shrink: 0;
 }
 
-.transaksi-detail-table tbody tr:last-child td {
-    border-bottom: none;
+.product-left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    min-width: 120px;
+}
+
+.product-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    margin-top: 12px;
+    min-height: 140px;
+}
+
+.product-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .product-name {
+    font-size: 1.1rem;
     font-weight: 700;
     color: #1f2937;
+    margin: 0;
 }
+
+.product-price {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #16a34a;
+    margin: 0;
+}
+
+.product-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100px;
+}
+
+.buy-again-btn {
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.buy-again-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+
 
 .quantity-badge {
     background: linear-gradient(135deg, #16a34a, #22c55e);
-    color: #fff;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 0.8rem;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
     font-weight: 700;
     text-align: center;
-    min-width: 40px;
+    min-width: 50px;
     display: inline-block;
+    position: absolute;
+    top: 28px;
+    right: 20px;
 }
 
-.price-cell {
+.subtotal-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.subtotal-label {
+    font-size: 0.9rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.subtotal-amount {
+    font-size: 1rem;
     font-weight: 700;
     color: #16a34a;
-    font-family: 'Courier New', monospace;
 }
 
 .transaksi-detail-total {
-    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    background: linear-gradient(135deg, #16a34a, #22c55e);
     padding: 20px;
     border-radius: 16px;
     font-weight: 800;
-    color: #15803d;
+    color: white;
     font-size: 1.3rem;
     text-align: right;
     margin-top: 16px;
@@ -465,12 +559,32 @@
         text-align: center;
     }
     
-    .transaksi-detail-table {
-        font-size: 0.9rem;
+    .product-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+        align-items: center;
     }
     
-    .transaksi-detail-table th, .transaksi-detail-table td {
-        padding: 12px 8px;
+    .product-left-column {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .product-image-placeholder {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .quantity-badge {
+        position: static;
+        margin: 0 auto;
+    }
+    
+    .product-actions {
+        justify-content: center;
+        margin-top: 8px;
     }
     
     .payment-info {
@@ -490,14 +604,6 @@
     
     .transaksi-detail-title {
         font-size: 1.4rem;
-    }
-    
-    .transaksi-detail-table {
-        font-size: 0.8rem;
-    }
-    
-    .transaksi-detail-table th, .transaksi-detail-table td {
-        padding: 10px 6px;
     }
     
     .back-button {
@@ -573,26 +679,46 @@
     </div>
     @endif
     
-    <table class="transaksi-detail-table">
-        <thead>
-            <tr>
-                <th>Produk</th>
-                <th>Kuantitas</th>
-                <th>Harga</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($transaction->transactionItems as $item)
-            <tr>
-                <td class="product-name">{{ $item->product->product_name ?? '-' }}</td>
-                <td><span class="quantity-badge">{{ $item->quantity }} {{ $item->product->unit}}</span></td>
-                <td class="price-cell">Rp{{ number_format($item->unit_price,0,',','.') }}</td>
-                <td class="price-cell">Rp{{ number_format($item->subtotal,0,',','.') }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <!-- Product Cards Section -->
+    <div class="product-cards-container">
+        @foreach($transaction->transactionItems as $item)
+        @php
+            $productHistory = \App\Models\ProductHistory::where('product_id', $item->product->product_id)
+                ->where('recorded_at', '<=', $transaction->order_date)
+                ->orderBy('recorded_at', 'desc')
+                ->first();
+        @endphp
+        <div class="product-card" style="cursor: pointer;" onclick="window.location.href='{{ $productHistory ? route('produk.history.detail', $productHistory->history_id) : route('produk.detail', $item->product->product_id) }}'">
+            <div class="product-left-column">
+                <div class="product-image-placeholder">
+                    🌱
+                </div>
+                <div class="product-actions">
+                    <a href="{{ route('produk.detail', $item->product->product_id) }}" class="buy-again-btn" onclick="event.stopPropagation();">
+                         Beli Lagi
+                    </a>
+                </div>
+            </div>
+            <div class="product-info">
+                <div class="product-details">
+                    <h5 class="product-name">{{ $item->product->product_name ?? '-' }}</h5>
+                    <p class="product-price">Rp{{ number_format($item->unit_price,0,',','.') }} / {{ $item->product->unit ?? 'kg' }}</p>
+                </div>
+                <div class="subtotal-info">
+                    <span class="subtotal-label">Subtotal:</span>
+                    <span class="subtotal-amount">Rp{{ number_format($item->subtotal,0,',','.') }}</span>
+                </div>
+            </div>
+            <div class="quantity-badge">
+                {{ $item->quantity }}{{ $item->product->unit ?? 'kg' }}
+            </div>
+        </div>
+        <!-- <div class="click-indicator">
+            <i class="fas fa-mouse-pointer" style="margin-right: 4px;"></i>
+            Klik untuk {{ $productHistory ? 'lihat history produk' : 'lihat detail produk' }}
+        </div> -->
+        @endforeach
+    </div>
     
     <div class="transaksi-detail-total">
         Total Belanja: Rp{{ number_format($transaction->total_price,0,',','.') }}

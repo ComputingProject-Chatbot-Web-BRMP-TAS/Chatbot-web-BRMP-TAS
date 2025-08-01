@@ -73,7 +73,11 @@ class TransactionController extends Controller
     public function detail($id)
     {
         $user = Auth::user();
-        $transaction = Transaction::with(['transactionItems.product', 'payments', 'shippingAddress'])
+        $transaction = Transaction::with([
+            'transactionItems.product', 
+            'payments', 
+            'shippingAddress'
+        ])
             ->where('user_id', $user->user_id)
             ->where('transaction_id', $id)
             ->firstOrFail();

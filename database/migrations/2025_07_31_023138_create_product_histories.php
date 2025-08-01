@@ -11,25 +11,29 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
-            $table->id('product_id');
-            $table->foreignId('plant_type_id')->constrained('plant_types', 'plant_type_id')->onDelete('cascade');
+        Schema::create('product_histories', function (Blueprint $table) {
+            $table->id('history_id');
+            $table->foreignId('product_id')->nullable()->constrained('products', 'product_id')->nullonDelete();
+        
+            // Data snapshot
+            $table->string('plant_type_name');
             $table->string('product_name');
             $table->text('description');
             $table->decimal('stock');
             $table->decimal('minimum_stock');
             $table->string('unit');
             $table->integer('price_per_unit');
-            $table->decimal('minimum_purchase')->default(0);
+            $table->decimal('minimum_purchase');
             $table->string('image1')->nullable();
             $table->string('image2')->nullable();
             $table->string('image_certificate')->nullable();
             $table->string('certificate_number')->nullable();
-            $table->enum('certificate_class', ['Penjenis', 'Dasar', 'Pokok', 'Sebar'])->nullable();
+            $table->string('certificate_class')->nullable(); 
             $table->date('valid_from')->nullable();
             $table->date('valid_until')->nullable();
-            $table->timestamps();
+            $table->timestamp('recorded_at'); // waktu perubahan disimpan
         });
+        
     }
 
     /**
@@ -37,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('product_histories');
     }
 };
