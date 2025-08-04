@@ -1,9 +1,24 @@
 @once
 <style>
+    /* Override untuk halaman yang menggunakan content-wrapper */
+    .content-wrapper + .mitra-section {
+        margin-top: 0;
+    }
+    
     .mitra-section {
         background: #fafbfa;
         padding: 48px 0 32px 0;
         border-top: 2px solid #f3f3f3;
+    }
+    
+    /* Sembunyikan mitra dan kontak di mobile */
+    @media (max-width: 768px) {
+        .mitra-section {
+            display: none;
+        }
+        .footer-contact {
+            display: none;
+        }
     }
     .mitra-section h2 {
         color: #388E3C;
@@ -93,19 +108,31 @@
     .footer-contact .contact-info .socials {
         margin-top: 18px;
         display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-start;
+        align-items: center;
     }
     .footer-contact .contact-info .socials a {
         color: #fff;
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         opacity: 0.85;
-        transition: opacity 0.2s;
-        margin-right: 10px;
-    }
-    .footer-contact .contact-info .socials a:last-child {
-        margin-right: 0;
+        transition: all 0.3s ease;
+        padding: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+        text-decoration: none;
     }
     .footer-contact .contact-info .socials a:hover {
+        background: rgba(255, 255, 255, 0.2);
         opacity: 1;
+        transform: scale(1.1);
     }
     .footer-contact .map {
         flex: 1 1 400px;
@@ -122,34 +149,11 @@
         border-top: 1px solid #0b7a4c;
     }
     
-    /* Mobile Responsive Styles */
-    @media (max-width: 900px) {
-        .mitra-section {
-            padding: 32px 20px 24px 20px;
-        }
-        .mitra-section h2 {
-            font-size: 1.6rem;
-            text-align: center;
-        }
-        .mitra-section p {
-            text-align: center;
-            font-size: 0.95rem;
-        }
-        .mitra-logos {
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .mitra-logo-box {
-            width: 140px;
-            height: 70px;
-        }
-        
-        .footer-contact {
-            padding: 32px 20px 0 20px;
-        }
+    /* Desktop Styles - Hanya untuk layar > 768px */
+    @media (min-width: 769px) {
         .footer-contact .container {
             flex-direction: row;
-            gap: 16px;
+            gap: 32px;
             align-items: flex-start;
         }
         .footer-contact .map {
@@ -157,66 +161,60 @@
             margin-bottom: 0;
         }
         .footer-contact .contact-info {
-            flex: 0 0 320px;
-            background: rgba(255, 255, 255, 0.05);
+            flex: 1;
+            padding: 24px 20px;
             border-radius: 16px;
-            padding: 20px 16px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
             margin-left: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         .footer-contact .contact-info h3 {
-            font-size: 1.2rem;
-            margin-bottom: 16px;
-            text-align: center;
-            color: #fff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        .footer-contact .contact-info ul {
-            margin-bottom: 16px;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
         }
         .footer-contact .contact-info li {
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-            padding: 6px 10px;
+            font-size: 0.95rem;
+            padding: 8px 12px;
+            margin-bottom: 12px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
             border-left: 3px solid #4CAF50;
-            transition: all 0.3s ease;
+            border-radius: 4px;
+            transition: background 0.2s;
         }
         .footer-contact .contact-info li:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateX(5px);
-        }
-        .footer-contact .contact-info li i {
-            margin-right: 8px;
-            color: #4CAF50;
-            width: 16px;
-            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
         }
         .footer-contact .contact-info address {
-            font-size: 0.9rem;
-            text-align: center;
-            line-height: 1.5;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            margin-bottom: 16px;
+            font-size: 0.95rem;
+            padding: 16px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
         }
         .footer-contact .contact-info .socials {
+            padding: 16px;
+            margin-top: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            flex-wrap: wrap;
+            gap: 12px;
             justify-content: center;
-            margin-top: 16px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
         }
         .footer-contact .contact-info .socials a {
-            font-size: 1.3rem;
-            margin-right: 15px;
-            padding: 6px;
-            border-radius: 50%;
+            font-size: 1.4rem;
+            padding: 10px;
             transition: all 0.3s ease;
+            min-width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+            text-decoration: none;
         }
+        .footer-contact .contact-info .socials a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+    }
         .footer-contact .contact-info .socials a:hover {
             background: rgba(255, 255, 255, 0.2);
             transform: scale(1.1);
@@ -225,362 +223,45 @@
             padding: 16px 20px 12px 20px;
             font-size: 0.9rem;
         }
-    }
+
     
-    @media (max-width: 768px) {
-        .mitra-section {
-            padding: 32px 16px 24px 16px;
-        }
-        .mitra-section h2 {
-            font-size: 1.5rem;
-            text-align: center;
-        }
-        .mitra-section p {
-            text-align: center;
-            font-size: 0.95rem;
-        }
-        .mitra-logos {
-            gap: 12px;
-            margin-top: 20px;
-        }
-        .mitra-logo-box {
-            width: 120px;
-            height: 60px;
-        }
-        
-        .footer-contact {
-            padding: 32px 16px 0 16px;
-        }
-        .footer-contact .container {
-            gap: 20px;
-        }
-        .footer-contact .contact-info h3 {
-            font-size: 1.1rem;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-        .footer-contact .contact-info ul {
-            margin-bottom: 16px;
-        }
-        .footer-contact .contact-info li {
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-        .footer-contact .contact-info address {
-            font-size: 0.9rem;
-            text-align: center;
-            line-height: 1.4;
-        }
-        .footer-contact .contact-info .socials {
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .footer-contact .contact-info .socials a {
-            font-size: 1.5rem;
-            margin-right: 15px;
-        }
-        .footer-bottom {
-            padding: 16px 16px 12px 16px;
-            font-size: 0.9rem;
-        }
-    }
-    
-    @media (max-width: 720px) and (min-width: 601px) {
-        .footer-contact .container {
-            flex-direction: row;
-            gap: 16px;
-            align-items: flex-start;
-        }
-        .footer-contact .map {
-            flex: 1;
-            margin-bottom: 0;
-        }
-        .footer-contact .contact-info {
-            flex: 1;
-            padding: 20px 16px;
-            border-radius: 12px;
-            margin-left: 0;
-        }
-        .footer-contact .contact-info h3 {
-            font-size: 1.2rem;
-            margin-bottom: 18px;
-        }
-        .footer-contact .contact-info li {
-            font-size: 0.9rem;
-            padding: 6px 10px;
-            margin-bottom: 10px;
-        }
-        .footer-contact .contact-info address {
-            font-size: 0.9rem;
-            padding: 12px;
-            margin-bottom: 18px;
-        }
-        .footer-contact .contact-info .socials {
-            padding: 12px;
-            margin-top: 20px;
-        }
-        .footer-contact .contact-info .socials a {
-            font-size: 1.4rem;
-            margin-right: 16px;
-            padding: 6px;
-        }
-    }
-    
-    @media (max-width: 600px) {
-        .mitra-section {
-            padding: 24px 16px 20px 16px;
-        }
-        .mitra-section h2 {
-            font-size: 1.4rem;
-        }
-        .mitra-section p {
-            font-size: 0.9rem;
-        }
-        .mitra-logos {
-            gap: 12px;
-        }
-        .mitra-logo-box {
-            width: 120px;
-            height: 60px;
-        }
-        
-        .footer-contact {
-            padding: 24px 16px 0 16px;
-        }
-        .footer-contact .container {
-            flex-direction: column;
-            gap: 12px;
-        }
-        .footer-contact .map {
-            margin-bottom: 0;
-            width: 100%;
-        }
-        .footer-contact .contact-info {
-            flex: none;
-            padding: 20px 16px;
-            border-radius: 12px;
-            margin-left: 0;
-            width: 100%;
-        }
-        .footer-contact .contact-info h3 {
-            font-size: 1.2rem;
-            margin-bottom: 18px;
-        }
-        .footer-contact .contact-info li {
-            font-size: 0.9rem;
-            padding: 6px 10px;
-            margin-bottom: 10px;
-        }
-        .footer-contact .contact-info address {
-            font-size: 0.9rem;
-            padding: 12px;
-            margin-bottom: 18px;
-        }
-        .footer-contact .contact-info .socials {
-            padding: 12px;
-            margin-top: 20px;
-        }
-        .footer-contact .contact-info .socials a {
-            font-size: 1.4rem;
-            margin-right: 16px;
-            padding: 6px;
-        }
-        .footer-bottom {
-            padding: 14px 16px 10px 16px;
-            font-size: 0.85rem;
-        }
-    }
-    
-    @media (max-width: 600px) and (min-width: 481px) {
-        .footer-contact .container {
-            flex-direction: column;
-            gap: 12px;
-        }
-        .footer-contact .map {
-            margin-bottom: 0;
-            width: 100%;
-            min-width: 100%;
-        }
-        .footer-contact .contact-info {
-            flex: none;
-            padding: 20px 16px;
-            border-radius: 12px;
-            margin-left: 0;
-            width: 100%;
-            min-width: 100%;
-        }
-        .footer-contact .contact-info h3 {
-            font-size: 1.2rem;
-            margin-bottom: 18px;
-        }
-        .footer-contact .contact-info li {
-            font-size: 0.9rem;
-            padding: 6px 10px;
-            margin-bottom: 10px;
-        }
-        .footer-contact .contact-info address {
-            font-size: 0.9rem;
-            padding: 12px;
-            margin-bottom: 18px;
-        }
-        .footer-contact .contact-info .socials {
-            padding: 12px;
-            margin-top: 20px;
-        }
-        .footer-contact .contact-info .socials a {
-            font-size: 1.4rem;
-            margin-right: 16px;
-            padding: 6px;
-        }
-    }
-    
-    @media (max-width: 480px) {
-        .mitra-logos {
-            gap: 8px;
-        }
-        .mitra-logo-box {
-            width: 100px;
-            height: 50px;
-        }
-        
-        .footer-contact {
-            padding: 16px 12px 0 12px;
-        }
-        .footer-contact .container {
-            gap: 16px;
-        }
-        .footer-contact .contact-info {
-            padding: 16px 12px;
-            border-radius: 10px;
-        }
-        .footer-contact .contact-info h3 {
-            font-size: 1.1rem;
-            margin-bottom: 16px;
-        }
-        .footer-contact .contact-info li {
-            font-size: 0.85rem;
-            padding: 5px 8px;
-            margin-bottom: 8px;
-        }
-        .footer-contact .contact-info address {
-            font-size: 0.85rem;
-            padding: 10px;
-            margin-bottom: 16px;
-        }
-        .footer-contact .contact-info .socials {
-            padding: 10px;
-            margin-top: 16px;
-        }
-        .footer-contact .contact-info .socials a {
-            font-size: 1.3rem;
-            margin-right: 12px;
-            padding: 5px;
-        }
-        .footer-bottom {
-            padding: 12px 12px 8px 12px;
-            font-size: 0.8rem;
-        }
-    }
-    
-    @media (max-width: 400px) {
-        .mitra-section {
-            padding: 20px 12px 16px 12px;
-        }
-        .mitra-section h2 {
-            font-size: 1.3rem;
-        }
-        .mitra-section p {
-            font-size: 0.85rem;
-        }
-        .mitra-logos {
-            gap: 6px;
-        }
-        .mitra-logo-box {
-            width: 90px;
-            height: 45px;
-        }
-        
-        .footer-contact {
-            padding: 12px 8px 0 8px;
-        }
-        .footer-contact .container {
-            gap: 12px;
-        }
-        .footer-contact .contact-info {
-            padding: 12px 10px;
-            border-radius: 8px;
-        }
-        .footer-contact .contact-info h3 {
-            font-size: 1rem;
-            margin-bottom: 14px;
-        }
-        .footer-contact .contact-info li {
-            font-size: 0.8rem;
-            padding: 4px 6px;
-            margin-bottom: 6px;
-        }
-        .footer-contact .contact-info address {
-            font-size: 0.8rem;
-            padding: 8px;
-            margin-bottom: 14px;
-        }
-        .footer-contact .contact-info .socials {
-            padding: 8px;
-            margin-top: 14px;
-        }
-        .footer-contact .contact-info .socials a {
-            font-size: 1.2rem;
-            margin-right: 10px;
-            padding: 4px;
-        }
-        .footer-bottom {
-            padding: 10px 10px 6px 10px;
-            font-size: 0.75rem;
-        }
-    }
-    
-    @media (max-width: 360px) {
-        .footer-contact {
-            padding: 10px 6px 0 6px;
-        }
-        .footer-contact .container {
-            gap: 8px;
-        }
-        .footer-contact .contact-info {
-            padding: 10px 8px;
-            border-radius: 6px;
-        }
-        .footer-contact .contact-info h3 {
-            font-size: 0.95rem;
-            margin-bottom: 12px;
-        }
-        .footer-contact .contact-info li {
-            font-size: 0.75rem;
-            padding: 3px 5px;
-            margin-bottom: 5px;
-        }
-        .footer-contact .contact-info address {
-            font-size: 0.75rem;
-            padding: 6px;
-            margin-bottom: 12px;
-        }
-        .footer-contact .contact-info .socials {
-            padding: 6px;
-            margin-top: 12px;
-        }
-        .footer-contact .contact-info .socials a {
-            font-size: 1.1rem;
-            margin-right: 8px;
-            padding: 3px;
-        }
-        .footer-bottom {
-            padding: 8px 8px 4px 8px;
-            font-size: 0.7rem;
-        }
-    }
+
     
     .tiktok-icon {
         margin-left: -5px;
+    }
+    
+    /* Memastikan semua social media icons terlihat */
+    .footer-contact .contact-info .socials {
+        overflow: visible;
+        max-width: 100%;
+    }
+    
+    /* Responsif untuk container yang sempit */
+    @media (max-width: 1200px) {
+        .footer-contact .contact-info .socials {
+            gap: 6px;
+        }
+        .footer-contact .contact-info .socials a {
+            min-width: 32px;
+            height: 32px;
+            font-size: 1.1rem;
+            padding: 6px;
+            text-decoration: none;
+        }
+    }
+    
+    @media (max-width: 1000px) {
+        .footer-contact .contact-info .socials {
+            gap: 4px;
+        }
+        .footer-contact .contact-info .socials a {
+            min-width: 30px;
+            height: 30px;
+            font-size: 1rem;
+            padding: 5px;
+            text-decoration: none;
+        }
     }
 </style>
 @endonce
