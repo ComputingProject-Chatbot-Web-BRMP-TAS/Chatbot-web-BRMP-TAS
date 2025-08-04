@@ -536,10 +536,15 @@
                             @php
                                 $hasPayments = $trx->payments && $trx->payments->count() > 0;
                                 $allRejected = $hasPayments && $trx->payments->every(function($p) { return $p->payment_status === 'rejected'; });
+                                $hasRejectedPayment = $hasPayments && $trx->payments->where('payment_status', 'rejected')->count() > 0;
                             @endphp
                             @if($allRejected)
-                                <a href="{{ route('transaksi.detail', $trx->transaction_id) }}" class="btn btn-outline-danger btn-sm" onclick="event.stopPropagation();">
-                                    🔁 Upload Ulang Bukti
+                                <a href="{{ route('transaksi.detail', $trx->transaction_id) }}" class="btn btn-outline-danger btn-sm" onclick="event.stopPropagation();" style="border-color:#dc2626;color:#dc2626;">
+                                    🔄 Upload Ulang Bukti
+                                </a>
+                            @elseif($hasRejectedPayment)
+                                <a href="{{ route('transaksi.detail', $trx->transaction_id) }}" class="btn btn-outline-warning btn-sm" onclick="event.stopPropagation();">
+                                    ⚠️ Lihat Detail
                                 </a>
                             @endif
                                 @if($trx->order_status === 'selesai')

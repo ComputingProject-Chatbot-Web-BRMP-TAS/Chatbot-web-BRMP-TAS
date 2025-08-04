@@ -168,4 +168,58 @@ class Transaction extends Model
 
         return 'menunggu-pembayaran';
     }
+
+    /**
+     * Get the payment status for display
+     */
+    public function getPaymentStatusAttribute()
+    {
+        $payment = $this->payments->last();
+        
+        if (!$payment) {
+            return 'Belum Ada Pembayaran';
+        }
+
+        switch ($payment->payment_status) {
+            case 'pending':
+                return 'Menunggu Konfirmasi';
+            case 'approved':
+                return 'Dikonfirmasi';
+            case 'rejected':
+                return 'Ditolak';
+            default:
+                return 'Tidak Diketahui';
+        }
+    }
+
+    /**
+     * Check if transaction can accept payment
+     */
+    public function canAcceptPayment()
+    {
+        // Can accept payment if status is menunggu_pembayaran and no pending/approved payments
+        if ($this->order_status !== 'menunggu_pembayaran') {
+            return false;
+        }
+
+        $hasNonRejectedPayment = $this->payments()->where('payment_status', '!=', 'rejected')->exists();
+        return !$hasNonRejectedPayment;
+    }
+
+    /**
+     * Check if transaction needs payment reupload
+     */
+    public function needsPaymentReupload()
+    {
+        $payment = $this->payments->last();
+        return $payment && $payment->payment_status === 'rejected';
+    }
+
+    /**
+     * Get the latest payment
+     */
+    public function getLatestPaymentAttribute()
+    {
+        return $this->payments->last();
+    }
 } 

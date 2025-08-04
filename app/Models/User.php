@@ -71,7 +71,7 @@ class User extends Authenticatable implements MustVerifyEmail
         if ($this->profile_picture) {
             return asset('storage/profile_pictures/' . $this->profile_picture);
         }
-        return asset('images/default-profile.png');
+        return null; // Return null to indicate no profile picture
     }
 
     public function isPhoneVerified()

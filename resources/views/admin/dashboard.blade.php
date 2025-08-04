@@ -30,6 +30,18 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
+                                <div class="card bg-warning text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Komplain</h5>
+                                        <p class="card-text">Kelola komplain pelanggan</p>
+                                        <a href="{{ route('admin.complaints.index') }}" class="btn btn-light">Lihat Komplain</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-3">
+                            <div class="col-md-4">
                                 <div class="card bg-info text-white">
                                     <div class="card-body">
                                         <h5 class="card-title">Artikel</h5>

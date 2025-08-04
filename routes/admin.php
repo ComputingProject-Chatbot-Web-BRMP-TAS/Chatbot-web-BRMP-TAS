@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\AdminDashboardController;
-use App\Http\Controllers\customer\ComplaintController;
+use App\Http\Controllers\admin\PaymentController;
+use App\Http\Controllers\admin\ComplaintController;
 
 // =====================
 // ADMIN ROUTES
@@ -16,8 +17,11 @@ Route::group(['prefix' => 'ADMIN-BRMP-TAS'], function () {
     // Admin Dashboard (Authenticated)
     Route::group(['middleware' => 'admin'], function () {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-        Route::get('/komplain', [ComplaintController::class, 'index'])->name('complaint.index');
-        Route::get('/komplain/{id}', [ComplaintController::class, 'show'])->name('complaint.show');
+        
+        // Complaint routes
+        Route::get('/complaints', [ComplaintController::class, 'index'])->name('admin.complaints.index');
+        Route::get('/complaints/{id}', [ComplaintController::class, 'show'])->name('admin.complaints.show');
+        Route::get('/complaints-dashboard', [ComplaintController::class, 'dashboard'])->name('admin.complaints.dashboard');
         
         // Admin menu routes
         Route::get('/products', [App\Http\Controllers\admin\ProductController::class, 'index'])->name('admin.products.index');
@@ -29,7 +33,16 @@ Route::group(['prefix' => 'ADMIN-BRMP-TAS'], function () {
         Route::delete('/products/{id}', [App\Http\Controllers\admin\ProductController::class, 'destroy'])->name('admin.products.destroy');
         Route::get('/products/{id}/history', [App\Http\Controllers\admin\ProductController::class, 'history'])->name('admin.products.history');
         
+        // Transaction routes
         Route::get('/transactions', [AdminDashboardController::class, 'transactions'])->name('admin.transactions');
+        Route::get('/transactions/{id}', [AdminDashboardController::class, 'transactionDetail'])->name('admin.transaction.detail');
+        Route::put('/transactions/{id}/status', [AdminDashboardController::class, 'updateTransactionStatus'])->name('admin.transaction.status.update');
+        
+        // Payment routes
+        Route::post('/payments/{id}/approve', [PaymentController::class, 'approvePayment'])->name('admin.payment.approve');
+        Route::post('/payments/{id}/reject', [PaymentController::class, 'rejectPayment'])->name('admin.payment.reject');
+        Route::get('/payments/{id}', [PaymentController::class, 'showPayment'])->name('admin.payment.show');
+        
         Route::get('/articles', [AdminDashboardController::class, 'articles'])->name('admin.articles');
         
         // Admin Logout

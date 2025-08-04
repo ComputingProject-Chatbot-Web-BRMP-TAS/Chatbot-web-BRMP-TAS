@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -33,6 +34,11 @@ class PaymentController extends Controller
         
         if (!$transaction) {
             return redirect()->route('cart')->with('error', 'Transaksi tidak ditemukan.');
+        }
+        
+        // Check if user owns this transaction
+        if ($transaction->user_id !== Auth::id()) {
+            return redirect()->route('transaksi')->with('error', 'Anda tidak memiliki akses ke transaksi ini.');
         }
         
         // Gunakan alamat dari transaksi jika tersedia, jika tidak gunakan dari session
@@ -70,54 +76,76 @@ class PaymentController extends Controller
     {
         $request->validate([
             'bukti_pembayaran' => 'required|image|mimes:jpg,jpeg,png|max:10240',
+            'transaction_id' => 'required|exists:transactions,transaction_id'
         ]);
         
-        // Ambil transaction_id dari form atau session
-        $transactionId = $request->input('transaction_id') ?? session('current_transaction_id');
-        
-        if (!$transactionId) {
-            return redirect()->route('cart')->with('error', 'Transaksi tidak ditemukan.');
+        try {
+            // Ambil transaction_id dari form atau session
+            $transactionId = $request->input('transaction_id') ?? session('current_transaction_id');
+            
+            if (!$transactionId) {
+                return redirect()->route('cart')->with('error', 'Transaksi tidak ditemukan.');
+            }
+            
+            $transaction = Transaction::find($transactionId);
+            
+            if (!$transaction) {
+                return redirect()->route('cart')->with('error', 'Transaksi tidak ditemukan.');
+            }
+            
+            // Cek apakah user yang mengupload adalah pemilik transaksi
+            if ($transaction->user_id !== Auth::id()) {
+                return redirect()->route('transaksi')->with('error', 'Anda tidak memiliki akses ke transaksi ini.');
+            }
+            
+            // Cek apakah transaksi masih dalam status menunggu pembayaran
+            if ($transaction->order_status !== 'menunggu_pembayaran') {
+                return redirect()->route('transaksi.detail', $transaction->transaction_id)->with('error', 'Transaksi tidak dapat menerima pembayaran karena status tidak valid.');
+            }
+            
+            // Cek apakah sudah ada payment untuk transaksi ini yang statusnya BUKAN rejected
+            $hasNonRejectedPayment = $transaction->payments()->where('payment_status', '!=', 'rejected')->exists();
+            if ($hasNonRejectedPayment) {
+                return redirect()->route('transaksi.detail', $transaction->transaction_id)->with('error', 'Bukti pembayaran sudah diupload dan sedang diproses untuk transaksi ini.');
+            }
+            
+            $file = $request->file('bukti_pembayaran');
+            $filename = 'bukti_' . time() . '_' . $transaction->transaction_id . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/bukti_pembayaran', $filename);
+            
+            // Buat payment baru dengan status 'pending'
+            $payment = Payment::create([
+                'transaction_id' => $transaction->transaction_id,
+                'payment_date' => now('Asia/Jakarta'),
+                'amount_paid' => $transaction->total_price,
+                'photo_proof_payment' => $filename,
+                'payment_status' => 'pending',
+            ]);
+            
+            // Update status order menjadi "menunggu_konfirmasi_pembayaran"
+            $transaction->update([
+                'order_status' => 'menunggu_konfirmasi_pembayaran'
+            ]);
+            
+            // Bersihkan session checkout jika ada
+            session()->forget(['checkout_cart', 'checkout_total', 'checkout_shipping_method', 'current_transaction_id']);
+            
+            Log::info('Payment proof uploaded', [
+                'payment_id' => $payment->payment_id,
+                'transaction_id' => $transaction->transaction_id,
+                'user_id' => Auth::id(),
+                'filename' => $filename
+            ]);
+            
+            // Redirect ke halaman detail transaksi
+            return redirect()->route('transaksi.detail', $transaction->transaction_id)->with('success', 'Bukti pembayaran berhasil diupload! Status order berubah menjadi "Menunggu Konfirmasi Pembayaran".');
+        } catch (\Exception $e) {
+            Log::error('Error uploading payment proof', [
+                'transaction_id' => $request->input('transaction_id'),
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage()
+            ]);
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupload bukti pembayaran. Silakan coba lagi.');
         }
-        
-        $transaction = Transaction::find($transactionId);
-        
-        if (!$transaction) {
-            return redirect()->route('cart')->with('error', 'Transaksi tidak ditemukan.');
-        }
-        
-        // Cek apakah user yang mengupload adalah pemilik transaksi
-        if ($transaction->user_id !== Auth::id()) {
-            return redirect()->route('transaksi')->with('error', 'Anda tidak memiliki akses ke transaksi ini.');
-        }
-        
-        // Cek apakah sudah ada payment untuk transaksi ini yang statusnya BUKAN rejected
-        $hasNonRejectedPayment = $transaction->payments()->where('payment_status', '!=', 'rejected')->exists();
-        if ($hasNonRejectedPayment) {
-            return redirect()->route('transaksi.detail', $transaction->transaction_id)->with('error', 'Bukti pembayaran sudah diupload dan sedang diproses untuk transaksi ini.');
-        }
-        
-        $file = $request->file('bukti_pembayaran');
-        $filename = 'bukti_' . time() . '.' . $file->getClientOriginalExtension();
-        $file->storeAs('public/bukti_pembayaran', $filename);
-        
-        // Buat payment baru dengan status 'pending'
-        $payment = Payment::create([
-            'transaction_id' => $transaction->transaction_id,
-            'payment_date' => now('Asia/Jakarta'),
-            'amount_paid' => $transaction->total_price,
-            'photo_proof_payment' => $filename,
-            'payment_status' => 'pending',
-        ]);
-        
-        // Update status order menjadi "menunggu_konfirmasi_pembayaran"
-        $transaction->update([
-            'order_status' => 'menunggu_konfirmasi_pembayaran'
-        ]);
-        
-        // Bersihkan session checkout jika ada
-        session()->forget(['checkout_cart', 'checkout_total', 'checkout_shipping_method', 'current_transaction_id']);
-        
-        // Redirect ke halaman detail transaksi
-        return redirect()->route('transaksi.detail', $transaction->transaction_id)->with('success', 'Bukti pembayaran berhasil diupload! Status order berubah menjadi "Menunggu Konfirmasi Pembayaran".');
     }
 } 

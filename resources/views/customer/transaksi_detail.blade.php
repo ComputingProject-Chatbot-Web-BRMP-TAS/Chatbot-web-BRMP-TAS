@@ -724,6 +724,44 @@
         Total Belanja: Rp{{ number_format($transaction->total_price,0,',','.') }}
     </div>
     
+    <!-- Payment History Section -->
+    @if($transaction->payments->count() > 0)
+        <div class="transaksi-detail-payment" style="margin-top: 24px;">
+            <div class="payment-title">
+                <b>Riwayat Pembayaran</b>
+            </div>
+            @foreach($transaction->payments as $index => $payment)
+                <div class="payment-info" style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <div style="font-weight: 600; color: #1f2937;">Pembayaran ke-{{ $index + 1 }}</div>
+                        <div style="font-size: 0.85rem; padding: 4px 8px; border-radius: 6px; background: {{ $payment->payment_status == 'rejected' ? '#dc2626' : ($payment->payment_status == 'approved' ? '#16a34a' : '#f59e0b') }}; color: white; font-weight: 600;">
+                            {{ ucfirst($payment->payment_status) }}
+                        </div>
+                    </div>
+                    <div style="font-size: 0.9rem; color: #6b7280; margin-bottom: 8px;">
+                        {{ $payment->payment_date ? $payment->payment_date->format('d M Y H:i') : $payment->created_at->format('d M Y H:i') }}
+                    </div>
+                    @if($payment->rejection_reason)
+                        <div style="font-size: 0.85rem; color: #dc2626; margin-top: 8px; padding: 8px; background: rgba(220, 38, 38, 0.1); border-radius: 6px; border-left: 3px solid #dc2626;">
+                            <strong>Alasan Penolakan:</strong><br>
+                            {{ $payment->rejection_reason }}
+                        </div>
+                    @endif
+                    @if($payment->photo_proof_payment)
+                        <div style="margin-top: 8px;">
+                            <strong style="font-size: 0.85rem; color: #6b7280;">Bukti Pembayaran:</strong>
+                            <div style="margin-top: 4px;">
+                                <img src="{{ asset('storage/bukti_pembayaran/'.$payment->photo_proof_payment) }}" 
+                                     alt="Bukti Pembayaran" 
+                                     style="max-width: 200px; max-height: 150px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+    @endif
+
     <div class="transaksi-detail-payment">
         <div class="payment-title"><b>Pembayaran</b></div>
         @php
@@ -773,6 +811,7 @@
       });
     </script>
     @endif
+
         @php
             $payments = $transaction->payments;
             $hasPayments = $payments && count($payments) > 0;
@@ -780,6 +819,7 @@
             $showUploadForm = (!$hasPayments && $transaction->order_status === 'menunggu_pembayaran') || $allRejected;
             $latestPayment = $hasPayments ? $payments->last() : null;
         @endphp
+        
         @if($hasPayments && !$allRejected)
             @php $payment = $payments->last(); @endphp
             <div class="payment-info">
@@ -814,8 +854,23 @@
             <div class="payment-upload-form">
                 @if($allRejected)
                     <div class="alert alert-warning" style="border-radius:10px; margin-bottom:16px;">
-                        <b>Upload Ulang Bukti Pembayaran</b><br>
-                        Bukti pembayaran sebelumnya <span style="color:#dc2626;font-weight:600;">ditolak</span>. Silakan upload ulang bukti pembayaran yang benar agar transaksi dapat diproses.
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                            <i class="fas fa-exclamation-triangle" style="color:#f59e0b;font-size:1.2rem;"></i>
+                            <strong style="color:#92400e;">Upload Ulang Bukti Pembayaran Diperlukan</strong>
+                        </div>
+                        <div style="color:#92400e;margin-bottom:12px;">
+                            Bukti pembayaran sebelumnya <span style="color:#dc2626;font-weight:600;">ditolak</span>. Silakan upload ulang bukti pembayaran yang benar agar transaksi dapat diproses.
+                        </div>
+                        @if($latestPayment && $latestPayment->rejection_reason)
+                            <div style="background:rgba(220,38,38,0.1);padding:12px;border-radius:8px;border-left:3px solid #dc2626;margin-bottom:12px;">
+                                <strong style="color:#dc2626;">Alasan penolakan:</strong><br>
+                                <span style="color:#dc2626;">{{ $latestPayment->rejection_reason }}</span>
+                            </div>
+                        @endif
+                        <div style="background:rgba(22,163,74,0.1);padding:12px;border-radius:8px;border-left:3px solid #16a34a;margin-bottom:12px;">
+                            <strong style="color:#16a34a;">Yang Perlu Dilakukan:</strong><br>
+                            <span style="color:#16a34a;">Upload ulang bukti pembayaran yang benar sesuai alasan penolakan di atas</span>
+                        </div>
                     </div>
                 @endif
                 <div class="payment-instructions">
@@ -825,10 +880,18 @@
                         <li>Simpan bukti transfer (screenshot atau foto)</li>
                         <li>Upload bukti transfer di bawah ini</li>
                         <li>Tim kami akan memverifikasi pembayaran Anda</li>
+                        @if($allRejected)
+                            <li style="color:#dc2626;font-weight:600;">⚠️ Pastikan bukti pembayaran terlihat jelas dan lengkap</li>
+                            <li style="color:#dc2626;font-weight:600;">⚠️ Perhatikan alasan penolakan sebelumnya</li>
+                        @endif
                     </ul>
                 </div>
                 <div class="upload-form-title">
-                    Upload Bukti Pembayaran
+                    @if($allRejected)
+                        🔄 Upload Ulang Bukti Pembayaran
+                    @else
+                        📤 Upload Bukti Pembayaran
+                    @endif
                 </div>
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -840,7 +903,7 @@
                     </div>
                 @endif
                 <div class="upload-form">
-                    <form enctype="multipart/form-data" method="POST" action="{{ route('payment.upload_proof') }}">
+                    <form enctype="multipart/form-data" method="POST" action="{{ route('payment.upload') }}">
                         @csrf
                         <input type="hidden" name="transaction_id" value="{{ $transaction->transaction_id }}">
                         <div class="mb-3">
@@ -854,7 +917,11 @@
                             <div class="form-text">Format yang didukung: JPG, JPEG, PNG (Max. 10MB)</div>
                         </div>
                         <button type="submit" class="upload-btn">
-                            📤 Upload Bukti Pembayaran
+                            @if($allRejected)
+                                🔄 Upload Ulang Bukti Pembayaran
+                            @else
+                                📤 Upload Bukti Pembayaran
+                            @endif
                         </button>
                     </form>
                 </div>

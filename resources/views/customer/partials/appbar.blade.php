@@ -124,6 +124,15 @@
     .dropdown-item:hover {
         background: #f4f4f4;
     }
+    .dropdown-item.logout-item i {
+        color: #dc3545;
+    }
+    .dropdown-item.logout-item:hover {
+        background: #f4f4f4;
+    }
+    .dropdown-item.logout-item:hover i {
+        color: #dc3545;
+    }
     @media (max-width: 1200px) {
         .navbar {
             display: flex;
@@ -282,10 +291,10 @@
         @auth
             <div class="user" style="position:relative;">
                 <a href="{{ route('profile') }}" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit;gap:8px;">
-                    @if(Auth::user()->profile_photo_url ?? false)
+                    @if(Auth::user()->profile_photo_url)
                         <img src="{{ Auth::user()->profile_photo_url }}" alt="Foto Profil" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
                     @else
-                        <i class="fas fa-user-circle"></i>
+                        <i class="fas fa-user-circle" style="width:32px; height:32px; font-size:32px; color:#666;"></i>
                     @endif
                     <span class="navbar-user-greeting">Hi, {{ Auth::user()->name }}</span>
                 </a>
@@ -293,9 +302,14 @@
                     <i class="fas fa-chevron-down" style="font-size:14px;"></i>
                 </span>
                 <div id="dropdown-menu" class="dropdown-menu">
+                    <a href="{{ route('complaint.create') }}" class="dropdown-item">
+                        <i class="fas fa-comment-dots me-2"></i>Komplain
+                    </a>
                     <form action="{{ route('logout') }}" method="POST" style="margin:0;">
                         @csrf
-                        <button type="submit" class="dropdown-item">Logout</button>
+                        <button type="submit" class="dropdown-item logout-item">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </button>
                     </form>
                 </div>
             </div>

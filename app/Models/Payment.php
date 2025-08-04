@@ -19,6 +19,8 @@ class Payment extends Model
         'amount_paid',
         'photo_proof_payment',
         'payment_status',
+        'rejection_reason',
+        'request_message',
     ];
 
     public function transaction()

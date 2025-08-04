@@ -1,7 +1,7 @@
 @php $hideAppbar = true; @endphp
 @extends('layouts.app')
 @section('content')
-<div class="container d-flex align-items-center justify-content-center min-vh-100" style="background: #eaffea;">
+<div class="d-flex align-items-center justify-content-center min-vh-100" style="background: #eaffea;">
     <div class="w-100" style="max-width: 400px;">
         <div class="card shadow" style="border-radius: 20px;">
             <div class="card-body p-4">

@@ -17,8 +17,8 @@
                 </thead>
                 <tbody>
                 @foreach($complaints as $complaint)
-                    <tr style="cursor:pointer;" onclick="window.location='{{ route('complaint.show', $complaint->id) }}'">
-                        <td>{{ $complaint->id }}</td>
+                    <tr style="cursor:pointer;" onclick="window.location='{{ route('complaint.show', $complaint->complaint_id) }}'">
+                        <td>{{ $complaint->complaint_id }}</td>
                         <td>{{ $complaint->user->name ?? '-' }}</td>
                         <td>{{ $complaint->user->phone ?? '-' }}</td>
                         <td style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $complaint->description }}</td>

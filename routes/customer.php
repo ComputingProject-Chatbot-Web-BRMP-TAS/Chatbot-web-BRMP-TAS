@@ -49,7 +49,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/checkout/set-address/{addressId}', [CheckoutController::class, 'setAddress'])->name('checkout.set_address');
     Route::post('/payment/start', [PaymentController::class, 'start'])->name('payment.start');
     Route::get('/payment', [PaymentController::class, 'show'])->name('payment.show');
-    Route::post('/payment/upload-proof', [PaymentController::class, 'uploadProof'])->name('payment.upload_proof');
+    Route::post('/payment/upload-proof', [PaymentController::class, 'uploadProof'])->name('payment.upload');
     
     // Customer Transactions
     Route::get('/transaksi', [TransactionController::class, 'index'])->name('transaksi');

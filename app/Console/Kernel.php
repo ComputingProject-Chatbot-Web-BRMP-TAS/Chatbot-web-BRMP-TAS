@@ -10,9 +10,14 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      */
-    protected function schedule(Schedule $schedule)
+    protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('app:cancel-expired-transactions')->hourly();
+        // $schedule->command('inspire')->hourly();
+        
+        // Cancel expired transactions daily at 2 AM
+        $schedule->command('transactions:cancel-expired')
+                 ->dailyAt('02:00')
+                 ->appendOutputTo(storage_path('logs/expired-transactions.log'));
     }
 
     /**

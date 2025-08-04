@@ -338,7 +338,7 @@
                     </div>
                 @endif
                 <div class="upload-form">
-                    <form enctype="multipart/form-data" method="POST" action="{{ route('payment.upload_proof') }}">
+                    <form enctype="multipart/form-data" method="POST" action="{{ route('payment.upload') }}">
                         @csrf
                         <div class="mb-3">
                             <label for="buktiPembayaran" class="form-label fw-semibold">Pilih file gambar bukti transfer</label>

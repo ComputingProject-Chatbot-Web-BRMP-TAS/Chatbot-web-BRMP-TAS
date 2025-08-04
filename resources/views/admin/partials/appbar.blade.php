@@ -108,6 +108,7 @@
         <span style="width:0px;"></span>
         <a href="{{ route('admin.products.index') }}" class="navbar-menu-link" style="margin-right:0px;">Produk</a>
         <a href="{{ route('admin.transactions') }}" class="navbar-menu-link" style="margin-left:0px;">Transaksi</a>
+        <a href="{{ route('admin.complaints.index') }}" class="navbar-menu-link" style="margin-left:0px;">Komplain</a>
         <a href="{{ route('admin.articles') }}" class="navbar-menu-link" style="margin-left:0px;">Artikel</a>
     </div>
     
