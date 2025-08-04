@@ -154,20 +154,26 @@
 
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 16px;
 }
 
 .product-card {
-    background: white;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: all 0.2s ease;
-    cursor: pointer;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0;
+    margin-bottom: 0;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(76, 175, 80, 0.1);
     position: relative;
-    text-decoration: none;
-    color: inherit;
+    overflow: hidden;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .product-card:hover {
@@ -176,26 +182,89 @@
     transform: translateY(-2px);
 }
 
+.product-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: #4CAF50;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    z-index: 10;
+}
+
 .product-image {
     width: 100%;
-    height: 200px;
+    height: 120px;
     object-fit: cover;
-    border-bottom: 1px solid #f0f0f0;
+    border-radius: 12px 12px 0 0;
 }
 
 .product-info {
-    padding: 12px;
+    padding: 12px 16px 16px 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .product-title {
-    font-size: 0.9rem;
-    color: #333;
-    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 15px;
+    margin-bottom: 6px;
     line-height: 1.3;
+}
+
+.product-price {
+    color: #388E3C;
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.product-location {
+    font-size: 12px;
+    color: #757575;
+    height: 32px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-stock {
+    font-size: 12px;
+    color: #888;
+    margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+    .product-card {
+        height: 260px;
+    }
+}
+
+@media (max-width: 768px) {
+    .products-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 12px;
+    }
+    .product-card {
+        height: 240px;
+    }
+}
+
+@media (max-width: 480px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    .product-card {
+        height: 220px;
+    }
 }
 
 .product-price {
@@ -348,41 +417,7 @@
 
                     <div class="products-grid" id="productsGrid">
                         @forelse($products as $product)
-                            @php
-                                $availableStock = $product->stock - $product->minimum_stock;
-                                $isOutOfStock = $availableStock <= 0;
-                            @endphp
-                            <a href="{{ route('produk.detail', $product->product_id) }}" class="product-card" data-price="{{ $product->price_per_unit }}" style="{{ $isOutOfStock ? 'opacity: 0.7; filter: grayscale(30%);' : '' }}">
-                                @if(in_array($product->product_id, $latestProducts))
-                                    <div class="product-badge">Baru</div>
-                                @endif
-                                @if($isOutOfStock)
-                                    <div style="position:absolute;top:8px;right:8px;background:#d32f2f;color:white;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:500;z-index:10;box-shadow:0 2px 4px rgba(211,47,47,0.3);">
-                                        <i class="fas fa-times-circle" style="margin-right:2px;"></i>Stok Habis
-                                    </div>
-                                @endif
-                                <button class="heart-icon" onclick="event.preventDefault();">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                                    </svg>
-                                </button>
-                                @if($product->image1)
-                                    <img src="{{ asset('images/' . $product->image1) }}" class="product-image" alt="{{ $product->product_name }}">
-                                @else
-                                    <img src="https://via.placeholder.com/200x200?text=No+Image" class="product-image" alt="No Image">
-                                @endif
-                                <div class="product-info">
-                                    <div class="product-title">{{ $product->product_name }}</div>
-                                    <div class="product-price">Rp{{ number_format($product->price_per_unit, 0, ',', '.') }}</div>
-                                    <div class="product-location">Kategori: {{ $product->jenis_kategori }}</div>
-                                    <div class="product-stock" style="font-size:12px;color:{{ $isOutOfStock ? '#d32f2f' : '#888' }};margin-top:4px;">
-                                        Stok: {{ $availableStock }} {{ $product->unit }}
-                                        @if($isOutOfStock)
-                                            <span style="font-weight:500;">(Habis)</span>
-                                        @endif
-                                    </div>
-                                </div>
-                            </a>
+                            @include('customer.partials.product-card', ['product' => $product])
                         @empty
                             <div class="no-products">Belum ada produk baru.</div>
                         @endforelse

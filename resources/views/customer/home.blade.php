@@ -173,17 +173,18 @@
             background: #fff;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            min-height: 260px;
+            height: 280px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            padding: 0 0 16px 0;
-            margin-bottom: 12px;
+            justify-content: space-between;
+            padding: 0;
+            margin-bottom: 0;
             transition: all 0.3s ease;
             border: 1px solid rgba(76, 175, 80, 0.1);
             position: relative;
             overflow: hidden;
             box-sizing: border-box;
+            width: 100%;
         }
         .product-badge {
             position: absolute;
@@ -208,7 +209,11 @@
             font-size: 32px;
         }
         .product-card .info {
-            padding: 12px 16px 0 16px;
+            padding: 12px 16px 16px 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .product-card .title {
             font-weight: 500;
@@ -262,6 +267,27 @@
             }
             .product-card {
                 width: 100%;
+                height: 260px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 12px;
+            }
+            .product-card {
+                height: 240px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .product-card {
+                height: 220px;
             }
         }
         .hero-banner-margin {
@@ -305,7 +331,7 @@
                 @endif
             </h2>
             @if($products->count() > 0)
-            <div class="product-grid" id="productsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,20px);">
+            <div class="product-grid" id="productsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
                 @foreach($products as $product)
                     @include('customer.partials.product-card', ['produk' => $product])
                 @endforeach

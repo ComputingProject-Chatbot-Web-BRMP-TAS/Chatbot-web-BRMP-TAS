@@ -441,7 +441,7 @@
     <div class="navbar-left" style="display:flex;align-items:center;gap:18px;min-width:320px;">
         <a href="/" class="navbar-title">Benih BRMP</a>
         <span style="width:0px;"></span>
-        <span class="navbar-category-title" id="appbarCategoryBtn" style="margin-right:0px;cursor:pointer;position:relative;">Kategori</span>
+        <span class="navbar-category-title" id="appbarCategoryBtn" style="margin-right:0px;cursor:pointer;position:relative;">Komoditas</span>
         <a href="{{ route('article') }}" class="navbar-article-link" style="margin-left:0px;">Artikel</a>
         <a href="{{ route('transaksi') }}" class="navbar-article-link" style="margin-left:0px;">Transaksi</a>
     </div>
@@ -525,7 +525,7 @@
         </a>
         <a href="#" class="mobile-menu-item" onclick="toggleMobileCategoryMenu()">
             <i class="fas fa-th-large"></i>
-            <span>Kategori</span>
+            <span>Komoditas</span>
             <i class="fas fa-chevron-down" style="margin-left:auto;font-size:12px;"></i>
         </a>
         <div id="mobileCategorySubmenu" style="display:none;margin-left:20px;margin-top:8px;">
