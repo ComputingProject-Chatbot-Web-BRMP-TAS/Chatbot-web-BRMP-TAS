@@ -45,6 +45,9 @@ Route::group(['prefix' => 'ADMIN-BRMP-TAS'], function () {
         
         Route::get('/articles', [AdminDashboardController::class, 'articles'])->name('admin.articles');
         
+        // Product Distribution Visualization
+        Route::get('/product-distribution', [AdminDashboardController::class, 'productDistribution'])->name('admin.product.distribution');
+        
         // Admin Logout
         Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
     });
