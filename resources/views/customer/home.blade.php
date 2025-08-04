@@ -341,6 +341,8 @@
     document.getElementById('loadMoreBtn').addEventListener('click', function() {
         if (isLoading) return;
 
+        console.log('LoadMore button clicked, currentOffset:', currentOffset);
+        
         isLoading = true;
         const btn = this;
         const originalText = btn.innerHTML;
@@ -348,22 +350,46 @@
         btn.disabled = true;
 
         fetch(`/load-more-products?offset=${currentOffset}`)
-            .then(response => response.json())
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log('Response data:', data);
+                
+                // Cek apakah ada error dari server
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
                 // Tambahkan produk baru ke grid
-                document.getElementById('productsGrid').insertAdjacentHTML('beforeend', data.html);
+                if (data.html && data.html.trim() !== '') {
+                    console.log('Adding HTML to grid, length:', data.html.length);
+                    document.getElementById('productsGrid').insertAdjacentHTML('beforeend', data.html);
+                } else {
+                    console.log('No HTML content in response');
+                }
 
                 // Update offset berdasarkan total produk yang sudah dimuat
                 currentOffset = data.totalLoaded;
+                console.log('Updated currentOffset to:', currentOffset);
 
                 // Sembunyikan tombol jika sudah tidak ada produk lagi
                 if (!data.hasMore) {
+                    console.log('No more products, hiding button');
                     document.getElementById('loadMoreContainer').style.display = 'none';
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat memuat produk.');
+                console.error('Error details:', error);
+                console.error('Error message:', error.message);
+                console.error('Error stack:', error.stack);
+                alert('Terjadi kesalahan saat memuat produk: ' + error.message);
             })
             .finally(() => {
                 isLoading = false;

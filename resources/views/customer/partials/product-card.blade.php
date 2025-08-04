@@ -21,11 +21,11 @@
             </div>
         @endif
         <div class="info" style="padding:12px 16px 0 16px;">
-            <div class="title" style="font-weight:500;font-size:15px;margin-bottom:6px;line-height:1.3;">{{ $product->product_name }}</div>
-            <div class="price" style="color:#388E3C;font-weight:bold;font-size:16px;margin-bottom:4px;">Rp{{ number_format($product->price_per_unit,0,',','.') }} / {{ $product->unit }}</div>
-            <div class="desc" style="font-size:12px;color:#757575;height:32px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ $product->description }}</div>
+            <div class="title" style="font-weight:500;font-size:15px;margin-bottom:6px;line-height:1.3;">{{ $product->product_name ?? 'Nama Produk Tidak Tersedia' }}</div>
+            <div class="price" style="color:#388E3C;font-weight:bold;font-size:16px;margin-bottom:4px;">Rp{{ number_format($product->price_per_unit ?? 0,0,',','.') }} / {{ $product->unit ?? 'Kg' }}</div>
+            <div class="desc" style="font-size:12px;color:#757575;height:32px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ $product->description ?? 'Deskripsi tidak tersedia' }}</div>
             <div class="stock" style="font-size:12px;color:{{ $isOutOfStock ? '#d32f2f' : '#888' }};margin-top:4px;">
-                Stok: {{ $availableStock }} {{ $product->unit }}
+                Stok: {{ $availableStock }} {{ $product->unit ?? 'Kg' }}
                 @if($isOutOfStock)
                     <span style="font-weight:500;">(Habis)</span>
                 @endif

@@ -26,6 +26,7 @@ class ProductController extends Controller
             })->get();
             session()->forget('displayed_products');
         } else {
+            // Reset session untuk memulai dari awal
             session()->forget('displayed_products');
             $products = Product::inRandomOrder()->take(10)->get();
             session(['displayed_products' => $products->pluck('product_id')->toArray()]);
@@ -36,26 +37,89 @@ class ProductController extends Controller
 
     public function loadMore(Request $request)
     {
-        $offset = $request->input('offset', 0);
-        $limit = 10;
-        $displayedProducts = session('displayed_products', []);
-        $products = Product::whereNotIn('product_id', $displayedProducts)
-                          ->inRandomOrder()
-                          ->take($limit)
-                          ->get();
-        $newDisplayedProducts = array_merge($displayedProducts, $products->pluck('product_id')->toArray());
-        session(['displayed_products' => $newDisplayedProducts]);
-        $totalProducts = Product::count();
-        $html = '';
-        foreach ($products as $produk) {
-            $html .= view('customer.partials.product-card', compact('produk'))->render();
+        try {
+            $offset = $request->input('offset', 0);
+            $limit = 10;
+            $displayedProducts = session('displayed_products', []);
+            
+            // Debug: cek session
+            \Log::info('Session check', [
+                'session_id' => session()->getId(),
+                'displayed_products' => $displayedProducts
+            ]);
+            
+            // Debug: log untuk debugging
+            \Log::info('LoadMore called', [
+                'offset' => $offset,
+                'displayedProducts' => $displayedProducts,
+                'count' => count($displayedProducts)
+            ]);
+            
+            // Debug: cek apakah ada produk yang tersedia
+            $totalAvailable = Product::whereNotIn('product_id', $displayedProducts)->count();
+            \Log::info('Available products', ['total' => $totalAvailable]);
+            
+            $products = Product::whereNotIn('product_id', $displayedProducts)
+                              ->inRandomOrder()
+                              ->take($limit)
+                              ->get();
+            
+            \Log::info('Products found', [
+                'count' => $products->count(),
+                'product_ids' => $products->pluck('product_id')->toArray()
+            ]);
+            
+            $newDisplayedProducts = array_merge($displayedProducts, $products->pluck('product_id')->toArray());
+            session(['displayed_products' => $newDisplayedProducts]);
+            
+            $totalProducts = Product::count();
+            $html = '';
+            
+            if ($products->count() > 0) {
+                foreach ($products as $product) {
+                    try {
+                        $html .= view('customer.partials.product-card', compact('product'))->render();
+                    } catch (\Exception $e) {
+                        \Log::error('Error rendering product card', [
+                            'product_id' => $product->product_id,
+                            'error' => $e->getMessage()
+                        ]);
+                        // Skip produk yang error, lanjut ke produk berikutnya
+                        continue;
+                    }
+                }
+            } else {
+                \Log::info('No more products available to load');
+            }
+            
+            $response = [
+                'html' => $html,
+                'hasMore' => count($newDisplayedProducts) < $totalProducts && $products->count() > 0,
+                'totalLoaded' => count($newDisplayedProducts),
+                'totalProducts' => $totalProducts
+            ];
+            
+            \Log::info('LoadMore response', [
+                'html_length' => strlen($html),
+                'hasMore' => $response['hasMore'],
+                'totalLoaded' => $response['totalLoaded'],
+                'totalProducts' => $response['totalProducts']
+            ]);
+            
+            return response()->json($response);
+            
+        } catch (\Exception $e) {
+            \Log::error('LoadMore error', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+            
+            return response()->json([
+                'error' => 'Terjadi kesalahan saat memuat produk.',
+                'message' => $e->getMessage()
+            ], 500);
         }
-        return response()->json([
-            'html' => $html,
-            'hasMore' => count($newDisplayedProducts) < $totalProducts,
-            'totalLoaded' => count($newDisplayedProducts),
-            'totalProducts' => $totalProducts
-        ]);
     }
 
     public function resetSession()
