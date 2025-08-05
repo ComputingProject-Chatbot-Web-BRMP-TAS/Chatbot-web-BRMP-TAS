@@ -386,6 +386,224 @@
         height: 32px !important;
     }
 
+    /* CSS untuk memastikan posisi searchbar konsisten */
+    .searchbar-container {
+        position: relative;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1100;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .searchbar-container form {
+        width: 100%;
+        position: relative;
+        min-width: 120px;
+        max-width: 1000px;
+        margin: 0 16px;
+    }
+
+    .searchbar-container input[type="text"] {
+        width: 100%;
+        border: 1.5px solid #bfc9d1;
+        border-radius: 8px;
+        padding: 6px 36px 6px 12px;
+        height: 32px;
+        font-family: 'Inter', Arial, sans-serif;
+        font-size: 16px;
+        color: #222;
+        background: #fff;
+    }
+
+    .searchbar-container button[type="submit"] {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        background: none;
+        border: none;
+        padding: 0 16px;
+        cursor: pointer;
+    }
+
+    .searchbar-container .fa-search {
+        color: #388E3C;
+    }
+
+    /* Responsive searchbar untuk tablet dan desktop */
+    @media (min-width: 768px) and (max-width: 1200px) {
+        .searchbar-container {
+            max-width: 100%;
+            margin: 0 8px;
+        }
+
+        .searchbar-container form {
+            min-width: 300px;
+            max-width: 100%;
+            margin: 0;
+        }
+    }
+
+    @media (min-width: 1201px) and (max-width: 1600px) {
+        .searchbar-container {
+            max-width: 100%;
+            margin-left: 20px;
+        }
+
+        .searchbar-container form {
+            min-width: 400px;
+            max-width: 100%;
+            margin: 0;
+        }
+    }
+
+    @media (min-width: 1601px) {
+        .searchbar-container {
+            max-width: 100%;
+            margin: 0 16px;
+        }
+
+        .searchbar-container form {
+            min-width: 500px;
+            max-width: 100%;
+            margin: 0;
+        }
+    }
+
+    /* Responsive searchbar untuk mobile */
+    @media (max-width: 768px) {
+        .searchbar-container {
+            max-width: 100%;
+            margin: 0 8px;
+        }
+
+        .searchbar-container form {
+            min-width: 80px;
+            max-width: 100%;
+            margin: 0;
+        }
+
+        .searchbar-container input[type="text"] {
+            font-size: 14px;
+            padding: 6px 32px 6px 10px;
+            height: 36px;
+        }
+
+        .searchbar-container button[type="submit"] {
+            padding: 0 12px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .searchbar-container {
+            margin: 0 4px;
+        }
+
+        .searchbar-container form {
+            min-width: 60px;
+        }
+
+        .searchbar-container input[type="text"] {
+            font-size: 13px;
+            padding: 6px 28px 6px 8px;
+            height: 34px;
+        }
+
+        .searchbar-container button[type="submit"] {
+            padding: 0 8px;
+        }
+    }
+
+    /* Mobile searchbar container */
+    .mobile-search-container .searchbar-container {
+        flex: 1;
+        margin: 0 12px;
+        position: relative;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .mobile-search-container .searchbar-container form {
+        width: 100%;
+        position: relative;
+    }
+
+    .mobile-search-container .searchbar-container input[type="text"] {
+        width: 100%;
+        padding: 8px 40px 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        font-size: 14px;
+        height: 40px;
+        box-sizing: border-box;
+        line-height: 1.2;
+    }
+
+    .mobile-search-container .searchbar-container button[type="submit"] {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        background: none;
+        border: none;
+        padding: 0 12px;
+        cursor: pointer;
+    }
+
+    .mobile-search-container .searchbar-container .fa-search {
+        color: #388E3C;
+        font-size: 16px;
+    }
+
+    /* Responsive mobile searchbar */
+    @media (max-width: 768px) {
+        .mobile-search-container .searchbar-container {
+            margin: 0 8px;
+            margin-bottom: 15px;
+        }
+
+        .mobile-search-container .searchbar-container input[type="text"] {
+            font-size: 13px;
+            padding: 6px 36px 6px 10px;
+            height: 38px;
+        }
+
+        .mobile-search-container .searchbar-container button[type="submit"] {
+            padding: 0 10px;
+        }
+
+        .mobile-search-container .searchbar-container .fa-search {
+            font-size: 14px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .mobile-search-container .searchbar-container {
+            margin: 0 4px;
+            margin-bottom: 15px;
+        }
+
+        .mobile-search-container .searchbar-container input[type="text"] {
+            font-size: 12px;
+            padding: 6px 32px 6px 8px;
+            height: 36px;
+        }
+
+        .mobile-search-container .searchbar-container button[type="submit"] {
+            padding: 0 8px;
+        }
+
+        .mobile-search-container .searchbar-container .fa-search {
+            font-size: 13px;
+        }
+    }
+
     .navbar-login-btn {
         font-family: 'Inter', Arial, sans-serif !important;
         font-weight: 600 !important;
@@ -447,10 +665,12 @@
     </div>
     <!-- Tengah: Searchbar -->
     <div class="navbar-center" style="flex:1;display:flex;justify-content:center;min-width:0;">
-        <form method="get" action="/" style="flex:1;min-width:120px;max-width:1000px;margin:0 16px;position:relative;">
-            <input type="text" name="q" class="navbar-search-input" placeholder="Cari di Benih BRMP" value="{{ request('q') }}" style="width:100%;border:1.5px solid #bfc9d1;">
-            <button type="submit" style="position:absolute;right:0;top:0;height:100%;background:none;border:none;padding:0 16px;cursor:pointer;"><i class="fas fa-search" style="color:#388E3C;"></i></button>
-        </form>
+        <div class="searchbar-container">
+            <form method="get" action="/">
+                <input type="text" name="q" placeholder="Cari di Benih BRMP" value="{{ request('q') }}">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
     </div>
     <!-- Kanan: User Section + Cart -->
     <div class="user-section" style="display:flex;align-items:center;gap:18px;min-width:220px;justify-content:flex-end;">
@@ -489,10 +709,12 @@
     <!-- Mobile Layout -->
     <!-- Mobile Search Bar -->
     <div class="mobile-search-container" style="display:none;">
-        <form method="get" action="/" style="width:100%;position:relative;">
-            <input type="text" name="q" placeholder="Cari di Benih BRMP" value="{{ request('q') }}" style="width:100%;padding:8px 40px 8px 12px;border-radius:8px;border:1px solid #e0e0e0;font-size:14px;height:40px;box-sizing:border-box;line-height:1.2;">
-            <button type="submit" style="position:absolute;right:0;top:0;height:100%;background:none;border:none;padding:0 12px;cursor:pointer;"><i class="fas fa-search" style="color:#388E3C;"></i></button>
-        </form>
+        <div class="searchbar-container">
+            <form method="get" action="/">
+                <input type="text" name="q" placeholder="Cari di Benih BRMP" value="{{ request('q') }}">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
     </div>
     
     <!-- Mobile Cart Button -->
