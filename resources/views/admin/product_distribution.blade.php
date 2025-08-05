@@ -161,8 +161,8 @@ console.log('All Regencies Sample:', allRegencies.slice(0, 3));
 
 // Inisialisasi peta dengan batasan area Indonesia
 const map = L.map('map', {
-    minZoom: 5.3,
-    maxZoom: 10,
+    minZoom: 4.4,
+    maxZoom: 15,
     maxBounds: [
         [-11.0, 95.0], // Southwest bounds (Lat, Lng)
         [6.0, 141.0]   // Northeast bounds (Lat, Lng)
@@ -570,7 +570,7 @@ function updateLegend(level) {
         const div = L.DomUtil.create('div', 'info legend');
         const grades = [0, 2, 4, 6, 8, 10];
         
-        const title = level === 'regency' ? 'Jumlah Produk (Kabupaten/Kota)' : 'Jumlah Produk (Provinsi)';
+        const title = 'Jumlah Produk' ;
         div.innerHTML = `<h4>${title}</h4>`;
         
         for (let i = 0; i < grades.length; i++) {

@@ -340,6 +340,7 @@
                 <div class="upload-form">
                     <form enctype="multipart/form-data" method="POST" action="{{ route('payment.upload') }}">
                         @csrf
+                        <input type="hidden" name="transaction_id" value="{{ $transaction->transaction_id }}">
                         <div class="mb-3">
                             <label for="buktiPembayaran" class="form-label fw-semibold">Pilih file gambar bukti transfer</label>
                             <input class="form-control file-input" 
@@ -348,7 +349,7 @@
                                    name="bukti_pembayaran" 
                                    accept="image/*" 
                                    required>
-                            <div class="form-text">Format yang didukung: JPG, JPEG, PNG (Max. 5MB)</div>
+                            <div class="form-text">Format yang didukung: JPG, JPEG, PNG (Max. 10MB)</div>
                         </div>
                         <button type="submit" class="upload-btn">
                             📤 Unggah Bukti Pembayaran

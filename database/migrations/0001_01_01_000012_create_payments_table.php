@@ -16,8 +16,10 @@ return new class extends Migration
             $table->foreignId('transaction_id')->constrained('transactions', 'transaction_id')->onDelete('cascade');
             $table->dateTime('payment_date');
             $table->integer('amount_paid');
-            $table->string('photo_proof_payment')->nullable();
+            $table->string('photo_proof_payment');
             $table->string('payment_status');
+            $table->text('rejection_reason');
+            $table->text('request_message');
             $table->timestamps();
         });
     }
