@@ -28,7 +28,7 @@ class TransactionController extends Controller
                 $q->whereHas('transactionItems.product', function($q2) use ($search) {
                     $q2->whereRaw('LOWER(product_name) LIKE ?', ['%' . strtolower($search) . '%']);
                 })
-                // Cari pada transaksi_id
+                // Cari pada transaction_id
                 ->orWhere('transaction_id', 'like', "%$search%")
                 // Cari pada order_date (format yyyy-mm-dd atau d M Y)
                 ->orWhere('order_date', 'like', "%$search%")
