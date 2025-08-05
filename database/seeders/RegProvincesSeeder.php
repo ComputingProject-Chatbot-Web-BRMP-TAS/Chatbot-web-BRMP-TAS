@@ -50,7 +50,8 @@ class RegProvincesSeeder extends Seeder
             ['id' => '92', 'name' => 'PAPUA BARAT'],
             ['id' => '93', 'name' => 'PAPUA SELATAN'],
             ['id' => '94', 'name' => 'PAPUA TENGAH'],
-            ['id' => '95', 'name' => 'PAPUA PEGUNUNGAN']
+            ['id' => '95', 'name' => 'PAPUA PEGUNUNGAN'],
+            ['id' => '96', 'name' => 'PAPUA BARAT DAYA'],
         ]);
     }
 }

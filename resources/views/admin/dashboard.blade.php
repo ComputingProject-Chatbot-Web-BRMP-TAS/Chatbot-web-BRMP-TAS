@@ -50,6 +50,15 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="card bg-secondary text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Penyebaran Produk</h5>
+                                        <p class="card-text">Visualisasi penyebaran produk di Indonesia</p>
+                                        <a href="{{ route('admin.product.distribution') }}" class="btn btn-light">Lihat Peta</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

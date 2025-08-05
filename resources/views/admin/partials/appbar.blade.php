@@ -110,6 +110,7 @@
         <a href="{{ route('admin.transactions') }}" class="navbar-menu-link" style="margin-left:0px;">Transaksi</a>
         <a href="{{ route('admin.complaints.index') }}" class="navbar-menu-link" style="margin-left:0px;">Komplain</a>
         <a href="{{ route('admin.articles') }}" class="navbar-menu-link" style="margin-left:0px;">Artikel</a>
+        <a href="{{ route('admin.product.distribution') }}" class="navbar-menu-link" style="margin-left:0px;">Peta</a>
     </div>
     
     <!-- Kanan: User Section + Logout -->
