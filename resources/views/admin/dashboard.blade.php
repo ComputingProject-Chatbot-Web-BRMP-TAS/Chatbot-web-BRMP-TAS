@@ -46,7 +46,7 @@
                                     <div class="card-body">
                                         <h5 class="card-title">Artikel</h5>
                                         <p class="card-text">Kelola artikel</p>
-                                        <a href="{{ route('admin.articles') }}" class="btn btn-light">Lihat Artikel</a>
+                                        <a href="{{ route('admin.articles.index') }}" class="btn btn-light">Lihat Artikel</a>
                                     </div>
                                 </div>
                             </div>
@@ -66,4 +66,4 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection

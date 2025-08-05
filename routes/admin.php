@@ -5,6 +5,7 @@ use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\AdminDashboardController;
 use App\Http\Controllers\admin\PaymentController;
 use App\Http\Controllers\admin\ComplaintController;
+use App\Http\Controllers\admin\ArticleController;
 
 // =====================
 // ADMIN ROUTES
@@ -43,7 +44,16 @@ Route::group(['prefix' => 'ADMIN-BRMP-TAS'], function () {
         Route::post('/payments/{id}/reject', [PaymentController::class, 'rejectPayment'])->name('admin.payment.reject');
         Route::get('/payments/{id}', [PaymentController::class, 'showPayment'])->name('admin.payment.show');
         
-        Route::get('/articles', [AdminDashboardController::class, 'articles'])->name('admin.articles');
+        // Article resource routes
+        Route::resource('/articles', ArticleController::class)->names([
+            'index' => 'admin.articles.index',
+            'create' => 'admin.articles.create',
+            'store' => 'admin.articles.store',
+            'edit' => 'admin.articles.edit',
+            'update' => 'admin.articles.update',
+            'destroy' => 'admin.articles.destroy',
+            'show' => 'admin.articles.show',
+        ]);
         
         // Product Distribution Visualization
         Route::get('/product-distribution', [AdminDashboardController::class, 'productDistribution'])->name('admin.product.distribution');
@@ -51,4 +61,4 @@ Route::group(['prefix' => 'ADMIN-BRMP-TAS'], function () {
         // Admin Logout
         Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
     });
-}); 
+});
