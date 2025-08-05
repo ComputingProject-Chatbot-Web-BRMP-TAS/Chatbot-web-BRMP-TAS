@@ -5,6 +5,7 @@
 // =====================
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\customer\DebugController;
+use App\Http\Controllers\customer\ArticleController;
 
 // =====================
 // INCLUDE ROLE-BASED ROUTES
@@ -31,3 +32,8 @@ if (app()->environment('local')) {
     Route::get('/debug/transaction-items', [DebugController::class, 'transactionItems']);
     Route::get('/debug/payments', [DebugController::class, 'payments']);
 }
+
+// =====================
+// ARTICLE ROUTES
+// =====================
+Route::get('/artikel', [ArticleController::class, 'index'])->name('articles.index');

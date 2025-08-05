@@ -660,7 +660,7 @@
         <a href="/" class="navbar-title">Benih BRMP</a>
         <span style="width:0px;"></span>
         <span class="navbar-category-title" id="appbarCategoryBtn" style="margin-right:0px;cursor:pointer;position:relative;">Komoditas</span>
-        <a href="{{ route('article') }}" class="navbar-article-link" style="margin-left:0px;">Artikel</a>
+        <a href="{{ route('articles.index') }}" class="navbar-article-link" style="margin-left:0px;">Artikel</a>
         <a href="{{ route('transaksi') }}" class="navbar-article-link" style="margin-left:0px;">Transaksi</a>
     </div>
     <!-- Tengah: Searchbar -->
@@ -768,7 +768,7 @@
                 <span>Tanaman Minyak Industri</span>
             </a>
         </div>
-        <a href="{{ route('article') }}" class="mobile-menu-item">
+        <a href="{{ route('articles.index') }}" class="mobile-menu-item">
             <i class="fas fa-newspaper"></i>
             <span>Artikel</span>
         </a>
