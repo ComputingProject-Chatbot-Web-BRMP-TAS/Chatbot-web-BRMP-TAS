@@ -37,3 +37,4 @@ if (app()->environment('local')) {
 // ARTICLE ROUTES
 // =====================
 Route::get('/artikel', [ArticleController::class, 'index'])->name('articles.index');
+Route::get('/artikel/{id}', [ArticleController::class, 'show'])->name('articles.show');

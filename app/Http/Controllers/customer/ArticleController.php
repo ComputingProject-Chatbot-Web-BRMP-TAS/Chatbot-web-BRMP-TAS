@@ -12,4 +12,10 @@ class ArticleController extends Controller
         $articles = Article::latest()->get();
         return view('customer.article', compact('articles'));
     }
+    
+    public function show($id)
+    {
+        $article = Article::findOrFail($id);
+        return view('customer.article_detail', compact('article'));
+    }
 }

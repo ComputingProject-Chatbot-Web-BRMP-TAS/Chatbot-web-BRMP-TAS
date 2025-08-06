@@ -1,9 +1,12 @@
 @extends('layouts.admin')
 
 @section('content')
+<!-- Quill CSS -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
 <div class="container mt-4">
     <h3>Edit Artikel</h3>
-    <form action="{{ route('admin.articles.update', $article) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.articles.update', $article) }}" method="POST" enctype="multipart/form-data" id="articleForm">
         @csrf
         @method('PUT')
         <div class="mb-3">
@@ -19,12 +22,29 @@
             @endif
             <input type="file" name="image" class="form-control">
         </div>
+        <!-- <div class="mb-3">
+            <label>Tanggal Artikel</label>
+            <textarea name="description" rows="3" class="form-control" required>{{ old('description', $article->description) }}</textarea>
+        </div> -->
         <div class="mb-3">
             <label>Isi Artikel</label>
-            <textarea name="body" rows="10" class="form-control" required>{{ old('body', $article->body) }}</textarea>
+            <div id="quill-editor" style="height: 300px;">{!! old('body', $article->body) !!}</div>
+            <input type="hidden" name="body" id="body">
         </div>
         <button class="btn btn-success" type="submit">Update</button>
         <a href="{{ route('admin.articles.index') }}" class="btn btn-secondary">Batal</a>
     </form>
 </div>
+
+<!-- Quill JS -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+    var quill = new Quill('#quill-editor', {
+        theme: 'snow'
+    });
+
+    document.getElementById('articleForm').onsubmit = function() {
+        document.getElementById('body').value = quill.root.innerHTML;
+    };
+</script>
 @endsection
