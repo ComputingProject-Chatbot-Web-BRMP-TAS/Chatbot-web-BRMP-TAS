@@ -8,7 +8,7 @@
                 <div class="card shadow">
                     <div class="card-header">
                         <h3 class="card-title">Visualisasi Penyebaran Produk di Indonesia</h3>
-                        <p class="text-muted">Klik pada provinsi untuk melihat detail produk yang terjual</p>
+                        <p >Klik pada provinsi untuk melihat detail produk yang terjual</p>
                         <button id="back-to-provinces" class="btn btn-secondary btn-sm" style="display: none;">
                             <i class="fas fa-arrow-left"></i> Kembali ke Provinsi
                         </button>
@@ -97,7 +97,6 @@
                                                 <div class="card">
                                                     <div class="card-header bg-primary text-white">
                                                         <h6 class="mb-0">
-                                                            <i class="fas fa-chart-pie"></i>
                                                             Ringkasan Distribusi Jenis Tanaman
                                                         </h6>
                                                     </div>
@@ -109,15 +108,20 @@
                                         @endif
                                     </div>
                                 </div>
-                                
-                                <div class="card mt-3">
+                            </div>
+                        </div>
+                        
+                        <!-- Detail Provinsi dipindah ke bawah peta -->
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="card">
                                     <div class="card-header">
                                         <h5>Detail Provinsi</h5>
                                     </div>
                                     <div class="card-body" id="province-detail">
                                         <p class="text-muted">Klik pada provinsi untuk melihat detail</p>
                                         <button id="show-regency-map" class="btn btn-sm btn-outline-primary mt-2" style="display: none;">
-                                            <i class="fas fa-map"></i> Tampilkan Peta Kota/Kabupaten
+                                            <i class="fas fa-map-marked-alt"></i> Tampilkan Peta Kota/Kabupaten
                                         </button>
                                     </div>
                                 </div>
@@ -217,7 +221,7 @@ fetch('/provinces.json')
         
         legend.addTo(map);
         
-        // Jika ada filter provinsi yang aktif, zoom ke provinsi tersebut
+        // Jika ada filter provinsi yang aktif, zoom ke provinsi tersebut dan tampilkan data kabupaten/kota
         const selectedProvinceId = document.getElementById('province_id').value;
         if (selectedProvinceId) {
             setTimeout(() => {
@@ -229,17 +233,21 @@ fetch('/provinces.json')
                     // Update detail panel untuk provinsi yang dipilih
                     updateProvinceDetail(selectedProvinceId);
                     
-                    // Load regency data jika ada
-                    const provinceDataItem = provinceData.find(p => p.province_id == parseInt(selectedProvinceId));
-                    if (provinceDataItem) {
-                        loadRegencyData(currentProvinceId);
-                    }
+                    // Load regency data untuk provinsi yang dipilih (terlepas dari ada transaksi atau tidak)
+                    loadRegencyData(currentProvinceId);
                     
                     // Update filter dropdown untuk menyesuaikan dengan provinsi yang dipilih
                     isProgrammaticChange = true;
                     document.getElementById('province_id').value = selectedProvinceId;
+                    
+                    // Tampilkan tombol kembali karena kita sudah di level regency
+                    document.getElementById('back-to-provinces').style.display = 'inline-block';
                 }
             }, 1000); // Delay untuk memastikan map sudah ter-render
+        } else {
+            // Jika tidak ada filter provinsi, pastikan kita di level provinsi
+            currentLevel = 'province';
+            document.getElementById('back-to-provinces').style.display = 'none';
         }
     })
     .catch(error => {
@@ -448,7 +456,7 @@ function highlightFeature(e) {
         
         const masterRegency = allRegencies.find(r => r.regency_id == parseInt(geoJsonRegencyId));
         const regencyName = regencyDataItem ? regencyDataItem.regency_name : (masterRegency ? masterRegency.regency_name : layer.feature.properties.WADMKK);
-        let detailHtml = `<h6>Detail Kabupaten/Kota: ${regencyName}</h6>`;
+        let detailHtml = `<h6 class="text-primary">Detail Kabupaten/Kota: ${regencyName}</h6>`;
         
         if (regencyDataItem) {
             detailHtml += `
@@ -457,9 +465,9 @@ function highlightFeature(e) {
             `;
             
             if (regencyProductsData.length > 0) {
-                detailHtml += '<h6>Produk yang Terjual:</h6><ul>';
+                detailHtml += '<h6 class="text-success"><i class="fas fa-shopping-cart"></i> Produk yang Terjual:</h6><ul class="mt-2">';
                 regencyProductsData.forEach(product => {
-                    detailHtml += `<li>${product.product_name} (${product.total_quantity} ${product.unit})</li>`;
+                    detailHtml += `<li><i class="fas fa-seedling"></i> ${product.product_name} (${product.total_quantity} ${product.unit})</li>`;
                 });
                 detailHtml += '</ul>';
             }
@@ -587,21 +595,14 @@ function updateLegend(level) {
 
 // Fungsi untuk kembali ke view provinsi
 function backToProvinces() {
-    // Set view ke seluruh Indonesia dengan zoom yang lebih dekat
-    map.setView([-2.548926, 118.014863], 5);
+    // Reset filter provinsi ke "Semua Provinsi"
+    isProgrammaticChange = true;
+    document.getElementById('province_id').value = '';
     
-    // Pastikan batasan area Indonesia tetap aktif
-    map.setMaxBounds([
-        [-11.0, 95.0], // Southwest bounds (Lat, Lng)
-        [6.0, 141.0]   // Northeast bounds (Lat, Lng)
-    ]);
-    
-    // Reload GeoJSON provinsi untuk memastikan tampil dengan benar
-    reloadProvinceGeoJSON();
-    
-    // Reset detail panel tanpa mereset filter
-    document.getElementById('province-detail').innerHTML = '<p class="text-muted">Klik pada provinsi untuk melihat detail</p>';
-    document.getElementById('back-to-provinces').style.display = 'none';
+    // Submit form untuk reload data dari server
+    setTimeout(() => {
+        document.getElementById('filterForm').submit();
+    }, 100);
 }
 
 // Fungsi untuk update detail panel
@@ -618,12 +619,12 @@ function updateDetailPanel(level, data) {
         const provinceName = currentProvince ? currentProvince.province_name : `Provinsi ID ${currentProvinceId}`;
         
         let detailHtml = `
-            <h6>Kabupaten/Kota di Provinsi: ${provinceName}</h6>
+            <h6 class="text-primary"><i class="fas fa-city"></i> Kabupaten/Kota di Provinsi: ${provinceName}</h6>
             <p><strong>Total Kabupaten/Kota dengan Transaksi:</strong> ${totalRegencies}</p>
             <p><strong>Total Produk:</strong> ${totalProducts}</p>
             <p><strong>Total Nilai:</strong> Rp ${parseFloat(totalValue).toLocaleString()}</p>
             <hr>
-            <p class="text-muted">Klik pada kabupaten/kota untuk melihat detail</p>
+            <p class="text-muted"><i class="fas fa-info-circle"></i> Klik pada kabupaten/kota untuk melihat detail</p>
         `;
         
         detailPanel.innerHTML = detailHtml;
@@ -707,7 +708,7 @@ function reloadProvinceGeoJSON() {
             updateLegend('province');
             
             // Reset detail panel
-            document.getElementById('province-detail').innerHTML = '<p class="text-muted">Klik pada provinsi untuk melihat detail</p>';
+            document.getElementById('province-detail').innerHTML = '<p class="text-muted"><i class="fas fa-info-circle"></i> Klik pada provinsi untuk melihat detail</p>';
             document.getElementById('back-to-provinces').style.display = 'none';
         })
         .catch(error => {
@@ -805,7 +806,7 @@ function updateDetailPanelWithRegencyList(level, data, provinceId) {
         const provinceName = currentProvince ? currentProvince.province_name : `Provinsi ID ${currentProvinceId}`;
         
         let detailHtml = `
-            <h6>Kabupaten/Kota di Provinsi: ${provinceName}</h6>
+            <h6 class="text-primary"><i class="fas fa-city"></i> Kabupaten/Kota di Provinsi: ${provinceName}</h6>
             <p><strong>Total Kabupaten/Kota dengan Transaksi:</strong> ${totalRegencies}</p>
             <p><strong>Total Produk:</strong> ${totalProducts}</p>
             <p><strong>Total Nilai:</strong> Rp ${parseFloat(totalValue).toLocaleString()}</p>
@@ -819,7 +820,7 @@ function updateDetailPanelWithRegencyList(level, data, provinceId) {
         });
         
         if (regenciesInProvince.length > 0) {
-            detailHtml += '<hr><h6>Daftar Kota/Kabupaten di Provinsi ini:</h6>';
+            detailHtml += '<hr><h6 class="text-primary"><i class="fas fa-list"></i> Daftar Kota/Kabupaten di Provinsi ini:</h6>';
             
             // Tambahkan informasi filter jika ada
             const selectedPlantType = document.getElementById('plant_type_id').value;
@@ -829,21 +830,21 @@ function updateDetailPanelWithRegencyList(level, data, provinceId) {
                 detailHtml += `<small class="text-muted mb-2 d-block">* Data ditampilkan sesuai filter: ${selectedOption.text}</small>`;
             }
             
-            detailHtml += '<div style="max-height: 200px; overflow-y: auto;">';
+            detailHtml += '<div class="mt-2">';
             
             regenciesInProvince.forEach(regency => {
                 // Cari data transaksi untuk regency ini (mungkin terfilter)
                 const regencyDataItem = regencyData.find(r => r.regency_id == regency.regency_id);
                 const regencyProductsData = regencyProducts[regency.regency_id] || [];
                 
-                detailHtml += `<div class="mb-2 p-2 border rounded">`;
+                detailHtml += `<div class="mb-2 p-2 border rounded bg-light">`;
                 detailHtml += `<strong>${regency.regency_name}</strong>`;
                 
                 if (regencyDataItem) {
                     detailHtml += `<br><small class="text-success">Total Produk: ${regencyDataItem.total_products} | Total Nilai: Rp ${parseFloat(regencyDataItem.total_value).toLocaleString()}</small>`;
                     
                     if (regencyProductsData.length > 0) {
-                        detailHtml += '<br><small class="text-muted">Produk: ';
+                        detailHtml += '<br><small class="text-muted"><i class="fas fa-seedling"></i> Produk: ';
                         const productNames = regencyProductsData.map(p => `${p.product_name} (${p.total_quantity} ${p.unit})`);
                         detailHtml += productNames.join(', ');
                         detailHtml += '</small>';
@@ -858,7 +859,7 @@ function updateDetailPanelWithRegencyList(level, data, provinceId) {
             detailHtml += '</div>';
         }
         
-        detailHtml += '<hr><p class="text-muted">Klik pada kabupaten/kota untuk melihat detail</p>';
+        detailHtml += '<hr><p class="text-muted"><i class="fas fa-info-circle"></i> Klik pada kabupaten/kota untuk melihat detail</p>';
         
         detailPanel.innerHTML = detailHtml;
         
@@ -931,10 +932,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Event listener untuk tombol tampilkan peta regency
-    document.getElementById('show-regency-map').addEventListener('click', function() {
-        if (currentProvinceId) {
-            loadRegencyData(currentProvinceId);
+    // Event listener untuk tombol tampilkan peta regency (menggunakan event delegation)
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'show-regency-map') {
+            if (currentProvinceId) {
+                loadRegencyData(currentProvinceId);
+            }
+        }
+        
+        // Event listener untuk item provinsi di ringkasan distribusi
+        if (e.target && e.target.closest('.clickable-province')) {
+            const provinceItem = e.target.closest('.clickable-province');
+            const provinceId = provinceItem.getAttribute('data-province-id');
+            
+            if (provinceId) {
+                // Set filter provinsi ke provinsi yang diklik
+                isProgrammaticChange = true;
+                document.getElementById('province_id').value = provinceId;
+                
+                // Submit form untuk reload data dengan filter provinsi baru
+                setTimeout(() => {
+                    document.getElementById('filterForm').submit();
+                }, 100);
+            }
         }
     });
     
@@ -960,26 +980,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const selectedProvinceId = this.value;
         
-        if (selectedProvinceId) {
-            // Zoom ke provinsi terlepas dari ada transaksi atau tidak
-            const provinceFeature = findProvinceFeature(selectedProvinceId);
-            if (provinceFeature) {
-                map.fitBounds(provinceFeature.getBounds());
-                currentProvinceId = parseInt(selectedProvinceId);
-                
-                // Update detail panel untuk provinsi yang dipilih
-                updateProvinceDetail(selectedProvinceId);
-                
-                // Load regency data jika ada
-                const provinceDataItem = provinceData.find(p => p.province_id == parseInt(selectedProvinceId));
-                if (provinceDataItem) {
-                    loadRegencyData(currentProvinceId);
-                }
-            }
-        } else {
-            // Jika "Semua Provinsi" dipilih, zoom out ke seluruh Indonesia tanpa reset filter
-            zoomOutToIndonesia(false);
-        }
+        // Submit form untuk reload data dari server dengan filter baru
+        setTimeout(() => {
+            document.getElementById('filterForm').submit();
+        }, 100);
     });
 });
 
@@ -1001,21 +1005,41 @@ function findProvinceFeature(provinceId) {
 function generateDistributionSummary(plantTypeId, plantTypeName) {
     console.log('Generating distribution summary for plant type:', plantTypeId, plantTypeName);
     
+    // Ambil filter provinsi yang aktif
+    const selectedProvinceId = document.getElementById('province_id').value;
+    console.log('Selected province filter:', selectedProvinceId);
+    
     // Filter provinsi yang memiliki transaksi untuk jenis tanaman ini
-    const provincesWithTransactions = provinceData.filter(province => {
+    let provincesWithTransactions = provinceData.filter(province => {
         const provinceProductsData = provinceProducts[province.province_id] || [];
         return provinceProductsData.some(product => product.plant_type_id == parseInt(plantTypeId));
     });
     
-    if (provincesWithTransactions.length === 0) {
-        return '<p class="text-muted">Belum ada transaksi untuk jenis tanaman ini</p>';
+    // Jika ada filter provinsi yang aktif, hanya tampilkan provinsi tersebut
+    if (selectedProvinceId) {
+        provincesWithTransactions = provincesWithTransactions.filter(province => 
+            province.province_id == parseInt(selectedProvinceId)
+        );
+        console.log('Filtered to selected province:', selectedProvinceId);
     }
     
-    let summaryHtml = '<div style="max-height: 300px; overflow-y: auto;">';
+    if (provincesWithTransactions.length === 0) {
+        if (selectedProvinceId) {
+            return '<p class="text-muted">Belum ada transaksi untuk jenis tanaman ini di provinsi yang dipilih</p>';
+        } else {
+            return '<p class="text-muted">Belum ada transaksi untuk jenis tanaman ini</p>';
+        }
+    }
+    
+    let summaryHtml = '<div class="mt-2">';
     
     // Daftar provinsi yang membeli jenis tanaman ini
-    summaryHtml += '<h6 class="text-primary">Provinsi yang Membeli ' + plantTypeName + ':</h6>';
-    summaryHtml += '<ul class="list-unstyled">';
+    if (selectedProvinceId) {
+        summaryHtml += '<h6 class="text-primary"><i class="fas fa-map-marker-alt"></i> Distribusi ' + plantTypeName + ' di Provinsi Terpilih:</h6>';
+    } else {
+        summaryHtml += '<h6 class="text-primary"> Provinsi yang Membeli ' + plantTypeName + ':</h6>';
+    }
+    summaryHtml += '<ul class="list-unstyled mt-2">';
     
     provincesWithTransactions.forEach(province => {
         const provinceProductsData = provinceProducts[province.province_id] || [];
@@ -1023,11 +1047,13 @@ function generateDistributionSummary(plantTypeId, plantTypeName) {
             product.plant_type_id == parseInt(plantTypeId)
         );
         
-        summaryHtml += '<li class="mb-2 p-2 border rounded">';
-        summaryHtml += '<strong>' + province.province_name + '</strong>';
+        summaryHtml += '<li class="mb-2 p-2 border rounded bg-light clickable-province" data-province-id="' + province.province_id + '" style="cursor: pointer; transition: all 0.2s ease;">';
+        summaryHtml += '<div class="d-flex justify-content-between align-items-start">';
+        summaryHtml += '<div><strong>' + province.province_name + '</strong></div>';
+        summaryHtml += '</div>';
         
         if (plantTypeProducts.length > 0) {
-            summaryHtml += '<br><small class="text-success">Produk: ';
+            summaryHtml += '<br><small class="text-success"><i class="fas fa-seedling"></i> Produk: ';
             const productNames = plantTypeProducts.map(p => p.product_name + ' (' + p.total_quantity + ' ' + p.unit + ')');
             summaryHtml += productNames.join(', ');
             summaryHtml += '</small>';
@@ -1041,7 +1067,7 @@ function generateDistributionSummary(plantTypeId, plantTypeName) {
         });
         
         if (regenciesWithTransactions.length > 0) {
-            summaryHtml += '<br><small class="text-info">Kabupaten/Kota: ';
+            summaryHtml += '<br><small class="text-info"><i class="fas fa-city"></i> Kabupaten/Kota: ';
             const regencyNames = regenciesWithTransactions.map(r => r.regency_name);
             summaryHtml += regencyNames.join(', ');
             summaryHtml += '</small>';
@@ -1054,14 +1080,26 @@ function generateDistributionSummary(plantTypeId, plantTypeName) {
     
     // Statistik ringkasan
     const totalProvinces = provincesWithTransactions.length;
-    const totalRegencies = regencyData.filter(regency => {
-        const regencyProductsData = regencyProducts[regency.regency_id] || [];
-        return regencyProductsData.some(product => product.plant_type_id == parseInt(plantTypeId));
-    }).length;
+    let totalRegencies = 0;
+    
+    if (selectedProvinceId) {
+        // Jika ada filter provinsi, hanya hitung kabupaten/kota di provinsi tersebut
+        totalRegencies = regencyData.filter(regency => {
+            const regencyProductsData = regencyProducts[regency.regency_id] || [];
+            return regency.province_id == parseInt(selectedProvinceId) && 
+                   regencyProductsData.some(product => product.plant_type_id == parseInt(plantTypeId));
+        }).length;
+    } else {
+        // Jika tidak ada filter provinsi, hitung semua kabupaten/kota
+        totalRegencies = regencyData.filter(regency => {
+            const regencyProductsData = regencyProducts[regency.regency_id] || [];
+            return regencyProductsData.some(product => product.plant_type_id == parseInt(plantTypeId));
+        }).length;
+    }
     
     summaryHtml += '<hr><div class="row">';
-    summaryHtml += '<div class="col-6"><small class="text-muted">Total Provinsi: <strong>' + totalProvinces + '</strong></small></div>';
-    summaryHtml += '<div class="col-6"><small class="text-muted">Total Kabupaten/Kota: <strong>' + totalRegencies + '</strong></small></div>';
+    summaryHtml += '<div class="col-6"><small class="text-muted"><i class="fas fa-map"></i> Total Provinsi: <strong>' + totalProvinces + '</strong></small></div>';
+    summaryHtml += '<div class="col-6"><small class="text-muted"><i class="fas fa-city"></i> Total Kabupaten/Kota: <strong>' + totalRegencies + '</strong></small></div>';
     summaryHtml += '</div>';
     
     summaryHtml += '</div>';
@@ -1069,6 +1107,7 @@ function generateDistributionSummary(plantTypeId, plantTypeName) {
     console.log('Distribution summary generated:', {
         plantTypeId: plantTypeId,
         plantTypeName: plantTypeName,
+        selectedProvinceId: selectedProvinceId,
         provincesWithTransactions: provincesWithTransactions.length,
         totalRegencies: totalRegencies
     });
@@ -1103,7 +1142,7 @@ function updateProvinceDetail(provinceId) {
     
     const provinceProductsData = provinceProducts[parseInt(geoJsonProvinceId)] || [];
     
-    let detailHtml = `<h6>Detail Provinsi: ${provinceName}</h6>`;
+    let detailHtml = `<h6 class="text-primary">Detail Provinsi: ${provinceName}</h6>`;
     
     if (provinceDataItem) {
         console.log('Province Data Item:', provinceDataItem);
@@ -1115,9 +1154,9 @@ function updateProvinceDetail(provinceId) {
         `;
         
         if (provinceProductsData.length > 0) {
-            detailHtml += '<h6>Produk yang Terjual:</h6><ul>';
+            detailHtml += '<h6 class="text-success"><i class="fas fa-shopping-cart"></i> Produk yang Terjual:</h6><ul class="mt-2">';
             provinceProductsData.forEach(product => {
-                detailHtml += `<li>${product.product_name} (${product.total_quantity} ${product.unit})</li>`;
+                detailHtml += `<li><i class="fas fa-seedling"></i> ${product.product_name} (${product.total_quantity} ${product.unit})</li>`;
             });
             detailHtml += '</ul>';
         }
@@ -1134,51 +1173,51 @@ function updateProvinceDetail(provinceId) {
         }
     }
     
-    // Tambahkan daftar kota/kabupaten di provinsi ini
-    const regenciesInProvince = allRegencies.filter(r => {
-        const regencyProvinceId = parseInt(r.province_id);
-        const searchProvinceId = parseInt(geoJsonProvinceId);
-        console.log(`Comparing: ${regencyProvinceId} (${typeof regencyProvinceId}) == ${searchProvinceId} (${typeof searchProvinceId})`);
-        return regencyProvinceId == searchProvinceId;
-    });
-    console.log('Regencies in Province:', regenciesInProvince);
-    console.log('Regency Data:', regencyData);
-    console.log('Regency Products:', regencyProducts);
-    console.log('Province ID being searched:', parseInt(geoJsonProvinceId));
-    console.log('All Regencies:', allRegencies);
-    
-    console.log('Regencies found for province:', regenciesInProvince.length);
-    console.log('Sample regency:', regenciesInProvince[0]);
-    if (regenciesInProvince.length > 0) {
-        detailHtml += '<hr><h6>Daftar Kota/Kabupaten di Provinsi ini:</h6>';
+            // Tambahkan daftar kota/kabupaten di provinsi ini
+        const regenciesInProvince = allRegencies.filter(r => {
+            const regencyProvinceId = parseInt(r.province_id);
+            const searchProvinceId = parseInt(geoJsonProvinceId);
+            console.log(`Comparing: ${regencyProvinceId} (${typeof regencyProvinceId}) == ${searchProvinceId} (${typeof searchProvinceId})`);
+            return regencyProvinceId == searchProvinceId;
+        });
+        console.log('Regencies in Province:', regenciesInProvince);
+        console.log('Regency Data:', regencyData);
+        console.log('Regency Products:', regencyProducts);
+        console.log('Province ID being searched:', parseInt(geoJsonProvinceId));
+        console.log('All Regencies:', allRegencies);
         
-        // Tambahkan informasi filter jika ada
-        const selectedPlantType = document.getElementById('plant_type_id').value;
-        if (selectedPlantType) {
-            const plantTypeSelect = document.getElementById('plant_type_id');
-            const selectedOption = plantTypeSelect.options[plantTypeSelect.selectedIndex];
-            detailHtml += `<small class="text-muted mb-2 d-block">* Data ditampilkan sesuai filter: ${selectedOption.text}</small>`;
-        }
-        
-        detailHtml += '<div style="max-height: 200px; overflow-y: auto;">';
-        
-            regenciesInProvince.forEach(regency => {
-        // Cari data transaksi untuk regency ini (mungkin terfilter)
-        const regencyDataItem = regencyData.find(r => r.regency_id == regency.regency_id);
-        const regencyProductsData = regencyProducts[regency.regency_id] || [];
-        
-        console.log(`Regency ${regency.regency_name}:`, regencyDataItem, regencyProductsData);
-        console.log(`Regency ID: ${regency.regency_id}, Type: ${typeof regency.regency_id}`);
-        console.log(`Province ID: ${regency.province_id}, Type: ${typeof regency.province_id}`);
+        console.log('Regencies found for province:', regenciesInProvince.length);
+        console.log('Sample regency:', regenciesInProvince[0]);
+        if (regenciesInProvince.length > 0) {
+            detailHtml += '<hr><h6 class="text-primary"><i class="fas fa-list"></i> Daftar Kota/Kabupaten di Provinsi ini:</h6>';
             
-            detailHtml += `<div class="mb-2 p-2 border rounded">`;
+            // Tambahkan informasi filter jika ada
+            const selectedPlantType = document.getElementById('plant_type_id').value;
+            if (selectedPlantType) {
+                const plantTypeSelect = document.getElementById('plant_type_id');
+                const selectedOption = plantTypeSelect.options[plantTypeSelect.selectedIndex];
+                detailHtml += `<small class="text-muted mb-2 d-block">* Data ditampilkan sesuai filter: ${selectedOption.text}</small>`;
+            }
+        
+        detailHtml += '<div class="mt-2">';
+        
+        regenciesInProvince.forEach(regency => {
+            // Cari data transaksi untuk regency ini (mungkin terfilter)
+            const regencyDataItem = regencyData.find(r => r.regency_id == regency.regency_id);
+            const regencyProductsData = regencyProducts[regency.regency_id] || [];
+            
+            console.log(`Regency ${regency.regency_name}:`, regencyDataItem, regencyProductsData);
+            console.log(`Regency ID: ${regency.regency_id}, Type: ${typeof regency.regency_id}`);
+            console.log(`Province ID: ${regency.province_id}, Type: ${typeof regency.province_id}`);
+                
+            detailHtml += `<div class="mb-2 p-2 border rounded bg-light">`;
             detailHtml += `<strong>${regency.regency_name}</strong>`;
             
             if (regencyDataItem) {
                 detailHtml += `<br><small class="text-success">Total Produk: ${regencyDataItem.total_products} | Total Nilai: Rp ${parseFloat(regencyDataItem.total_value).toLocaleString()}</small>`;
                 
                 if (regencyProductsData.length > 0) {
-                    detailHtml += '<br><small class="text-muted">Produk: ';
+                    detailHtml += '<br><small class="text-muted"><i class="fas fa-seedling"></i> Produk: ';
                     const productNames = regencyProductsData.map(p => `${p.product_name} (${p.total_quantity} ${p.unit})`);
                     detailHtml += productNames.join(', ');
                     detailHtml += '</small>';
@@ -1194,8 +1233,8 @@ function updateProvinceDetail(provinceId) {
     }
     
     // Tambahkan tombol untuk menampilkan peta regency
-    detailHtml += '<hr><button id="show-regency-map" class="btn btn-sm btn-outline-primary">';
-    detailHtml += '<i class="fas fa-map"></i> Tampilkan Peta Kota/Kabupaten';
+    detailHtml += '<hr><button id="show-regency-map" class="btn btn-sm btn-outline-primary mt-2">';
+    detailHtml += '<i class="fas fa-map-marked-alt"></i> Tampilkan Peta Kota/Kabupaten';
     detailHtml += '</button>';
     
     // Tambahkan ringkasan distribusi jika ada filter jenis tanaman
@@ -1205,7 +1244,7 @@ function updateProvinceDetail(provinceId) {
         const selectedOption = plantTypeSelect.options[plantTypeSelect.selectedIndex];
         const distributionSummary = generateDistributionSummary(selectedPlantType, selectedOption.text);
         if (distributionSummary) {
-            detailHtml += '<hr><h6>Ringkasan Distribusi ' + selectedOption.text + ':</h6>';
+            detailHtml += '<hr><h6 class="text-primary">Ringkasan Distribusi ' + selectedOption.text + ':</h6>';
             detailHtml += distributionSummary;
         }
     }
@@ -1275,8 +1314,6 @@ function onEachFeature(feature, layer) {
 }
 
 #province-detail {
-    max-height: 300px;
-    overflow-y: auto;
 }
 
 #province-detail ul {
@@ -1287,6 +1324,188 @@ function onEachFeature(feature, layer) {
 #province-detail li {
     margin-bottom: 5px;
 }
+
+/* Styling untuk detail provinsi yang dipindah ke bawah */
+.card-body .row:last-child .card {
+    border-top: 3px solid #4CAF50;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.card-body .row:last-child .card .card-header {
+    background: linear-gradient(135deg, #4CAF50, #66BB6A);
+    color: white;
+    border: none;
+}
+
+/* Styling untuk item kabupaten/kota */
+.bg-light {
+    background-color: #f8f9fa !important;
+    border-color: #dee2e6 !important;
+}
+
+.bg-light:hover {
+    background-color: #e9ecef !important;
+    transition: background-color 0.2s ease;
+}
+
+/* Styling untuk text-primary */
+.text-primary {
+    color: #4CAF50 !important;
+    font-weight: 600;
+}
+
+/* Styling untuk icon di heading */
+.text-primary i {
+    margin-right: 8px;
+    color: #388E3C;
+}
+
+/* Styling untuk text-success */
+.text-success {
+    color: #28a745 !important;
+    font-weight: 600;
+}
+
+/* Styling untuk text-info */
+.text-info {
+    color: #17a2b8 !important;
+    font-weight: 500;
+}
+
+/* Styling untuk list items */
+#province-detail ul li {
+    margin-bottom: 8px;
+    padding: 4px 0;
+}
+
+#province-detail ul li i {
+    margin-right: 6px;
+    color: #4CAF50;
+}
+
+/* Styling untuk mt-2 class */
+.mt-2 {
+    margin-top: 0.5rem !important;
+}
+
+.card-body .row:last-child .card {
+    margin-top: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.card-body .row:last-child .card .card-header {
+    border-radius: 8px 8px 0 0;
+}
+
+.card-body .row:last-child .card .card-body {
+    border-radius: 0 0 8px 8px;
+    padding: 1.5rem;
+}
+
+.card-body .row:last-child .card .card-header h5 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.card-body .row:last-child .card .card-body p {
+    margin-bottom: 0.75rem;
+}
+
+.card-body .row:last-child .card .card-body hr {
+    margin: 1rem 0;
+    border-color: #e9ecef;
+}
+
+.card-body .row:last-child .card .card-body h6 {
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.card-body .row:last-child .card .card-body ul {
+    margin-bottom: 1rem;
+}
+
+.card-body .row:last-child .card .card-body ul li {
+    margin-bottom: 0.5rem;
+}
+
+.card-body .row:last-child .card .card-body ul li i {
+    margin-right: 0.5rem;
+    color: #4CAF50;
+}
+
+.card-body .row:last-child .card .card-body small {
+    font-size: 0.875rem;
+}
+
+/* Styling untuk tombol */
+.btn-outline-primary {
+    border-color: #4CAF50;
+    color: #4CAF50;
+}
+
+.btn-outline-primary:hover {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+    color: white;
+}
+
+/* Styling untuk alert */
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+/* Styling untuk text-muted */
+.text-muted {
+    color: #6c757d !important;
+}
+
+.text-muted i {
+    margin-right: 6px;
+    color: #4CAF50;
+}
+
+.card-body .row:last-child .card .card-body small i {
+    margin-right: 0.25rem;
+}
+
+.card-body .row:last-child .card .card-body strong {
+    font-weight: 600;
+}
+
+.card-body .row:last-child .card .card-body .btn {
+    margin-top: 0.5rem;
+}
+
+.card-body .row:last-child .card .card-body .btn i {
+    margin-right: 0.5rem;
+}
+
+.card-body .row:last-child .card .card-body .btn:hover {
+    transform: translateY(-1px);
+    transition: transform 0.2s ease;
+}
+
+.card-body .row:last-child .card .card-body .btn:active {
+    transform: translateY(0);
+}
+
+.card-body .row:last-child .card .card-body .btn:focus {
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+}
+
+
+
+
+
+
+
+
+
+
 
 .card-header {
     background: linear-gradient(135deg, #388E3C, #4CAF50);
@@ -1327,6 +1546,43 @@ function onEachFeature(feature, layer) {
 
 .custom-tooltip::before {
     border-top-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Styling untuk item provinsi yang bisa diklik */
+.clickable-province {
+    border: 2px solid #e9ecef !important;
+    transition: all 0.3s ease !important;
+}
+
+.clickable-province:hover {
+    border-color: #4CAF50 !important;
+    background-color: #f8fff9 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+}
+
+.clickable-province:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(76, 175, 80, 0.2);
+}
+
+.clickable-province .text-primary {
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.clickable-province:hover .text-primary {
+    opacity: 1;
+}
+
+.clickable-province:hover .text-primary i {
+    animation: pulse 0.6s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
 }
 </style>
 @endsection 

@@ -542,7 +542,7 @@
                                 <a href="{{ route('transaksi.detail', $trx->transaction_id) }}" class="btn btn-outline-danger btn-sm" onclick="event.stopPropagation();" style="border-color:#dc2626;color:#dc2626;">
                                     🔄 Upload Ulang Bukti
                                 </a>
-                            @elseif($hasRejectedPayment)
+                            @elseif($hasRejectedPayment && $trx->order_status !== 'selesai')
                                 <a href="{{ route('transaksi.detail', $trx->transaction_id) }}" class="btn btn-outline-warning btn-sm" onclick="event.stopPropagation();">
                                     ⚠️ Lihat Detail
                                 </a>
