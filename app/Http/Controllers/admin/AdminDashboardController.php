@@ -14,7 +14,22 @@ class AdminDashboardController extends Controller
 {
     public function index()
     {
-        return view('admin.dashboard');
+        // Get today's date
+        $today = now()->format('Y-m-d');
+        
+        // Get statistics
+        $stats = [
+            'new_orders_today' => Transaction::whereDate('order_date', $today)->count(),
+            'total_products' => Product::count(),
+            'total_transactions' => Transaction::count(),
+            'total_complaints' => Complaint::count(),
+            'total_articles' => \App\Models\Article::count(),
+            'orders_need_payment_confirmation' => Transaction::where('order_status', 'menunggu_konfirmasi_pembayaran')->count(),
+            'completed_orders' => Transaction::where('order_status', 'selesai')->count(),
+            'total_revenue' => Transaction::where('order_status', '!=', 'dibatalkan')->sum('total_price'),
+        ];
+        
+        return view('admin.dashboard', compact('stats'));
     }
     
         public function productDistribution(Request $request)
@@ -49,7 +64,7 @@ class AdminDashboardController extends Controller
             ->join('plant_types as pt', 'p.plant_type_id', '=', 'pt.plant_type_id')
             ->join('reg_provinces as rp', 't.province_id', '=', 'rp.id')
             ->whereNotNull('t.province_id')
-            ->where('t.order_status', '!=', 'cancelled');
+            ->where('t.order_status', '!=', 'dibatalkan');
 
         // Apply filters
         if ($selectedProvince) {
@@ -81,7 +96,7 @@ class AdminDashboardController extends Controller
             ->join('plant_types as pt', 'p.plant_type_id', '=', 'pt.plant_type_id')
             ->join('reg_provinces as rp', 't.province_id', '=', 'rp.id')
             ->whereNotNull('t.province_id')
-            ->where('t.order_status', '!=', 'cancelled');
+            ->where('t.order_status', '!=', 'dibatalkan');
 
         // Apply filters untuk province products
         if ($selectedProvince) {
@@ -116,7 +131,7 @@ class AdminDashboardController extends Controller
             ->join('plant_types as pt', 'p.plant_type_id', '=', 'pt.plant_type_id')
             ->join('reg_regencies as rr', 't.regency_id', '=', 'rr.id')
             ->whereNotNull('t.regency_id')
-            ->where('t.order_status', '!=', 'cancelled');
+            ->where('t.order_status', '!=', 'dibatalkan');
 
         // Apply filters untuk regency data
         if ($selectedProvince) {
@@ -156,7 +171,7 @@ class AdminDashboardController extends Controller
             ->join('plant_types as pt', 'p.plant_type_id', '=', 'pt.plant_type_id')
             ->join('reg_regencies as rr', 't.regency_id', '=', 'rr.id')
             ->whereNotNull('t.regency_id')
-            ->where('t.order_status', '!=', 'cancelled');
+            ->where('t.order_status', '!=', 'dibatalkan');
 
         // Apply filters untuk regency products
         if ($selectedProvince) {

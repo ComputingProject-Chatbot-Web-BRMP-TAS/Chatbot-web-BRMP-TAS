@@ -9,6 +9,8 @@ use App\Models\ProductHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ProductController extends Controller
 {
@@ -82,49 +84,52 @@ class ProductController extends Controller
         $query->orderBy($sortBy, $sortOrder);
 
         // Export functionality
-        if ($request->has('export') && $request->export === 'csv') {
+        if ($request->has('export') && $request->export === 'excel') {
             $products = $query->get();
-            
-            $filename = 'products_' . date('Y-m-d_H-i-s') . '.csv';
-            
+
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // Header
             $headers = [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                'ID', 'Nama Produk', 'Kategori', 'Deskripsi', 'Stok', 'Stok Minimum',
+                'Satuan', 'Harga per Unit', 'Min. Pembelian', 'No. Sertifikat',
+                'Kelas Sertifikat', 'Berlaku Dari', 'Berlaku Sampai', 'Dibuat'
             ];
-            
-            $callback = function() use ($products) {
-                $file = fopen('php://output', 'w');
-                
-                // CSV headers
-                fputcsv($file, [
-                    'ID', 'Nama Produk', 'Kategori', 'Deskripsi', 'Stok', 'Stok Minimum',
-                    'Satuan', 'Harga per Unit', 'Min. Pembelian', 'No. Sertifikat',
-                    'Kelas Sertifikat', 'Berlaku Dari', 'Berlaku Sampai', 'Dibuat'
-                ]);
-                
-                foreach ($products as $product) {
-                    fputcsv($file, [
-                        $product->product_id,
-                        $product->product_name,
-                        $product->plantType->plant_type_name ?? 'N/A',
-                        $product->description,
-                        $product->stock,
-                        $product->minimum_stock,
-                        $product->unit,
-                        $product->price_per_unit,
-                        $product->minimum_purchase,
-                        $product->certificate_number ?? 'N/A',
-                        $product->certificate_class ?? 'N/A',
-                        $product->valid_from ? $product->valid_from->format('Y-m-d') : 'N/A',
-                        $product->valid_until ? $product->valid_until->format('Y-m-d') : 'N/A',
-                        $product->created_at->format('Y-m-d H:i:s')
-                    ]);
-                }
-                
-                fclose($file);
-            };
-            
-            return response()->stream($callback, 200, $headers);
+            $sheet->fromArray($headers, null, 'A1');
+
+            // Data
+            $rowNum = 2;
+            foreach ($products as $product) {
+                $row = [
+                    $product->product_id,
+                    $product->product_name,
+                    $product->plantType->plant_type_name ?? 'N/A',
+                    $product->description,
+                    $product->stock,
+                    $product->minimum_stock,
+                    $product->unit,
+                    $product->price_per_unit,
+                    $product->minimum_purchase,
+                    $product->certificate_number ?? 'N/A',
+                    $product->certificate_class ?? 'N/A',
+                    $product->valid_from ? $product->valid_from->format('Y-m-d') : 'N/A',
+                    $product->valid_until ? $product->valid_until->format('Y-m-d') : 'N/A',
+                    $product->created_at->format('Y-m-d H:i:s')
+                ];
+                $sheet->fromArray($row, null, 'A' . $rowNum);
+                $rowNum++;
+            }
+
+            $filename = 'products_' . date('Y-m-d_H-i-s') . '.xlsx';
+            $writer = new Xlsx($spreadsheet);
+
+            // Output to browser
+            return response()->streamDownload(function() use ($writer) {
+                $writer->save('php://output');
+            }, $filename, [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
         }
 
         $products = $query->paginate(15);

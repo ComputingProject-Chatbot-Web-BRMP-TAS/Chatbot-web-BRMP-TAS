@@ -139,7 +139,7 @@
                     <h2>Kelola Produk</h2>
                     <div>
                         <button class="btn btn-outline-success me-2" onclick="exportData()" title="Export Data">
-                            <i class="fas fa-download"></i> Export
+                            <i class="fas fa-file-excel"></i> Export Excel
                         </button>
                         <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
                             <i class="fas fa-plus"></i> Tambah Produk
@@ -312,9 +312,9 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Gambar</th>
                                         <th>Nama Produk</th>
                                         <th>Kategori</th>
+                                        <th>Status Sertifikasi</th>
                                         <th>Harga/Unit</th>
                                         <th>Stok</th>
                                         <th>Min. Pembelian</th>
@@ -326,19 +326,26 @@
                                                                          @forelse($products as $index => $product)
                                      <tr>
                                          <td>{{ ($products->currentPage() - 1) * $products->perPage() + $index + 1 }}</td>
-                                        <td>
-                                            @if($product->image1)
-                                                <img src="{{ asset('storage/' . $product->image1) }}" 
-                                                     alt="{{ $product->product_name }}" 
-                                                     style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
-                                            @else
-                                                <div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
-                                                    <i class="fas fa-image text-muted"></i>
-                                                </div>
-                                            @endif
-                                        </td>
                                         <td>{{ $product->product_name }}</td>
                                         <td>{{ $product->plantType->plant_type_name ?? 'N/A' }}</td>
+                                        <td>
+                                            @php
+                                                $now = \Carbon\Carbon::now();
+                                                $validFrom = $product->valid_from ? \Carbon\Carbon::parse($product->valid_from) : null;
+                                                $validUntil = $product->valid_until ? \Carbon\Carbon::parse($product->valid_until) : null;
+                                            @endphp
+                                            @if($validFrom && $validUntil)
+                                                @if($now->lt($validFrom))
+                                                    <span class="badge bg-warning">Belum Berlaku</span>
+                                                @elseif($now->between($validFrom, $validUntil))
+                                                    <span class="badge bg-success">Berlaku</span>
+                                                @elseif($now->gt($validUntil))
+                                                    <span class="badge bg-danger">Tidak Berlaku</span>
+                                                @endif
+                                            @else
+                                                <span class="badge bg-secondary">Tidak Ada Sertifikat</span>
+                                            @endif
+                                        </td>
                                         <td>Rp {{ number_format($product->price_per_unit, 0, ',', '.') }}</td>
                                         <td>{{ $product->stock }} {{ $product->unit }}</td>
                                         <td>{{ $product->minimum_purchase }} {{ $product->unit }}</td>
@@ -556,7 +563,7 @@ function clearFilters() {
 // Export data function
 function exportData() {
     const currentUrl = new URL(window.location.href);
-    currentUrl.searchParams.set('export', 'csv');
+    currentUrl.searchParams.set('export', 'excel');
     window.location.href = currentUrl.toString();
 }
 
