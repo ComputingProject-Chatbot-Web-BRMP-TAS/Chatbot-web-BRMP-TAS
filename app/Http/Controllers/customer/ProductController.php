@@ -165,14 +165,72 @@ class ProductController extends Controller
         if (!isset($map[$kategori])) abort(404);
         [$jenis_kategori, $judul] = $map[$kategori];
         $plantTypes = PlantTypes::where('comodity', $jenis_kategori)->get();
+        
+        // Get filter parameters
         $plantTypeIds = request('plant_types', []);
-        $products = Product::whereHas('plantType', function($q) use ($jenis_kategori, $plantTypeIds) {
+        $minPrice = request('min_price');
+        $maxPrice = request('max_price');
+        $stockFilter = request('stock_filter', 'all');
+        $sort = request('sort', 'name-asc');
+        
+        // Build query
+        $query = Product::whereHas('plantType', function($q) use ($jenis_kategori, $plantTypeIds) {
             $q->where('comodity', $jenis_kategori);
             if (!empty($plantTypeIds)) {
                 $q->whereIn('plant_type_id', $plantTypeIds);
             }
-        })->get();
+        });
+        
+        // Apply price filters
+        if ($minPrice !== null && $minPrice !== '') {
+            $query->where('price_per_unit', '>=', $minPrice);
+        }
+        if ($maxPrice !== null && $maxPrice !== '') {
+            $query->where('price_per_unit', '<=', $maxPrice);
+        }
+        
+        // Apply stock filters
+        switch ($stockFilter) {
+            case 'available':
+                $query->whereRaw('(stock - minimum_stock) > 0');
+                break;
+            case 'low':
+                $query->whereRaw('(stock - minimum_stock) <= 10')->whereRaw('(stock - minimum_stock) > 0');
+                break;
+            case 'all':
+            default:
+                // No filter applied
+                break;
+        }
+        
+        // Apply sorting
+        switch ($sort) {
+            case 'name-asc':
+                $query->orderBy('product_name', 'asc');
+                break;
+            case 'name-desc':
+                $query->orderBy('product_name', 'desc');
+                break;
+            case 'price-low':
+                $query->orderBy('price_per_unit', 'asc');
+                break;
+            case 'price-high':
+                $query->orderBy('price_per_unit', 'desc');
+                break;
+            case 'stock-high':
+                $query->orderByRaw('(stock - minimum_stock) DESC');
+                break;
+            case 'stock-low':
+                $query->orderByRaw('(stock - minimum_stock) ASC');
+                break;
+            default:
+                $query->orderBy('product_name', 'asc');
+                break;
+        }
+        
+        $products = $query->get();
         $latestProducts = Product::orderBy('product_id', 'desc')->take(5)->pluck('product_id')->toArray();
+        
         return view('customer.kategori', compact('products', 'latestProducts', 'judul', 'plantTypes'));
     }
 } 
