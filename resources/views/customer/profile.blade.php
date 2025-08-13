@@ -10,7 +10,7 @@
             gap: 0;
             border-bottom: 2px solid #e0e0e0;
             margin-bottom: 32px;
-            margin-top: 64px; /* dinaikkan jarak dari appbar */
+            margin-top: -20px; /* dinaikkan jarak dari appbar */
             justify-content: flex-start;
         }
         .profile-tab {

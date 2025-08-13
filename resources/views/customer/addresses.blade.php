@@ -7,9 +7,11 @@
         display: flex;
         gap: 0;
         border-bottom: 2px solid #e0e0e0;
-        margin-bottom: 32px;
-        margin-top: 64px;
+        margin-bottom: 24px;
+        margin-top: -20px;
         justify-content: flex-start;
+        position: relative;
+        z-index: 100;
     }
     .profile-tab {
         padding: 16px 36px 12px 36px;
@@ -37,6 +39,13 @@
         padding: 32px 32px 24px 32px;
         margin-top: 32px;
         justify-items: center;
+    }
+
+    /* Tambah margin-top untuk container agar tidak tenggelam dengan appbar */
+    @media (max-width: 900px) {
+        .addresses-container {
+            margin-top: 16px;
+        }
     }
     .btn-add-address {
         background: #4CAF50;
@@ -93,7 +102,273 @@
     }
     @media (max-width: 900px) {
         .addresses-container { padding: 18px 8px; }
-        .profile-tabs { margin-top: 32px; }
+        .profile-tabs { margin-top: 0px; }
+    }
+
+    /* Responsive CSS untuk mobile */
+    @media (max-width: 900px) {
+        .profile-tabs {
+            margin-top: -20px; /* Lebih kecil agar tidak terlalu jauh dari appbar */
+            flex-direction: row; /* Tetap horizontal di tablet */
+            gap: 0;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .profile-tab {
+            padding: 12px 24px;
+            font-size: 1rem;
+            text-align: center;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .addresses-container {
+            margin: 16px 8px;
+            padding: 20px 16px;
+            border-radius: 12px;
+        }
+        
+        .btn-add-address {
+            padding: 14px 16px;
+            font-size: 1rem;
+            border-radius: 8px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .profile-tabs {
+            margin-top: -20px; /* Lebih kecil agar tidak terlalu jauh dari appbar */
+            flex-direction: row; /* Tetap horizontal */
+            gap: 0;
+        }
+        
+        .profile-tab {
+            padding: 10px 16px;
+            font-size: 0.95rem;
+            text-align: center;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .addresses-container {
+            margin: 16px 8px;
+            padding: 20px 16px;
+            border-radius: 12px;
+        }
+        
+        .btn-add-address {
+            padding: 14px 16px;
+            font-size: 1rem;
+            border-radius: 8px;
+        }
+        
+        .address-card-clickable .card-body {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .address-card-clickable .fw-bold {
+            font-size: 1rem;
+        }
+        
+        .address-card-clickable div[style*="color:#555"] {
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .address-card-clickable div[style*="color:#888"] {
+            font-size: 0.85em;
+        }
+        
+        .address-card-clickable .mt-2 {
+            margin-top: 12px !important;
+        }
+        
+        .address-card-clickable .btn {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+        
+        .address-empty-img {
+            width: 160px;
+        }
+        
+        .address-empty-title {
+            font-size: 1.3rem;
+        }
+        
+        .address-empty-desc {
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .profile-tabs {
+            margin-top: -20px; /* Lebih kecil agar tidak terlalu jauh dari appbar */
+            flex-direction: row; /* Tetap horizontal */
+        }
+        
+        .profile-tab {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+        
+        .addresses-container {
+            margin: 16px 4px;
+            padding: 16px 12px;
+            margin-top: 16px;
+        }
+        
+        .btn-add-address {
+            padding: 12px 14px;
+            font-size: 0.95rem;
+        }
+        
+        .address-card-clickable .card-body {
+            padding: 16px;
+        }
+        
+        .address-card-clickable .fw-bold {
+            font-size: 0.95rem;
+        }
+        
+        .address-card-clickable div[style*="color:#555"] {
+            font-size: 0.85em;
+        }
+        
+        .address-card-clickable div[style*="color:#888"] {
+            font-size: 0.8em;
+        }
+        
+        .address-card-clickable .btn {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+        
+        .address-empty-img {
+            width: 140px;
+        }
+        
+        .address-empty-title {
+            font-size: 1.2rem;
+        }
+        
+        .address-empty-desc {
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Responsive CSS untuk modal */
+    @media (max-width: 768px) {
+        .modal-dialog {
+            margin: 10px;
+            max-width: calc(100% - 20px);
+        }
+        
+        .modal-content {
+            border-radius: 12px;
+        }
+        
+        .modal-header {
+            padding: 16px 20px;
+        }
+        
+        .modal-title {
+            font-size: 1.1rem;
+        }
+        
+        .step-alamat .px-3 {
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+        }
+        
+        .step-alamat .pt-3 {
+            padding-top: 20px !important;
+        }
+        
+        .step-alamat .pb-3 {
+            padding-bottom: 20px !important;
+        }
+        
+        .step-alamat .pb-2 {
+            padding-bottom: 16px !important;
+        }
+        
+        #gmap, #editGmap {
+            height: 200px !important;
+        }
+        
+        .form-control {
+            font-size: 0.95rem;
+            padding: 10px 12px;
+        }
+        
+        .form-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        
+        .btn {
+            font-size: 0.95rem;
+            padding: 10px 16px;
+        }
+        
+        .fw-bold {
+            font-size: 1rem !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .modal-dialog {
+            margin: 5px;
+            max-width: calc(100% - 10px);
+        }
+        
+        .modal-header {
+            padding: 12px 16px;
+        }
+        
+        .modal-title {
+            font-size: 1rem;
+        }
+        
+        .step-alamat .px-3 {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+        }
+        
+        .step-alamat .pt-3 {
+            padding-top: 16px !important;
+        }
+        
+        .step-alamat .pb-3 {
+            padding-bottom: 16px !important;
+        }
+        
+        .step-alamat .pb-2 {
+            padding-bottom: 12px !important;
+        }
+        
+        #gmap, #editGmap {
+            height: 180px !important;
+        }
+        
+        .form-control {
+            font-size: 0.9rem;
+            padding: 8px 10px;
+        }
+        
+        .form-label {
+            font-size: 0.9rem;
+        }
+        
+        .btn {
+            font-size: 0.9rem;
+            padding: 8px 12px;
+        }
+        
+        .fw-bold {
+            font-size: 0.95rem !important;
+        }
     }
 </style>
 <div class="profile-tabs">
@@ -115,14 +390,16 @@
                                         <span class="badge bg-success mb-2">Utama</span><br>
                                     @endif
                                     <div class="fw-bold" style="font-size:1.1em;">{{ $address->label ?? 'Alamat' }}</div>
-                                    <div style="color:#555;font-size:0.98em;">{{ $address->address }}</div>
+                                    <div style="color:#555;font-size:0.98em;word-wrap:break-word;">{{ $address->address }}</div>
                                     <div style="color:#888;font-size:0.93em;">({{ $address->latitude }}, {{ $address->longitude }})</div>
                                     @if($address->note)
                                         <div style="color:#888;font-size:0.93em;">Catatan: {{ $address->note }}</div>
                                     @endif
                                     <div style="color:#888;font-size:0.93em;">Penerima: {{ $address->recipient_name }} ({{ $address->recipient_phone }})</div>
-                                    <div class="mt-2 d-flex gap-2">
-                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="editAlamat({{ $address->address_id }}, event)"
+                                    <div class="mt-2 d-flex gap-2 flex-wrap">
+                                        <button type="button" 
+                                            class="btn btn-outline-primary btn-sm" 
+                                            onclick="editAlamat({{ $address->address_id }}, event)"
                                             data-id="{{ $address->address_id }}"
                                             data-label="{{ $address->label }}"
                                             data-address="{{ $address->address }}"
@@ -131,24 +408,24 @@
                                             data-note="{{ $address->note }}"
                                             data-recipient_name="{{ $address->recipient_name }}"
                                             data-recipient_phone="{{ $address->recipient_phone }}"
-                                        >Edit</button>
+                                        >Edit Alamat</button>
                                         @if(!$address->is_primary)
-                                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="hapusAlamat{{ $address->id }}(event)">Hapus</button>
+                                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="hapusAlamat{{ $address->address_id }}(event)">Hapus</button>
                                         @endif
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </form>
-                    <form id="formHapusAlamat{{ $address->id }}" method="POST" action="{{ route('addresses.destroy', $address) }}" style="display:none;">
+                    <form id="formHapusAlamat{{ $address->address_id }}" method="POST" action="{{ route('addresses.destroy', $address) }}" style="display:none;">
                         @csrf
                         @method('DELETE')
                     </form>
                     <script>
-                    function hapusAlamat{{ $address->id }}(e) {
+                    function hapusAlamat{{ $address->address_id }}(e) {
                         e.stopPropagation();
                         if(confirm('Hapus alamat ini?')) {
-                            document.getElementById('formHapusAlamat{{ $address->id }}').submit();
+                            document.getElementById('formHapusAlamat{{ $address->address_id }}').submit();
                         }
                     }
                     function editAlamat(id, e) {
