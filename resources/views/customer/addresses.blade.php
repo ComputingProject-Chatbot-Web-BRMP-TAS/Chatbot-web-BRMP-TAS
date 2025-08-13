@@ -122,8 +122,8 @@
                                     @endif
                                     <div style="color:#888;font-size:0.93em;">Penerima: {{ $address->recipient_name }} ({{ $address->recipient_phone }})</div>
                                     <div class="mt-2 d-flex gap-2">
-                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="editAlamat({{ $address->id }}, event)"
-                                            data-id="{{ $address->id }}"
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="editAlamat({{ $address->address_id }}, event)"
+                                            data-id="{{ $address->address_id }}"
                                             data-label="{{ $address->label }}"
                                             data-address="{{ $address->address }}"
                                             data-latitude="{{ $address->latitude }}"

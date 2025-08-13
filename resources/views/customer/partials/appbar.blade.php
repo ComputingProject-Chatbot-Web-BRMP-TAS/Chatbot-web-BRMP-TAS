@@ -658,22 +658,22 @@
     <!-- Kiri: Logo + Menu -->
     <div class="navbar-left" style="display:flex;align-items:center;gap:18px;min-width:320px;">
         <a href="/" class="navbar-title">Benih BRMP</a>
-        <span style="width:0px;"></span>
+        <span style="width:100px;"></span>
         <span class="navbar-category-title" id="appbarCategoryBtn" style="margin-right:0px;cursor:pointer;position:relative;">Komoditas</span>
         <a href="{{ route('articles.index') }}" class="navbar-article-link" style="margin-left:0px;">Artikel</a>
         <a href="{{ route('transaksi') }}" class="navbar-article-link" style="margin-left:0px;">Transaksi</a>
     </div>
-    <!-- Tengah: Searchbar -->
-    <div class="navbar-center" style="flex:1;display:flex;justify-content:center;min-width:0;">
-        <div class="searchbar-container">
-            <form method="get" action="/">
-                <input type="text" name="q" placeholder="Cari di Benih BRMP" value="{{ request('q') }}">
-                <button type="submit"><i class="fas fa-search"></i></button>
-            </form>
-        </div>
-    </div>
-    <!-- Kanan: User Section + Cart -->
+    
+    <!-- Kanan: Searchbar +User Section + Cart -->
     <div class="user-section" style="display:flex;align-items:center;gap:18px;min-width:220px;justify-content:flex-end;">
+        <div class="navbar-center" style="flex:1;display:flex;justify-content:center;min-width:0;">
+            <div class="searchbar-container">
+                <form method="get" action="/">
+                    <input type="text" name="q" placeholder="Cari di Benih BRMP" value="{{ request('q') }}">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </div>
         @auth
             <div class="user" style="position:relative;">
                 <a href="{{ route('profile') }}" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit;gap:8px;">
@@ -700,8 +700,7 @@
                 </div>
             </div>
         @else
-            <a href="{{ route('login') }}" class="btn btn-success navbar-login-btn" style="margin-right: 10px;">Login</a>
-            <a href="{{ route('register') }}" class="btn btn-warning navbar-register-btn">Daftar</a>
+            <a href="{{ route('login') }}" class="btn btn-success navbar-login-btn" >Login</a>
         @endauth
         <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
     </div>

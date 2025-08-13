@@ -350,7 +350,7 @@
                                 <div class="d-flex gap-1 align-items-start">
                                     <button type="button" class="btn btn-sm btn-outline-primary"
                                         onclick="editAlamat(event)"
-                                        data-id="{{ $address->id }}"
+                                        data-id="{{ $address->address_id }}"
                                         data-label="{{ $address->label }}"
                                         data-address="{{ $address->address }}"
                                         data-latitude="{{ $address->latitude }}"

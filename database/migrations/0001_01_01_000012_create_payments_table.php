@@ -18,8 +18,8 @@ return new class extends Migration
             $table->integer('amount_paid');
             $table->string('photo_proof_payment');
             $table->string('payment_status');
-            $table->text('rejection_reason');
-            $table->text('request_message');
+            $table->text('rejection_reason')->nullable();
+            $table->text('request_message')->nullable();
             $table->timestamps();
         });
     }
