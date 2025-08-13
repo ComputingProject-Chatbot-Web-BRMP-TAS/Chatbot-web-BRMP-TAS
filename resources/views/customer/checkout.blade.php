@@ -276,7 +276,11 @@
                     <div class="order-item-row">
                         <div class="order-item-img">
                             @if($item['image'])
-                                <img src="{{ asset('images/' . $item['image']) }}" alt="{{ $item['name'] }}">
+                                <img src="{{ asset('storage/' . $item['image']) }}" alt="{{ $item['name'] }}">
+                            @else
+                                <div style="width:48px;height:48px;background:#f0f0f0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#999;">
+                                    <i class="fas fa-seedling" style="font-size:16px;"></i>
+                                </div>
                             @endif
                         </div>
                         <div class="order-item-info">

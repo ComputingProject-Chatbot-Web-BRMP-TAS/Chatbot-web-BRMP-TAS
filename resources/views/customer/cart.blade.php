@@ -247,7 +247,13 @@
                 @endphp
                 <div class="cart-item-box" style="{{ $isOutOfStock || $isQuantityBelowMin ? 'opacity: 0.7;' : '' }}">
                     <input type="checkbox" class="cart-item-checkbox" name="checked_items[]" value="{{ $item->cart_item_id }}" onchange="updateSummary()" checked {{ $isOutOfStock || $isQuantityBelowMin ? 'disabled' : '' }}>
-                    <img src="{{ asset('images/' . $item->product->gambar) }}" alt="{{ $item->product->product_name }}" style="width:70px;height:70px;object-fit:cover;border-radius:12px;">
+                    @if($item->product->image1)
+                        <img src="{{ asset('storage/' . $item->product->image1) }}" alt="{{ $item->product->product_name }}" style="width:70px;height:70px;object-fit:cover;border-radius:12px;">
+                    @else
+                        <div style="width:70px;height:70px;background:#f0f0f0;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#999;">
+                            <i class="fas fa-seedling" style="font-size:24px;"></i>
+                        </div>
+                    @endif
                     <div style="flex:1;">
                         <div style="font-weight:600;font-size:1.1rem;">
                             <a href="/produk/{{ $item->product->product_id }}" style="color:#222; text-decoration:none; font-weight:600;">

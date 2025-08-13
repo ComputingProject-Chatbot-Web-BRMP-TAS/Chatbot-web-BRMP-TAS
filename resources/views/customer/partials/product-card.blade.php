@@ -14,7 +14,7 @@
             </div>
         @endif
         @if($product->image1)
-            <img src="{{ asset('images/' . $product->image1) }}" alt="{{ $product->product_name }}" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
+            <img src="{{ asset('storage/' . $product->image1) }}" alt="{{ $product->product_name }}" style="width:100%;height:120px;object-fit:cover;border-radius:12px 12px 0 0;">
         @else
             <div style="width:100%;height:120px;background:#f0f0f0;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:center;color:#999;">
                 <i class="fas fa-seedling" style="font-size:32px;"></i>

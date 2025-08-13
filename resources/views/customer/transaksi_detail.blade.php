@@ -691,7 +691,11 @@
         <div class="product-card" style="cursor: pointer;" onclick="window.location.href='{{ $productHistory ? route('produk.history.detail', $productHistory->history_id) : route('produk.detail', $item->product->product_id) }}'">
             <div class="product-left-column">
                 <div class="product-image-placeholder">
-                    🌱
+                    @if($item->product->image1)
+                        <img src="{{ asset('storage/' . $item->product->image1) }}" alt="{{ $item->product->product_name }}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+                    @else
+                        <i class="fas fa-seedling" style="font-size:24px;"></i>
+                    @endif
                 </div>
                 <div class="product-actions">
                     <a href="{{ route('produk.detail', $item->product->product_id) }}" class="buy-again-btn" onclick="event.stopPropagation();">

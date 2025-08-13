@@ -6,15 +6,27 @@
     <div class="product-detail-modern-container">
         <div class="product-detail-modern-left">
             <div class="product-detail-main-image-wrapper">
-                <img src="{{ asset('images/' . $productHistory->image1) }}" alt="{{ $productHistory->product_name }}" class="product-detail-main-image" id="mainImage">
+                @if($productHistory->image1)
+                    <img src="{{ asset('storage/' . $productHistory->image1) }}" alt="{{ $productHistory->product_name }}" class="product-detail-main-image" id="mainImage">
+                @else
+                    <div class="product-detail-default-image" id="mainImage">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                @endif
             </div>
             <div class="product-detail-thumbs">
-                <img src="{{ asset('images/' . $productHistory->image1) }}" alt="thumb1" class="selected" onclick="changeImage(this, '{{ asset('images/' . $productHistory->image1) }}')">
+                @if($productHistory->image1)
+                    <img src="{{ asset('storage/' . $productHistory->image1) }}" alt="thumb1" class="selected" onclick="changeImage(this, '{{ asset('storage/' . $productHistory->image1) }}')">
+                @else
+                    <div class="product-detail-thumb-default selected" onclick="changeImage(this, 'default')">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                @endif
                 @if($productHistory->image2)
-                    <img src="{{ asset('images/' . $productHistory->image2) }}" alt="thumb2" onclick="changeImage(this, '{{ asset('images/' . $productHistory->image2) }}')">
+                    <img src="{{ asset('storage/' . $productHistory->image2) }}" alt="thumb2" onclick="changeImage(this, '{{ asset('storage/' . $productHistory->image2) }}')">
                 @endif
                 @if($productHistory->image_certificate)
-                    <img src="{{ asset('images/' . $productHistory->image_certificate) }}" alt="certificate" onclick="changeImage(this, '{{ asset('images/' . $productHistory->image_certificate) }}')">
+                    <img src="{{ asset('storage/' . $productHistory->image_certificate) }}" alt="certificate" onclick="changeImage(this, '{{ asset('storage/' . $productHistory->image_certificate) }}')">
                 @endif
             </div>
         </div>
@@ -165,6 +177,19 @@
     margin-bottom: 18px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
+.product-detail-default-image {
+    width: 340px;
+    height: 340px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f0f0f0;
+    border-radius: 16px;
+    color: #999;
+}
+.product-detail-default-image i {
+    font-size: 80px;
+}
 .product-detail-thumbs {
     display: flex;
     gap: 10px;
@@ -180,6 +205,24 @@
 }
 .product-detail-thumbs img.selected {
     border: 2px solid #4CAF50;
+}
+.product-detail-thumb-default {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f0f0f0;
+    border-radius: 8px;
+    border: 2px solid #e0e0e0;
+    cursor: pointer;
+    color: #999;
+}
+.product-detail-thumb-default.selected {
+    border: 2px solid #4CAF50;
+}
+.product-detail-thumb-default i {
+    font-size: 20px;
 }
 .product-detail-modern-center {
     flex: 1.5;
@@ -305,12 +348,21 @@
 @push('scripts')
 <script>
 function changeImage(thumbElement, imageSrc) {
-    // Update main image
-    document.getElementById('mainImage').src = imageSrc;
+    const mainImageContainer = document.getElementById('mainImage');
+    
+    if (imageSrc === 'default') {
+        // Show default image
+        mainImageContainer.innerHTML = '<i class="fas fa-seedling"></i>';
+        mainImageContainer.className = 'product-detail-default-image';
+    } else {
+        // Show actual image
+        mainImageContainer.src = imageSrc;
+        mainImageContainer.className = 'product-detail-main-image';
+    }
     
     // Update selected thumbnail
-    document.querySelectorAll('.product-detail-thumbs img').forEach(img => {
-        img.classList.remove('selected');
+    document.querySelectorAll('.product-detail-thumbs img, .product-detail-thumbs .product-detail-thumb-default').forEach(thumb => {
+        thumb.classList.remove('selected');
     });
     thumbElement.classList.add('selected');
 }

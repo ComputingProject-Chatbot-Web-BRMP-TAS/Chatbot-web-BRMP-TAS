@@ -4,17 +4,29 @@
 @section('content')
 <div class="product-detail-modern-bg">
     <div class="product-detail-modern-container">
-        <div class="product-detail-modern-left">
+    <div class="product-detail-modern-left">
             <div class="product-detail-main-image-wrapper">
-                <img src="{{ asset('images/' . $product->image1) }}" alt="{{ $product->product_name }}" class="product-detail-main-image">
+                @if($product->image1)
+                    <img src="{{ asset('storage/' . $product->image1) }}" alt="{{ $product->product_name }}" class="product-detail-main-image" id="mainImage">
+                @else
+                    <div class="product-detail-default-image" id="mainImage">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                @endif
             </div>
             <div class="product-detail-thumbs">
-                <img src="{{ asset('images/' . $product->image1) }}" alt="thumb1" class="selected">
+                @if($product->image1)
+                    <img src="{{ asset('storage/' . $product->image1) }}" alt="thumb1" class="selected" onclick="changeImage(this, '{{ asset('storage/' . $product->image1) }}')">
+                @else
+                    <div class="product-detail-thumb-default selected" onclick="changeImage(this, 'default')">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                @endif
                 @if($product->image2)
-                    <img src="{{ asset('images/' . $product->image2) }}" alt="thumb2">
+                    <img src="{{ asset('storage/' . $product->image2) }}" alt="thumb2" onclick="changeImage(this, '{{ asset('storage/' . $product->image2) }}')">
                 @endif
                 @if($product->image_certificate)
-                    <img src="{{ asset('images/' . $product->image_certificate) }}" alt="certificate">
+                    <img src="{{ asset('storage/' . $product->image_certificate) }}" alt="certificate" onclick="changeImage(this, '{{ asset('storage/' . $product->image_certificate) }}')">
                 @endif
             </div>
         </div>
@@ -32,6 +44,30 @@
                 @endif
             </div>
             <div class="product-detail-desc">{{ $product->description }}</div>
+            
+            <!-- Informasi Sertifikat -->
+            @if($product->certificate_number)
+            <div class="certificate-info" style="margin-top: 20px;">
+                <h4 style="color: #16a34a; margin-bottom: 8px;">
+                    <i class="fas fa-certificate" style="margin-right: 6px;"></i>
+                    Informasi Sertifikat
+                </h4>
+                <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; border-left: 4px solid #16a34a;">
+                    <div style="margin-bottom: 8px;">
+                        <strong>Nomor Sertifikat:</strong> {{ $product->certificate_number }}
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <strong>Kelas:</strong> {{ $product->certificate_class }}
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <strong>Berlaku dari:</strong> {{ $product->valid_from ? \Carbon\Carbon::parse($product->valid_from)->format('d M Y') : '-' }}
+                    </div>
+                    <div>
+                        <strong>Berlaku sampai:</strong> {{ $product->valid_until ? \Carbon\Carbon::parse($product->valid_until)->format('d M Y') : '-' }}
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
         <div class="product-detail-modern-right">
             @if(session('error'))
@@ -127,6 +163,19 @@
     margin-bottom: 18px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
+.product-detail-default-image {
+    width: 340px;
+    height: 340px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f0f0f0;
+    border-radius: 16px;
+    color: #999;
+}
+.product-detail-default-image i {
+    font-size: 80px;
+}
 .product-detail-thumbs {
     display: flex;
     gap: 10px;
@@ -142,6 +191,24 @@
 }
 .product-detail-thumbs img.selected {
     border: 2px solid #4CAF50;
+}
+.product-detail-thumb-default {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f0f0f0;
+    border-radius: 8px;
+    border: 2px solid #e0e0e0;
+    cursor: pointer;
+    color: #999;
+}
+.product-detail-thumb-default.selected {
+    border: 2px solid #4CAF50;
+}
+.product-detail-thumb-default i {
+    font-size: 20px;
 }
 .product-detail-modern-center {
     flex: 1.5;
@@ -182,6 +249,13 @@
     margin-top: 18px;
     color: #444;
     font-size: 1.1rem;
+}
+.certificate-info {
+    margin-top: 20px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
 }
 .product-detail-modern-right {
     flex: 1;
@@ -305,6 +379,25 @@
 @endpush
 @push('scripts')
 <script>
+function changeImage(thumbElement, imageSrc) {
+    const mainImageContainer = document.getElementById('mainImage');
+    
+    if (imageSrc === 'default') {
+        // Show default image
+        mainImageContainer.innerHTML = '<i class="fas fa-seedling"></i>';
+        mainImageContainer.className = 'product-detail-default-image';
+    } else {
+        // Show actual image
+        mainImageContainer.src = imageSrc;
+        mainImageContainer.className = 'product-detail-main-image';
+    }
+    
+    // Update selected thumbnail
+    document.querySelectorAll('.product-detail-thumbs img, .product-detail-thumbs .product-detail-thumb-default').forEach(thumb => {
+        thumb.classList.remove('selected');
+    });
+    thumbElement.classList.add('selected');
+}
 @if(!$isOutOfStock)
 function updateSubtotal() {
     let qty = parseFloat(document.getElementById('qtyInput').value.replace(',', '.')) || 0;
