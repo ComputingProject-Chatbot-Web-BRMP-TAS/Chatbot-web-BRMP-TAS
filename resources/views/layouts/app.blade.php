@@ -27,7 +27,7 @@
         $isCart = $routeName === 'cart';
         $isKategori = in_array($routeName, ['kategori.tumbuhan','kategori.rempah','kategori.buah','kategori.sayuran','kategori.bunga']);
     @endphp
-    <div style="min-height:80vh; margin-top: 0; @if($isHome)padding-top: 24px;@elseif($isCart)padding-top: 0;@else padding-top: 80px;@endif">
+    <div style="min-height:80vh; margin-top: 0; @if($isHome)padding-top: 24px;@else padding-top: 0;@endif">
         @yield('content')
     </div>
     <!-- Bootstrap 5 JS Bundle -->

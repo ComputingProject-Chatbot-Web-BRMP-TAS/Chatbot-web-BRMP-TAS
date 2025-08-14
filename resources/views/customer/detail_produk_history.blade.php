@@ -131,6 +131,44 @@
         </div>
     </div>
 </div>
+
+<!-- Gallery Modal -->
+<div class="modal fade gallery-modal" id="imageGalleryModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content bg-transparent border-0 shadow-none">
+			<button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+			<div class="modal-body p-0">
+				<div id="imageGalleryCarousel" class="carousel slide" data-bs-ride="false">
+					<div class="carousel-inner">
+						@if($productHistory->image1)
+							<div class="carousel-item active">
+								<img src="{{ asset('storage/' . $productHistory->image1) }}" class="d-block w-100" alt="{{ $productHistory->product_name }}">
+							</div>
+						@endif
+						@if($productHistory->image2)
+							<div class="carousel-item">
+								<img src="{{ asset('storage/' . $productHistory->image2) }}" class="d-block w-100" alt="{{ $productHistory->product_name }}">
+							</div>
+						@endif
+						@if($productHistory->image_certificate)
+							<div class="carousel-item">
+								<img src="{{ asset('storage/' . $productHistory->image_certificate) }}" class="d-block w-100" alt="{{ $productHistory->product_name }}">
+							</div>
+						@endif
+					</div>
+					<button class="carousel-control-prev" type="button" data-bs-target="#imageGalleryCarousel" data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Previous</span>
+					</button>
+					<button class="carousel-control-next" type="button" data-bs-target="#imageGalleryCarousel" data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Next</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 @endsection
 
 @push('styles')
@@ -342,6 +380,17 @@
         margin-top: 18px;
     }
 }
+.product-detail-main-image,
+.product-detail-default-image {
+    cursor: zoom-in;
+}
+/* Gallery modal visuals */
+.gallery-modal .modal-body img {
+    max-height: 80vh;
+    object-fit: contain;
+    background: #000;
+}
+.gallery-modal .modal-content { background: rgba(0,0,0,0.06); }
 </style>
 @endpush
 
@@ -366,6 +415,46 @@ function changeImage(thumbElement, imageSrc) {
     });
     thumbElement.classList.add('selected');
 }
+// Image gallery modal logic
+(function() {
+	const galleryImages = [
+		@if($productHistory->image1) '{{ asset('storage/' . $productHistory->image1) }}', @endif
+		@if($productHistory->image2) '{{ asset('storage/' . $productHistory->image2) }}', @endif
+		@if($productHistory->image_certificate) '{{ asset('storage/' . $productHistory->image_certificate) }}', @endif
+	];
+
+	if (galleryImages.length === 0) return;
+
+	const mainImageEl = document.getElementById('mainImage');
+	const modalEl = document.getElementById('imageGalleryModal');
+	const carouselEl = document.getElementById('imageGalleryCarousel');
+	let carouselInstance;
+
+	function ensureCarousel() {
+		if (!carouselInstance) {
+			carouselInstance = new bootstrap.Carousel(carouselEl, { interval: false, ride: false, keyboard: true });
+		}
+	}
+
+	function openGalleryAt(index) {
+		const items = carouselEl.querySelectorAll('.carousel-item');
+		items.forEach((item, i) => {
+			if (i === index) item.classList.add('active'); else item.classList.remove('active');
+		});
+		ensureCarousel();
+		const bsModal = new bootstrap.Modal(modalEl);
+		bsModal.show();
+	}
+
+	if (mainImageEl && mainImageEl.tagName === 'IMG') {
+		mainImageEl.addEventListener('click', function() {
+			const currentSrc = this.getAttribute('src');
+			let idx = galleryImages.findIndex(u => u === currentSrc);
+			if (idx < 0) idx = 0;
+			openGalleryAt(idx);
+		});
+	}
+})();
 </script>
 @endpush
 

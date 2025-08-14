@@ -422,7 +422,7 @@
     object-fit: contain;
     background: #000;
 }
-.gallery-modal .modal-content { background: rgba(0,0,0,0.6); }
+.gallery-modal .modal-content { background: rgba(0,0,0,0.06); }
 </style>
 @endpush
 @push('scripts')
