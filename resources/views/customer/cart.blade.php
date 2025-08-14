@@ -18,7 +18,7 @@
         margin: 0;
         padding: 0;
         background: #f8f9fa;
-        min-height: 100vh;
+        min-height: 50vh;
         color: #222;
         position: relative;
     }
@@ -228,9 +228,10 @@
         max-width: 1200px;
         margin: 60px auto 40px auto;
         display: flex;
-        gap: 40px;
+        gap: 0px;
         align-items: flex-start;
         padding: 0 20px;
+        flex-direction: column;
     }
     
     .cart-left {
@@ -371,7 +372,7 @@
         height: fit-content;
         position: sticky;
         top: 80px;
-        margin-top: 150px;
+        margin-top: 0px;
     }
     
     .cart-summary-title {
@@ -405,6 +406,14 @@
         cursor: not-allowed;
     }
     
+    .cart-row{
+        width:100%;
+        margin-bottom:0px; 
+        display:flex; 
+        flex-direction: row;
+        gap: 20px;
+    }
+
     .btn-hapus {
         background: #fff;
         border: 1.5px solid #e57373;
@@ -590,25 +599,55 @@
 
     <!-- Mobile Cart Items -->
     @if($items->isEmpty())
-        <!-- Desktop Empty State -->
-        <div class="cart-empty-box">
-            <div class="cart-empty-img">
-                <i class="fas fa-box-open" style="color:#ffd600;"></i>
-            </div>
-            <div class="cart-empty-content">
-                <h5>Wah, keranjang belanjamu kosong</h5>
-                <p>Yuk, isi dengan barang-barang impianmu!</p>
-                <a href="/" class="btn-green">Mulai Belanja</a>
-            </div>
-        </div>
-        
         <!-- Mobile Empty State -->
-        <div style="margin: 16px; text-align: center; color: #222;">
-            <i class="fas fa-shopping-cart" style="font-size: 48px; color: #666; margin-bottom: 16px;"></i>
+        <div class="mobile-empty-state">
+            <i class="fas fa-shopping-cart"></i>
             <h3>Keranjang Kosong</h3>
             <p>Belum ada produk di keranjang belanja</p>
-            <a href="/" style="background: #4CAF50; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block; margin-top: 16px;">Mulai Belanja</a>
+            <a href="/" class="btn-green">Mulai Belanja</a>
         </div>
+        <style>
+            .mobile-empty-state {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: calc(100vh - 80px); /* 80px = checkout bar height */
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                color: #222;
+                background: #f8f9fa;
+                z-index: 998;
+                padding-bottom: 80px;
+            }
+            @media (max-width: 480px) {
+                .mobile-empty-state {
+                    height: calc(100vh - 70px); /* 70px = mobile checkout bar height */
+                    padding-bottom: 70px;
+                }
+            }
+            .mobile-empty-state i {
+                font-size: 48px;
+                color: #666;
+                margin-bottom: 16px;
+            }
+            .mobile-empty-state .btn-green {
+                background: #4CAF50;
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                text-decoration: none;
+                display: inline-block;
+                margin-top: 16px;
+                font-weight: 600;
+            }
+            @media (min-width: 900px) {
+                .mobile-empty-state { display: none !important; }
+            }
+        </style>
     @else
         <!-- Mobile Product Items -->
         @foreach($items as $item)
@@ -665,38 +704,65 @@
 
     <!-- Desktop Cart Summary -->
     <div class="cart-main">
-        <div class="cart-left">
+        <div class="cart-row" style="flex-direction: column;">
+            <!-- Tambahkan konten baris di sini jika diperlukan -->
             <!-- Desktop Title -->
-            <div class="cart-title">
+             <div class="cart-title">
                 Keranjang
                 <span style="font-size:1.1rem;font-weight:600;color:#388e3c;margin-left:10px;">
                     ({{ $items->count() }} Benih)
                 </span>
             </div>
-            
             <!-- Desktop Select All -->
-            <div style="margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;">
+            <div style="margin-bottom:0px;display:flex;align-items:flex-start;gap:12px;">
                 <input type="checkbox" id="checkAll" class="checkall-box" onclick="toggleAll(this)" style="margin-top:4px;">
                 <label for="checkAll" class="checkall-label">Pilih Semua</label>
             </div>
-            
+        </div>
+        <div class="cart-row">
+            <!-- Tambahkan konten baris di sini jika diperlukan -->
+            <div class="cart-left">
+                @if($items->isEmpty())
+                <!-- Desktop Empty State (dipindah ke sini) -->
+                <div class="cart-empty-box" id="desktop-empty-state">
+                    <div class="cart-empty-img">
+                        <i class="fas fa-box-open" style="color:#ffd600;"></i>
+                    </div>
+                    <div class="cart-empty-content">
+                        <h5>Wah, keranjang belanjamu kosong</h5>
+                        <p>Yuk, isi dengan barang-barang impianmu!</p>
+                        <a href="/" class="btn-green">Mulai Belanja</a>
+                    </div>
+                </div>
+                <style>
+                    @media (min-width: 900px) {
+                        #desktop-empty-state {
+                            height: calc(32px + 1.2rem + 24px + 20px + 24px + 16px + 20px + 24px + 1.1rem + 150px); /* match cart-summary height */
+                            min-height: 350px;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                        }
+                }
+            </style>
+            @else
             <!-- Desktop Cart Items -->
             @foreach($items as $item)
             @php
-                $availableStock = $item->product->stock - $item->product->minimum_stock;
-                $isOutOfStock = $availableStock <= 0;
-                $isQuantityExceedStock = $item->quantity > $availableStock;
-                $isQuantityBelowMin = $item->quantity < $item->product->minimum_purchase;
+            $availableStock = $item->product->stock - $item->product->minimum_stock;
+            $isOutOfStock = $availableStock <= 0;
+            $isQuantityExceedStock = $item->quantity > $availableStock;
+            $isQuantityBelowMin = $item->quantity < $item->product->minimum_purchase;
             @endphp
             <div class="cart-item-box" style="{{ $isOutOfStock || $isQuantityBelowMin ? 'opacity: 0.7;' : '' }}">
                 <input type="checkbox" class="cart-item-checkbox" name="checked_items[]" value="{{ $item->cart_item_id }}" onchange="updateSummary()" checked {{ $isOutOfStock || $isQuantityBelowMin ? 'disabled' : '' }}>
                 
                 @if($item->product->gambar)
-                    <img src="{{ asset('images/' . $item->product->gambar) }}" alt="{{ $item->product->product_name }}" class="cart-item-image">
+                <img src="{{ asset('images/' . $item->product->gambar) }}" alt="{{ $item->product->product_name }}" class="cart-item-image">
                 @else
-                    <div class="cart-item-image">
-                        <i class="fas fa-seedling"></i>
-                    </div>
+                <div class="cart-item-image">
+                    <i class="fas fa-seedling"></i>
+                </div>
                 @endif
                 
                 <div class="cart-item-content">
@@ -707,17 +773,17 @@
                     </div>
                     
                     @if($isOutOfStock)
-                        <div style="color:#d32f2f;font-weight:500;font-size:0.9rem;margin-bottom:4px;">
-                            <i class="fas fa-exclamation-triangle"></i> Stok habis
-                        </div>
+                    <div style="color:#d32f2f;font-weight:500;font-size:0.9rem;margin-bottom:4px;">
+                        <i class="fas fa-exclamation-triangle"></i> Stok habis
+                    </div>
                     @elseif($isQuantityExceedStock)
-                        <div style="color:#d32f2f;font-size:12px;">
-                            <i class="fas fa-exclamation-triangle"></i> Stok tidak mencukupi (maks: {{ $availableStock }} {{ $item->product->unit }})
-                        </div>
+                    <div style="color:#d32f2f;font-size:12px;">
+                        <i class="fas fa-exclamation-triangle"></i> Stok tidak mencukupi (maks: {{ $availableStock }} {{ $item->product->unit }})
+                    </div>
                     @elseif($isQuantityBelowMin)
-                        <div style="color:#d32f2f;font-size:12px;">
-                            <i class="fas fa-exclamation-triangle"></i> Minimal pembelian: {{ number_format($item->product->minimum_purchase, 0, ',', '') }} {{ $item->product->unit }}
-                        </div>
+                    <div style="color:#d32f2f;font-size:12px;">
+                        <i class="fas fa-exclamation-triangle"></i> Minimal pembelian: {{ number_format($item->product->minimum_purchase, 0, ',', '') }} {{ $item->product->unit }}
+                    </div>
                     @endif
                     
                     <div class="cart-item-price-qty">
@@ -740,6 +806,7 @@
                 </form>
             </div>
             @endforeach
+            @endif
         </div>
         <div class="cart-summary">
             <div class="cart-summary-title">Ringkasan belanja</div>
@@ -754,6 +821,7 @@
             <button class="btn" id="checkoutBtn" type="button" disabled onclick="submitCheckout()">Beli</button>
         </div>
     </div>
+</div>
 
     <!-- Mobile Checkout Bar -->
     <div class="checkout-bar">
