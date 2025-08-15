@@ -46,7 +46,7 @@
             background: #fff;
             border-radius: 16px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            padding: 28px 18px 18px 18px;
+            padding: 18px 18px 18px 18px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -175,10 +175,19 @@
             padding: 3px 10px;
             margin-left: 10px;
         }
-        @media (max-width: 900px) {
+        @media (max-width: 1023px) {
             .profile-main { flex-direction: column; gap: 18px; }
-            .profile-left, .profile-right { width: 100%; max-width: 100%; }
+            .profile-left, .profile-right {
+                width: 90%;
+                max-width: 90%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .profile-left { margin-top: 80px; }
             .profile-right { padding: 18px 8px; }
+            .profile-tabs {
+              display: none !important;
+            }
         }
     </style>
     <div class="profile-tabs">
