@@ -1,9 +1,12 @@
 {{-- resources/views/admin/articles/create.blade.php --}}
 @extends('layouts.admin')
 @section('content')
-<div class="container mt-4">
+<!-- Quill CSS -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+<div class="container" style="margin-top: 100px;">
     <h3>Tambah Artikel</h3>
-    <form action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data" id="articleForm">
         @csrf
         <div class="mb-3">
             <label>Headline</label>
@@ -15,10 +18,23 @@
         </div>
         <div class="mb-3">
             <label>Isi Artikel</label>
-            <textarea name="body" rows="10" class="form-control" required></textarea>
+            <div id="quill-editor" style="height: 300px;">{!! old('body') !!}</div>
+            <input type="hidden" name="body" id="body">
         </div>
         <button class="btn btn-success" type="submit">Simpan</button>
         <a href="{{ route('admin.articles.index') }}" class="btn btn-secondary">Batal</a>
     </form>
 </div>
+
+<!-- Quill JS -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+    var quill = new Quill('#quill-editor', {
+        theme: 'snow'
+    });
+
+    document.getElementById('articleForm').onsubmit = function() {
+        document.getElementById('body').value = quill.root.innerHTML;
+    };
+</script>
 @endsection
