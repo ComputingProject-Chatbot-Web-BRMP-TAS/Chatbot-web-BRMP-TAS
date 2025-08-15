@@ -583,6 +583,10 @@
                 margin-top: 16px;
                 font-weight: 600;
             }
+            .mobile-empty-state { display: none; }
+            @media (max-width: 1023px) {
+                .mobile-empty-state { display: flex; }
+            }
         </style>
     @else
         <!-- Mobile Product Items -->
