@@ -135,7 +135,26 @@
     }
     
     /* Mobile Responsive Styles */
-    @media (max-width: 1200px) {
+    .mobile-search-container,
+    .mobile-menu-toggle,
+    .mobile-cart-btn,
+    .mobile-menu-overlay,
+    .mobile-menu {
+        display: none !important;
+    }
+
+    @media (max-width: 1023px) {
+        .mobile-menu-toggle,
+        .mobile-cart-btn {
+            display: flex !important;
+        }
+        .mobile-menu {
+            display: block !important;
+        }
+        .mobile-search-container {
+            display: flex !important;
+        }
+        
         .navbar {
             padding: 12px 16px;
             height: 64px;
@@ -349,16 +368,6 @@
         }
     }
     
-    @media (min-width: 1201px) {
-        .mobile-search-container,
-        .mobile-menu-toggle,
-        .mobile-cart-btn,
-        .mobile-menu-overlay,
-        .mobile-menu {
-            display: none !important;
-        }
-    }
-    
     .navbar-title {
         font-family: 'Inter', Arial, sans-serif !important;
         font-weight: bold !important;
@@ -436,90 +445,6 @@
         color: #388E3C;
     }
 
-    /* Responsive searchbar untuk tablet dan desktop */
-    @media (min-width: 768px) and (max-width: 1200px) {
-        .searchbar-container {
-            max-width: 100%;
-            margin: 0 8px;
-        }
-
-        .searchbar-container form {
-            min-width: 300px;
-            max-width: 100%;
-            margin: 0;
-        }
-    }
-
-    @media (min-width: 1201px) and (max-width: 1600px) {
-        .searchbar-container {
-            max-width: 100%;
-            margin-left: 20px;
-        }
-
-        .searchbar-container form {
-            min-width: 400px;
-            max-width: 100%;
-            margin: 0;
-        }
-    }
-
-    @media (min-width: 1601px) {
-        .searchbar-container {
-            max-width: 100%;
-            margin: 0 16px;
-        }
-
-        .searchbar-container form {
-            min-width: 500px;
-            max-width: 100%;
-            margin: 0;
-        }
-    }
-
-    /* Responsive searchbar untuk mobile */
-    @media (max-width: 768px) {
-        .searchbar-container {
-            max-width: 100%;
-            margin: 0 8px;
-        }
-
-        .searchbar-container form {
-            min-width: 80px;
-            max-width: 100%;
-            margin: 0;
-        }
-
-        .searchbar-container input[type="text"] {
-            font-size: 14px;
-            padding: 6px 32px 6px 10px;
-            height: 36px;
-        }
-
-        .searchbar-container button[type="submit"] {
-            padding: 0 12px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .searchbar-container {
-            margin: 0 4px;
-        }
-
-        .searchbar-container form {
-            min-width: 60px;
-        }
-
-        .searchbar-container input[type="text"] {
-            font-size: 13px;
-            padding: 6px 28px 6px 8px;
-            height: 34px;
-        }
-
-        .searchbar-container button[type="submit"] {
-            padding: 0 8px;
-        }
-    }
-
     /* Mobile searchbar container */
     .mobile-search-container .searchbar-container {
         flex: 1;
@@ -559,49 +484,6 @@
     .mobile-search-container .searchbar-container .fa-search {
         color: #388E3C;
         font-size: 16px;
-    }
-
-    /* Responsive mobile searchbar */
-    @media (max-width: 768px) {
-        .mobile-search-container .searchbar-container {
-            margin: 0 8px;
-            margin-bottom: 15px;
-        }
-
-        .mobile-search-container .searchbar-container input[type="text"] {
-            font-size: 13px;
-            padding: 6px 36px 6px 10px;
-            height: 38px;
-        }
-
-        .mobile-search-container .searchbar-container button[type="submit"] {
-            padding: 0 10px;
-        }
-
-        .mobile-search-container .searchbar-container .fa-search {
-            font-size: 14px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .mobile-search-container .searchbar-container {
-            margin: 0 4px;
-            margin-bottom: 15px;
-        }
-
-        .mobile-search-container .searchbar-container input[type="text"] {
-            font-size: 12px;
-            padding: 6px 32px 6px 8px;
-            height: 36px;
-        }
-
-        .mobile-search-container .searchbar-container button[type="submit"] {
-            padding: 0 8px;
-        }
-
-        .mobile-search-container .searchbar-container .fa-search {
-            font-size: 13px;
-        }
     }
 
     .navbar-login-btn {

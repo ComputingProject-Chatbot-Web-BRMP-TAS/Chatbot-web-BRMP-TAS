@@ -8,7 +8,7 @@
         gap: 0;
         border-bottom: 2px solid #e0e0e0;
         margin-bottom: 24px;
-        margin-top: -20px;
+        margin-top: 60px;
         justify-content: flex-start;
         position: relative;
         z-index: 100;
@@ -42,9 +42,16 @@
     }
 
     /* Tambah margin-top untuk container agar tidak tenggelam dengan appbar */
-    @media (max-width: 900px) {
+    @media (max-width: 1024px) {
         .addresses-container {
             margin-top: 16px;
+            padding: 18px 8px;
+        }
+        .profile-tabs { 
+            margin-top: 0px; 
+            flex-direction: row; /* Tetap horizontal di tablet */
+            gap: 0;
+            border-bottom: 2px solid #e0e0e0;
         }
     }
     .btn-add-address {
@@ -99,10 +106,6 @@
     .address-card-primary {
         border: 2px solid #4CAF50;
         background: #f6fff6;
-    }
-    @media (max-width: 900px) {
-        .addresses-container { padding: 18px 8px; }
-        .profile-tabs { margin-top: 0px; }
     }
 
     /* Responsive CSS untuk mobile */
@@ -206,6 +209,7 @@
             margin-top: -20px; /* Lebih kecil agar tidak terlalu jauh dari appbar */
             flex-direction: row; /* Tetap horizontal */
         }
+        
         
         .profile-tab {
             padding: 8px 12px;

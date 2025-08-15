@@ -471,7 +471,6 @@
     }
     
     /* Responsive breakpoints */
-    @media (min-width: 900px) {
         .cart-container {
             background: #f8f9fa;
             color: #222;
@@ -501,9 +500,8 @@
         .checkall-label {
             display: flex !important;
         }
-    }
     
-    @media (max-width: 899px) {
+    @media (max-width: 1023px) {
         .cart-main,
         .cart-title,
         .cart-item-box,
@@ -525,59 +523,6 @@
         .cart-container {
             padding-bottom: 100px;
             padding-top: 65px; /* Adjusted for mobile header */
-        }
-    }
-    
-    /* Mobile responsive adjustments */
-    @media (max-width: 480px) {
-        .product-section {
-            margin: 12px 12px 12px 12px; /* Margin normal, margin-top diatur di .cart-container */
-        }
-        
-        .product-card {
-            padding: 12px;
-            gap: 12px;
-        }
-        
-        .product-image {
-            width: 70px;
-            height: 70px;
-        }
-        
-        .checkout-bar {
-            padding: 12px;
-            height: 70px; /* Smaller height for mobile */
-        }
-        
-        /* Adjust bottom padding for smaller checkout bar */
-        .cart-container {
-            padding-bottom: 80px;
-        }
-        .page-title {
-            font-size: 16px;
-        }
-        .back-btn, .wishlist-btn {
-            font-size: 20px;
-            padding: 4px;
-        }
-        .product-section {
-            margin: 12px 8px 12px 8px;
-        }
-        .product-card {
-            padding: 10px;
-            gap: 10px;
-        }
-        .product-image {
-            width: 60px;
-            height: 60px;
-        }
-        .checkout-bar {
-            padding: 8px;
-            height: 60px;
-        }
-        .cart-container {
-            padding-top: 70px;
-            padding-bottom: 70px;
         }
     }
 </style>
@@ -623,12 +568,6 @@
                 z-index: 998;
                 padding-bottom: 80px;
             }
-            @media (max-width: 480px) {
-                .mobile-empty-state {
-                    height: calc(100vh - 70px); /* 70px = mobile checkout bar height */
-                    padding-bottom: 70px;
-                }
-            }
             .mobile-empty-state i {
                 font-size: 48px;
                 color: #666;
@@ -643,9 +582,6 @@
                 display: inline-block;
                 margin-top: 16px;
                 font-weight: 600;
-            }
-            @media (min-width: 900px) {
-                .mobile-empty-state { display: none !important; }
             }
         </style>
     @else
@@ -689,13 +625,16 @@
                     <button class="delete-btn" onclick="deleteItem({{ $item->cart_item_id }})">
                         <i class="fas fa-trash"></i>
                     </button>
-                    <input type="text" 
-                           class="quantity-display mobile-qty-input" 
-                           value="{{ $item->quantity }}" 
-                           min="{{ $item->product->minimum_purchase }}" 
-                           max="{{ $availableStock }}"
-                           onchange="updateQtyMobile({{ $item->cart_item_id }}, {{ $item->product->minimum_purchase }})"
-                           {{ $isOutOfStock || $isQuantityBelowMin ? 'disabled' : '' }}>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="text" 
+                               class="quantity-display mobile-qty-input" 
+                               value="{{ $item->quantity }}" 
+                               min="{{ $item->product->minimum_purchase }}" 
+                               max="{{ $availableStock }}"
+                               onchange="updateQtyMobile({{ $item->cart_item_id }}, {{ $item->product->minimum_purchase }})"
+                               {{ $isOutOfStock || $isQuantityBelowMin ? 'disabled' : '' }}>
+                        <span style="font-size: 14px; color: #222;">{{ $item->product->unit }}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -734,17 +673,6 @@
                         <a href="/" class="btn-green">Mulai Belanja</a>
                     </div>
                 </div>
-                <style>
-                    @media (min-width: 900px) {
-                        #desktop-empty-state {
-                            height: calc(32px + 1.2rem + 24px + 20px + 24px + 16px + 20px + 24px + 1.1rem + 150px); /* match cart-summary height */
-                            min-height: 350px;
-                            display: flex;
-                            flex-direction: column;
-                            justify-content: center;
-                        }
-                }
-            </style>
             @else
             <!-- Desktop Cart Items -->
             @foreach($items as $item)
@@ -827,7 +755,7 @@
     <div class="checkout-bar">
         <div class="select-all-section">
             <input type="checkbox" id="checkAllMobile" class="select-all-checkbox" onchange="toggleAllMobile(this)">
-            <span class="select-all-text">Semua</span>
+            <span class="select-all-text">Pilih Semua</span>
         </div>
         <div class="total-section">
             <div class="total-price" id="mobileTotalPrice">Rp{{ number_format($total,0,',','.') }}</div>
