@@ -14,8 +14,8 @@
             <input type="file" name="image" class="form-control">
         </div>
         <div class="mb-3">
-            <label>Isi Artikel3</label>
-            <textarea name="body" rows="5" class="form-control" required></textarea>
+            <label>Isi Artikel</label>
+            <textarea name="body" rows="10" class="form-control" required></textarea>
         </div>
         <button class="btn btn-success" type="submit">Simpan</button>
         <a href="{{ route('admin.articles.index') }}" class="btn btn-secondary">Batal</a>
