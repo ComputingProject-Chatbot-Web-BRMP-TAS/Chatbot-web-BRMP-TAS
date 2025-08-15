@@ -4,7 +4,7 @@
 <!-- Quill CSS -->
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
-<div class="container mt-4">
+<div class="container" style="margin-top: 100px;">
     <h3>Edit Artikel</h3>
     <form action="{{ route('admin.articles.update', $article) }}" method="POST" enctype="multipart/form-data" id="articleForm">
         @csrf
@@ -22,10 +22,6 @@
             @endif
             <input type="file" name="image" class="form-control">
         </div>
-        <!-- <div class="mb-3">
-            <label>Tanggal Artikel</label>
-            <textarea name="description" rows="3" class="form-control" required>{{ old('description', $article->description) }}</textarea>
-        </div> -->
         <div class="mb-3">
             <label>Isi Artikel</label>
             <div id="quill-editor" style="height: 300px;">{!! old('body', $article->body) !!}</div>
