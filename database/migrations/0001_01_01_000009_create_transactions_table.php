@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('order_status');
             $table->string('delivery_method');
             $table->dateTime('order_date');
+            $table->dateTime('done_date')->nullable();
             $table->dateTime('estimated_delivery_date')->nullable();
             $table->timestamps();
         });

@@ -11,6 +11,8 @@ class Complaint extends Model
     protected $primaryKey = 'complaint_id';
     protected $fillable = [
         'user_id',
+        'transaction_id',
+        'complaint_types',
         'description',
         'photo_proof',
     ];

@@ -11,12 +11,18 @@ class ComplaintController extends Controller
 {
     public function create()
     {
+        $transactions = \App\Models\Transaction::where('user_id', Auth::id())->orderByDesc('created_at')->get();
+        $finishedTransactions = \App\Models\Transaction::where('user_id', Auth::id())->where('order_status', 'selesai')->orderByDesc('created_at')->get();
+        return view('customer.form_complaint', compact('transactions', 'finishedTransactions'));
+
         return view('customer.form_complaint');
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'complaint_types' => 'required|string',
+            'transaction_id' => 'required|exists:transactions,transaction_id',
             'description' => 'required|string|max:1000',
             'photo_proof' => 'required|image|mimes:jpg,jpeg,png|max:10240',
         ]);

@@ -7,8 +7,10 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('complaints', function (Blueprint $table) {
+            $table->foreignId('transaction_id')->constrained('transactions', 'transaction_id')->onDelete('cascade');
             $table->id('complaint_id');
             $table->foreignId('user_id')->constrained('users', 'user_id')->onDelete('cascade');
+            $table->string('complaint_types');
             $table->text('description');
             $table->string('photo_proof');
             $table->timestamps();
