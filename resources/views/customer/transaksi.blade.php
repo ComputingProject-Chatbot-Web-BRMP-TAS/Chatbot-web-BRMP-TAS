@@ -422,10 +422,11 @@
         pointer-events: none;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1023px) {
+        
         .transaksi-container {
-            padding: 24px 16px;
-            margin: 40px 16px 0 16px;
+            width: 90%;
+            max-width: 90%;
         }
 
         .transaksi-title {
@@ -452,32 +453,6 @@
 
         .transaksi-filters select {
             min-width: 100%;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .transaksi-container {
-            padding: 20px 12px;
-            margin: 20px 8px 0 8px;
-        }
-
-        .transaksi-title {
-            font-size: 1.4rem;
-        }
-
-        .transaksi-card {
-            padding: 16px 12px;
-        }
-
-        .transaksi-card .transaksi-row {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 8px;
-        }
-
-        .transaksi-status {
-            margin-left: 0 !important;
-            text-align: center;
         }
     }
 </style>
