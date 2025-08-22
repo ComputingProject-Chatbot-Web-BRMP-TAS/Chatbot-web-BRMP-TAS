@@ -21,6 +21,8 @@
                             <th>Nama</th>
                             <th>No. Telepon</th>
                             <th>Deskripsi</th>
+                            <th>Tipe Komplain</th> <!-- Tambahan -->
+                            <th>Transaction ID</th> <!-- Tambahan -->
                             <th>Bukti Gambar</th>
                             <th>Tanggal</th>
                             <th>Aksi</th>
@@ -33,6 +35,8 @@
                             <td>{{ $complaint->user->name ?? '-' }}</td>
                             <td>{{ $complaint->user->phone ?? '-' }}</td>
                             <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $complaint->description }}</td>
+                            <td>{{ $complaint->complaint_types ?? '-' }}</td> <!-- Tipe Komplain -->
+                            <td>{{ $complaint->transaction_id ?? '-' }}</td> <!-- Transaction ID -->
                             <td>
                                 @if($complaint->photo_proof)
                                     <img src="{{ asset('storage/'.$complaint->photo_proof) }}" alt="Bukti" style="width:48px;height:48px;object-fit:cover;border-radius:8px;" data-bs-toggle="modal" data-bs-target="#imageModal{{ $complaint->complaint_id }}">
@@ -66,7 +70,7 @@
                         @endif
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center py-4">
+                            <td colspan="9" class="text-center py-4">
                                 <div class="text-muted">
                                     <i class="fas fa-inbox fa-3x mb-3"></i>
                                     <p>Tidak ada komplain yang ditemukan</p>

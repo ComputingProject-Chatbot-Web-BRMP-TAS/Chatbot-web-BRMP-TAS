@@ -25,6 +25,33 @@
             </div>
             
             <div class="mb-4">
+                <h5 class="text-primary mb-3">Transaksi</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Tipe Komplain:</strong> {{ $complaint->complaint_types ?? '-' }}</p>
+                        <p><strong>Transaction ID:</strong> {{ $complaint->transaction_id ?? '-' }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Produk & Quantity:</strong>
+                        @php
+                            $transaction = \App\Models\Transaction::with('transactionItems.product')->find($complaint->transaction_id);
+                        @endphp
+                        @if($transaction && $transaction->transactionItems->count())
+                            <ul class="mb-0">
+                                @foreach($transaction->transactionItems as $item)
+                                    <li>
+                                        {{ $item->product->product_name ?? 'Produk #' . $item->product_id }} - {{ number_format($item->quantity, 2) }} Kg
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <span class="text-muted">Tidak ada data produk</span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4">
                 <h5 class="text-primary mb-3">Deskripsi Komplain</h5>
                 <div class="p-3 bg-light rounded">
                     {{ $complaint->description }}

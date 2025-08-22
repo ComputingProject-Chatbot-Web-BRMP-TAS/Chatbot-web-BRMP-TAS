@@ -275,9 +275,20 @@ class AdminDashboardController extends Controller
     
     public function updateTransactionStatus(Request $request, $id)
     {
-        $transaction = Transaction::where('transaction_id', $id)->firstOrFail();
-        $transaction->order_status = $request->status;
-        $transaction->save();
+        $trx = Transaction::findOrFail($id);
+        $newStatus = $request->input('status');
+
+        // Jika status berubah ke selesai dan sebelumnya belum selesai, isi done_date
+        if ($newStatus === 'selesai' && $trx->order_status !== 'selesai') {
+            $trx->done_date = now();
+        }
+        // Jika status berubah ke selain selesai, kosongkan done_date
+        elseif ($newStatus !== 'selesai') {
+            $trx->done_date = null;
+        }
+
+        $trx->order_status = $newStatus;
+        $trx->save();
         
         return redirect()->back()->with('success', 'Status transaksi berhasil diperbarui');
     }

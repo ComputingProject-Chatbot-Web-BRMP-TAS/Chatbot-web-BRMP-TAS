@@ -94,8 +94,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($finishedTransactions as $transaction)
-                                            <tr>
+                                        @foreach($finishedTransactions as $transaction)
+                                            @php
+                                                $canComplain = $transaction->done_date && \Carbon\Carbon::parse($transaction->done_date)->diffInDays(now()) < 30;
+                                                $daysLeft = $transaction->done_date ? 30 - \Carbon\Carbon::parse($transaction->done_date)->diffInDays(now()) : null;
+                                            @endphp
+                                            <tr @if(!$canComplain) style="background-color: #f1f1f1; color: #888;" @endif>
                                                 <td>
                                                     @if($transaction->transactionItems && count($transaction->transactionItems))
                                                         <ul class="list-unstyled mb-0">
@@ -116,14 +120,23 @@
                                                 <td>{{ $transaction->created_at->format('d M Y') }}</td>
                                                 <td>Rp{{ number_format($transaction->total_price,0,',','.') }}</td>
                                                 <td>
-                                                    <button type="button" class="btn btn-success btn-sm pilih-transaksi-btn"
-                                                        data-id="{{ $transaction->transaction_id }}"
-                                                        data-info="@foreach($transaction->transactionItems as $item){{ $item->product->product_name }} {{ number_format($item->quantity, 2) }} Kg{{ !$loop->last ? ', ' : '' }}@endforeach | {{ $transaction->created_at->format('d M Y') }} | Rp{{ number_format($transaction->total_price,0,',','.') }}">
-                                                        Pilih
-                                                    </button>
+                                                    @if($canComplain)
+                                                        <button type="button" class="btn btn-success btn-sm pilih-transaksi-btn"
+                                                            data-id="{{ $transaction->transaction_id }}"
+                                                            data-info="@foreach($transaction->transactionItems as $item){{ $item->product->product_name }} {{ number_format($item->quantity, 2) }} Kg{{ !$loop->last ? ', ' : '' }}@endforeach | {{ $transaction->created_at->format('d M Y') }} | Rp{{ number_format($transaction->total_price,0,',','.') }}">
+                                                            Pilih
+                                                        </button>
+                                                    @else
+                                                        <button type="button" class="btn btn-secondary btn-sm" disabled>
+                                                            Pilih
+                                                        </button>
+                                                        <div class="text-muted small mt-1">
+                                                            Sudah lewat 30 hari, tidak bisa komplain<br>
+                                                        </div>
+                                                    @endif
                                                 </td>
                                             </tr>
-                                            @endforeach
+                                        @endforeach
                                         </tbody>
                                     </table>
                                 </div>

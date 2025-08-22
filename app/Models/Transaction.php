@@ -12,6 +12,7 @@ class Transaction extends Model
     protected $casts = [
         'order_date' => 'datetime',
         'estimated_delivery_date' => 'date',
+        'done_date' => 'datetime',
     ];
     
     protected $fillable = [
@@ -29,6 +30,7 @@ class Transaction extends Model
         'order_status',
         'delivery_method',
         'estimated_delivery_date',
+        'done_date',
     ];
 
     public function user()
