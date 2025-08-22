@@ -91,6 +91,7 @@
                         {{ session('success') }}
                     </div>
                 @endif
+                <!-- Mobile -->
                 <div class="bar-pesan">
                     <div>
                         <div>Stok: {{ $availableStock }} {{ $product->unit }}
@@ -115,7 +116,6 @@
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                {{-- Isi form seperti sebelumnya --}}
                                 @if ($isOutOfStock)
                                     <div style="text-align: center; padding: 20px; color: #d32f2f; font-weight: 500;">
                                         <i class="fas fa-exclamation-triangle"
@@ -125,11 +125,11 @@
                                     </div>
                                 @else
                                     <form method="POST"
-                                        action="{{ Auth::check() ? route('cart.add', $product->product_id) : route('login') }}"
-                                        id="addToCartFormMobile">
+                                        action="{{route('cart.add', $product->product_id)}}"
+                                        class="addToCartForm">
                                         @csrf
                                         <div class="product-detail-card-qty">
-                                            <input type="text" id="qtyInput" name="quantity" value=""
+                                            <input type="text" class="qtyInput" name="quantity" value=""
                                                 placeholder="0" min="{{ $product->minimum_purchase }}"
                                                 max="{{ $availableStock }}"
                                                 style="width:60px;text-align:center;background:#fff;">
@@ -137,23 +137,23 @@
                                             <span style="margin-left:8px;color:#d32f2f;font-size:0.9rem;">*Minimal Pembelian
                                                 {{ number_format($product->minimum_purchase, 0, ',', '') }}{{ $product->unit }}</span>
                                         </div>
-                                        <div id="stockWarning"
+                                        <div class="stockWarning"
                                             style="color:#d32f2f;font-size:0.98rem;display:none;margin-bottom:8px;">
                                             <i class="fas fa-exclamation-triangle" style="margin-right:4px;"></i>
                                             Stok tidak mencukupi
                                         </div>
-                                        <div id="minPurchaseWarning"
+                                        <div class="minPurchaseWarning"
                                             style="color:#d32f2f;font-size:0.98rem;display:none;margin-bottom:8px;">
                                             <i class="fas fa-exclamation-triangle" style="margin-right:4px;"></i>
                                             Minimal pembelian tidak terpenuhi
                                         </div>
                                         <div class="product-detail-card-subtotal">
                                             Subtotal
-                                            <span id="subtotal">Rp0</span>
+                                            <span class="subtotal">Rp0</span>
                                         </div>
-                                        <button class="btn-green w-100"
+                                        <button class="btn-green w-100 addToCartBtn"
                                             style="margin-bottom:10px;opacity:0.6;cursor:not-allowed;background:#ccc !important;color:#666 !important;"
-                                            type="submit" id="addToCartBtn" disabled>+ Keranjang</button>
+                                            type="submit" disabled>+ Keranjang</button>
                                     </form>
                                 @endif
                             </div>
@@ -170,34 +170,34 @@
                         </div>
                     @else
                         <form method="POST"
-                            action="{{ Auth::check() ? route('cart.add', $product->product_id) : route('login') }}"
-                            id="addToCartForm">
+                            action="{{route('cart.add', $product->product_id)}}"
+                            class="addToCartForm">
                             @csrf
                             <div class="product-detail-card-qty">
-                                <input type="text" id="qtyInput" name="quantity" value="" placeholder="0"
+                                <input type="text" class="qtyInput" name="quantity" value="" placeholder="0"
                                     min="{{ $product->minimum_purchase }}" max="{{ $availableStock }}"
                                     style="width:60px;text-align:center;background:#fff;">
                                 <span style="margin-left:8px;">{{ $product->unit }}</span>
                                 <span style="margin-left:8px;color:#d32f2f;font-size:0.9rem;">*Minimal Pembelian
                                     {{ number_format($product->minimum_purchase, 0, ',', '') }}{{ $product->unit }}</span>
                             </div>
-                            <div id="stockWarning"
+                            <div class="stockWarning"
                                 style="color:#d32f2f;font-size:0.98rem;display:none;margin-bottom:8px;">
                                 <i class="fas fa-exclamation-triangle" style="margin-right:4px;"></i>
                                 Stok tidak mencukupi
                             </div>
-                            <div id="minPurchaseWarning"
+                            <div class="minPurchaseWarning"
                                 style="color:#d32f2f;font-size:0.98rem;display:none;margin-bottom:8px;">
                                 <i class="fas fa-exclamation-triangle" style="margin-right:4px;"></i>
                                 Minimal pembelian tidak terpenuhi
                             </div>
                             <div class="product-detail-card-subtotal">
                                 Subtotal
-                                <span id="subtotal">Rp0</span>
+                                <span class="subtotal">Rp0</span>
                             </div>
-                            <button class="btn-green w-100"
+                            <button class="btn-green w-100 addToCartBtn"
                                 style="margin-bottom:10px;opacity:0.6;cursor:not-allowed;background:#ccc !important;color:#666 !important;"
-                                type="submit" id="addToCartBtn" disabled>+ Keranjang</button>
+                                type="submit" disabled>+ Keranjang</button>
                         </form>
                     @endif
                 </div>
@@ -670,261 +670,157 @@
     </style>
 @endpush
 @push('scripts')
+@push('scripts')
     <script>
         function changeImage(thumbElement, imageSrc) {
             const mainImageContainer = document.getElementById('mainImage');
-
+            
             if (imageSrc === 'default') {
-                // Show default image
-                mainImageContainer.innerHTML = '<i class="fas fa-seedling"></i>';
+                mainImageContainer.src = '{{ asset('path/to/default/image.jpg') }}'; // Ganti dengan path gambar default jika ada
                 mainImageContainer.className = 'product-detail-default-image';
             } else {
-                // Show actual image
                 mainImageContainer.src = imageSrc;
                 mainImageContainer.className = 'product-detail-main-image';
             }
-
-            // Update selected thumbnail
+            
             document.querySelectorAll('.product-detail-thumbs img, .product-detail-thumbs .product-detail-thumb-default')
                 .forEach(thumb => {
                     thumb.classList.remove('selected');
                 });
             thumbElement.classList.add('selected');
         }
+
+        // --- Logika untuk Form Tambah ke Keranjang ---
         @if (!$isOutOfStock)
-            function updateSubtotal() {
-                let qty = parseFloat(document.getElementById('qtyInput').value.replace(',', '.')) || 0;
-                let harga = {{ $product->price_per_unit }};
-                let availableStock = {{ $availableStock }};
-                let minimumPurchase = {{ $product->minimum_purchase }};
-
-                // Reset semua warning
-                document.getElementById('stockWarning').style.display = 'none';
-                document.getElementById('minPurchaseWarning').style.display = 'none';
-
-                // Jika quantity kosong atau 0
-                if (qty === 0 || document.getElementById('qtyInput').value.trim() === '') {
-                    document.getElementById('subtotal').innerText = 'Rp0';
-                    const addToCartBtn = document.getElementById('addToCartBtn');
-                    addToCartBtn.disabled = true;
-                    addToCartBtn.style.opacity = '0.6';
-                    addToCartBtn.style.cursor = 'not-allowed';
-                    return;
+            document.addEventListener('DOMContentLoaded', function() {
+                const forms = document.querySelectorAll('.addToCartForm');
+                forms.forEach(button => {
+            button.addEventListener('click', function(e) {
+                const isUserLoggedIn = @json(Auth::check());
+                if (!isUserLoggedIn) {
+                    e.preventDefault(); 
+                    window.location.href = '{{ route('login') }}';
                 }
+            });
+        });
+                const unitProduk = @json($product->unit);
+                const minimumPurchase = {{ $product->minimum_purchase }};
+                const availableStock = {{ $availableStock }};
 
-                // Validasi minimal pembelian
-                if (qty < minimumPurchase) {
-                    document.getElementById('minPurchaseWarning').style.display = 'block';
-                    document.getElementById('minPurchaseWarning').innerText = 'Minimal pembelian: ' +
-                        {{ number_format($product->minimum_purchase, 0, ',', '') }} + ' {{ $product->unit }}';
-                    // Jangan otomatis set ke minimal pembelian, biarkan user input manual
-                    // qty = minimumPurchase;
-                    // document.getElementById('qtyInput').value = qty;
-                }
+                forms.forEach(form => {
+                    const qtyInput = form.querySelector('.qtyInput');
+                    const subtotalSpan = form.querySelector('.subtotal');
+                    const addToCartBtn = form.querySelector('.addToCartBtn');
+                    const stockWarning = form.querySelector('.stockWarning');
+                    const minPurchaseWarning = form.querySelector('.minPurchaseWarning');
 
-                // Validasi stok
-                if (qty > availableStock) {
-                    document.getElementById('stockWarning').style.display = 'block';
-                    document.getElementById('stockWarning').innerText = 'Stok tidak mencukupi. Maksimal: ' +
-                        availableStock + ' {{ $product->unit }}';
-                    qty = availableStock;
-                    document.getElementById('qtyInput').value = qty;
-                }
+                    const updateSubtotal = () => {
+                        let qty = parseFloat(qtyInput.value.replace(',', '.')) || 0;
+                        let harga = {{ $product->price_per_unit }};
 
-                document.getElementById('subtotal').innerText = 'Rp' + (harga * qty).toLocaleString('id-ID');
+                        // Reset warnings
+                        if (stockWarning) stockWarning.style.display = 'none';
+                        if (minPurchaseWarning) minPurchaseWarning.style.display = 'none';
 
-                // Disable/enable tombol berdasarkan validasi
-                const addToCartBtn = document.getElementById('addToCartBtn');
-                if (qty < minimumPurchase || qty > availableStock || qty === 0) {
-                    addToCartBtn.disabled = true;
-                    addToCartBtn.style.opacity = '0.6';
-                    addToCartBtn.style.cursor = 'not-allowed';
-                    addToCartBtn.style.background = '#ccc';
-                    addToCartBtn.style.color = '#666';
-                } else {
-                    addToCartBtn.disabled = false;
-                    addToCartBtn.style.opacity = '1';
-                    addToCartBtn.style.cursor = 'pointer';
-                    addToCartBtn.style.background = '#388e3c';
-                    addToCartBtn.style.color = '#fff';
-                }
-            }
-
-            const unitProduk = @json($product->unit);
-            const qtyInput = document.getElementById('qtyInput');
-            const minimumPurchase = {{ $product->minimum_purchase }};
-            const availableStock = {{ $availableStock }};
-
-            if (["Mata", "Tanaman", "Rizome"].includes(unitProduk)) {
-                qtyInput.setAttribute('type', 'number');
-                qtyInput.setAttribute('step', '1');
-                qtyInput.setAttribute('min', minimumPurchase);
-                qtyInput.setAttribute('max', availableStock);
-                qtyInput.addEventListener('input', function(e) {
-                    let val = this.value;
-                    if (val !== "") {
-                        val = parseInt(val, 10);
-                        if (isNaN(val)) {
-                            this.value = "";
-                        } else if (val > availableStock) {
-                            val = availableStock;
-                            this.value = val;
+                        if (qty === 0 || qtyInput.value.trim() === '') {
+                            subtotalSpan.innerText = 'Rp0';
+                            if (addToCartBtn) {
+                                addToCartBtn.disabled = true;
+                                addToCartBtn.style.opacity = '0.6';
+                                addToCartBtn.style.cursor = 'not-allowed';
+                                addToCartBtn.style.background = '#ccc';
+                                addToCartBtn.style.color = '#666';
+                            }
+                            return;
                         }
-                    }
-                    updateSubtotal();
-                });
-                qtyInput.addEventListener('blur', function(e) {
-                    if (this.value === "" || isNaN(this.value)) {
-                        this.value = "";
-                        updateSubtotal();
-                    }
-                });
-            } else {
-                qtyInput.setAttribute('min', minimumPurchase);
-                qtyInput.setAttribute('max', availableStock);
-                qtyInput.addEventListener('input', function(e) {
-                    updateSubtotal();
-                });
-                qtyInput.addEventListener('blur', function(e) {
-                    let val = this.value.replace(',', '.');
-                    if (val === "" || isNaN(val)) {
-                        this.value = "";
-                    } else {
-                        val = parseFloat(val);
-                        if (val > availableStock) {
-                            val = availableStock;
-                            this.value = val;
+
+                        let isValid = true;
+
+                        if (qty < minimumPurchase) {
+                            if (minPurchaseWarning) minPurchaseWarning.style.display = 'block';
+                            isValid = false;
                         }
+
+                        if (qty > availableStock) {
+                            if (stockWarning) stockWarning.style.display = 'block';
+                            isValid = false;
+                        }
+
+                        subtotalSpan.innerText = 'Rp' + (harga * qty).toLocaleString('id-ID');
+                        
+                        if (addToCartBtn) {
+                            addToCartBtn.disabled = !isValid;
+                            addToCartBtn.style.opacity = isValid ? '1' : '0.6';
+                            addToCartBtn.style.cursor = isValid ? 'pointer' : 'not-allowed';
+                            addToCartBtn.style.background = isValid ? '#388e3c' : '#ccc';
+                            addToCartBtn.style.color = isValid ? '#fff' : '#666';
+                        }
+                    };
+
+                    if (qtyInput) {
+                        qtyInput.addEventListener('input', updateSubtotal);
+                        qtyInput.addEventListener('blur', updateSubtotal);
                     }
+                    
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
+                            let qty = parseFloat(qtyInput.value.replace(',', '.')) || 0;
+
+                            if (qty === 0 || qtyInput.value.trim() === '') {
+                                e.preventDefault();
+                                alert('Silakan masukkan jumlah yang ingin dibeli');
+                                return false;
+                            }
+                            
+                            if (qty < minimumPurchase) {
+                                e.preventDefault();
+                                alert('Minimal pembelian: ' + minimumPurchase + ' ' + unitProduk);
+                                return false;
+                            }
+                            
+                            if (qty > availableStock) {
+                                e.preventDefault();
+                                alert('Stok tidak mencukupi. Maksimal: ' + availableStock + ' ' + unitProduk);
+                                return false;
+                            }
+                        });
+                    }
+
+                    // Panggil saat halaman dimuat
                     updateSubtotal();
                 });
-            }
-
-            // Inisialisasi subtotal saat halaman dimuat
-            updateSubtotal();
-
-            // Validasi form submission
-            document.getElementById('addToCartForm').addEventListener('submit', function(e) {
-                let qty = parseFloat(document.getElementById('qtyInput').value.replace(',', '.')) || 0;
-                let minimumPurchase = {{ $product->minimum_purchase }};
-                let availableStock = {{ $availableStock }};
-
-                if (qty === 0 || document.getElementById('qtyInput').value.trim() === '') {
-                    e.preventDefault();
-                    alert('Silakan masukkan jumlah yang ingin dibeli');
-                    return false;
-                }
-
-                if (qty < minimumPurchase) {
-                    e.preventDefault();
-                    alert('Minimal pembelian: ' + {{ number_format($product->minimum_purchase, 0, ',', '') }} +
-                        ' {{ $product->unit }}');
-                    return false;
-                }
-
-                if (qty > availableStock) {
-                    e.preventDefault();
-                    alert('Stok tidak mencukupi. Maksimal: ' + availableStock + ' {{ $product->unit }}');
-                    return false;
-                }
             });
         @endif
+        
+        // --- Logika untuk Modal ---
+        const openDetailCardBtn = document.getElementById('openDetailCardBtn');
+        const productDetailCardModal = document.getElementById('productDetailCardModal');
 
-        // Image gallery modal logic
-        (function() {
-            const galleryImages = [
-                @if ($product->image1)
-                    '{{ asset('storage/' . $product->image1) }}',
-                @endif
-                @if ($product->image2)
-                    '{{ asset('storage/' . $product->image2) }}',
-                @endif
-                @if ($product->image_certificate)
-                    '{{ asset('storage/' . $product->image_certificate) }}',
-                @endif
-            ];
-
-            if (galleryImages.length === 0) return;
-
-            const mainImageEl = document.getElementById('mainImage');
-            const modalEl = document.getElementById('imageGalleryModal');
-            const carouselEl = document.getElementById('imageGalleryCarousel');
-            let carouselInstance;
-
-            function ensureCarousel() {
-                if (!carouselInstance) {
-                    carouselInstance = new bootstrap.Carousel(carouselEl, {
-                        interval: false,
-                        ride: false,
-                        keyboard: true
-                    });
-                }
-            }
-
-            function openGalleryAt(index) {
-                const items = carouselEl.querySelectorAll('.carousel-item');
-                items.forEach((item, i) => {
-                    if (i === index) item.classList.add('active');
-                    else item.classList.remove('active');
-                });
-                ensureCarousel();
-                const bsModal = new bootstrap.Modal(modalEl);
-                bsModal.show();
-            }
-
-            if (mainImageEl && mainImageEl.tagName === 'IMG') {
-                mainImageEl.addEventListener('click', function() {
-                    const currentSrc = this.getAttribute('src');
-                    let idx = galleryImages.findIndex(u => u === currentSrc);
-                    if (idx < 0) idx = 0;
-                    openGalleryAt(idx);
-                });
-            }
-
-            // SWIPE SUPPORT
-            let startX = null;
-            let threshold = 50; // minimal swipe distance in px
-
-            carouselEl.addEventListener('touchstart', function(e) {
-                if (e.touches.length === 1) {
-                    startX = e.touches[0].clientX;
+        if (openDetailCardBtn && productDetailCardModal) {
+            openDetailCardBtn.addEventListener('click', function() {
+                const isUserLoggedIn = @json(Auth::check());
+                if (isUserLoggedIn) {
+                    const modal = new bootstrap.Modal(productDetailCardModal);
+                    modal.show();
+                } else {
+                    window.location.href = '{{ route('login') }}';
                 }
             });
 
-            carouselEl.addEventListener('touchend', function(e) {
-                if (startX === null) return;
-                let endX = e.changedTouches[0].clientX;
-                let diffX = endX - startX;
-                if (Math.abs(diffX) > threshold) {
-                    ensureCarousel();
-                    if (diffX < 0) {
-                        // swipe left, next
-                        carouselInstance.next();
-                    } else {
-                        // swipe right, prev
-                        carouselInstance.prev();
-                    }
+            productDetailCardModal.addEventListener('hide.bs.modal', function(event) {
+                const modalContent = productDetailCardModal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.classList.add('slide-down-animation');
                 }
-                startX = null;
-            });
-        })();
-        document.getElementById('openDetailCardBtn').addEventListener('click', function() {
-            const modal = new bootstrap.Modal(document.getElementById('productDetailCardModal'));
-            modal.show();
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            const myModal = document.getElementById('productDetailCardModal');
-
-            myModal.addEventListener('hide.bs.modal', function(event) {
-                const modalContent = myModal.querySelector('.modal-content');
-                modalContent.classList.add('slide-down-animation');
             });
 
-            myModal.addEventListener('hidden.bs.modal', function(event) {
-                const modalContent = myModal.querySelector('.modal-content');
-                modalContent.classList.remove('slide-down-animation');
+            productDetailCardModal.addEventListener('hidden.bs.modal', function(event) {
+                const modalContent = productDetailCardModal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.classList.remove('slide-down-animation');
+                }
             });
-        });
+        }
     </script>
 @endpush
 @section('after_content')

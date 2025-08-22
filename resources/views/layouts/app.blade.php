@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,23 +12,51 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!--Font yang digunakan-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <style>
-        body { background: #f8f9fa; }
+        body {
+            background: #f8f9fa;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            font-weight: bold;
+        }
     </style>
     @stack('styles')
 </head>
+
 <body>
-    @if(empty($hideAppbar) || !$hideAppbar)
+    @if (empty($hideAppbar) || !$hideAppbar)
         @include('customer.partials.appbar')
     @endif
     @php
         $routeName = Route::currentRouteName();
         $isHome = request()->is('/') || $routeName === 'home';
         $isCart = $routeName === 'cart';
-        $isKategori = in_array($routeName, ['kategori.tumbuhan','kategori.rempah','kategori.buah','kategori.sayuran','kategori.bunga']);
+        $isKategori = in_array($routeName, [
+            'kategori.tumbuhan',
+            'kategori.rempah',
+            'kategori.buah',
+            'kategori.sayuran',
+            'kategori.bunga',
+        ]);
     @endphp
-    <div style="min-height:50vh; margin-top: 0; @if($isHome)padding-top: 24px;@else padding-top: 0;@endif">
+    <div
+        style="min-height:50vh; margin-top: 0; @if ($isHome) padding-top: 24px;@else padding-top: 0; @endif">
         @yield('content')
     </div>
     <!-- Bootstrap 5 JS Bundle -->
@@ -35,4 +64,5 @@
     @stack('scripts')
     @yield('after_content')
 </body>
-</html> 
+
+</html>

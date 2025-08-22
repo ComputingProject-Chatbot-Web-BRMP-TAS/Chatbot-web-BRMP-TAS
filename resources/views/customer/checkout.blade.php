@@ -1,13 +1,16 @@
-@php($hideAppbar = true)
-@endphp
 @extends('layouts.app')
-
 @section('content')
-    @include('customer.partials.appbar_fokus')
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
     <style>
-        body {
-            background: #f8f9fa;
+        .user-section,
+        .navbar-left,
+        .mobile-search-container,
+        .mobile-cart-btn,
+        .mobile-menu-toggle {
+            display: none !important;
+        }
+
+        .navbar-title-fokus {
+            display: flex !important;
         }
 
         .checkout-main {
@@ -249,11 +252,11 @@
         }
 
         @media (min-width: 1023px) {
-            .checkout-mobile-card{
+            .checkout-mobile-card {
                 display: none !important;
             }
 
-            .checkout-mobile-pay-btn{
+            .checkout-mobile-pay-btn {
                 display: none !important;
             }
         }
@@ -298,7 +301,8 @@
                                 </div>
                                 <div class="checkout-mobile-product-info">
                                     <div class="checkout-mobile-product-name">{{ $item['name'] }}</div>
-                                    <div class="checkout-mobile-product-price">Rp{{ number_format($item['price'], 0, ',', '.') }} x
+                                    <div class="checkout-mobile-product-price">
+                                        Rp{{ number_format($item['price'], 0, ',', '.') }} x
                                         {{ $item['quantity'] }} {{ $item['unit'] }}</div>
                                 </div>
                             </div>
@@ -608,7 +612,7 @@
                 hideModalKonfirmasi();
             };
             document.getElementById('kembali-hapus-perubahan').onclick = function() {
-                window.location.href = '/cart'; // Ganti dengan route keranjang yang benar jika perlu
+                window.history.back(); // Ganti dengan route keranjang yang benar jika perlu
             };
 
             // Initialize province-city dropdown functionality

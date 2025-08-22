@@ -166,6 +166,23 @@
     }
 
     @media (max-width: 1023px) {
+        .mobile-back-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            font-size: 20px;
+            min-height: 40px;
+            min-width: 40px;
+            line-height: 1;
+        }
+
+        .mobile-cart-title {
+            font-size: 16px;
+            font-weight: 800;
+            width: 100%;
+        }
 
         .mobile-menu-toggle,
         .mobile-cart-btn {
@@ -181,7 +198,7 @@
         }
 
         .navbar {
-            padding: 12px 16px;
+            padding: 8px 10px;
             height: 64px;
             align-items: center;
         }
@@ -206,6 +223,7 @@
             align-items: center;
             justify-content: space-between;
             height: 64px;
+            gap: 8px;
         }
 
         /* Mobile search bar */
@@ -247,8 +265,8 @@
             color: #388E3C;
             cursor: pointer;
             padding: 0;
-            height: 40px;
-            width: 40px;
+            min-height: 40px;
+            min-width: 40px;
             line-height: 1;
         }
 
@@ -262,8 +280,8 @@
             font-size: 20px;
             color: #388E3C;
             cursor: pointer;
-            height: 40px;
-            width: 40px;
+            min-height: 40px;
+            min-width: 40px;
             line-height: 1;
         }
 
@@ -386,13 +404,20 @@
     }
 
     .navbar-title {
-        font-family: 'Inter', Arial, sans-serif !important;
         font-weight: bold !important;
         color: #388E3C !important;
         font-size: 22px !important;
         text-decoration: none !important;
         letter-spacing: 0;
         width: max-content !important;
+    }
+
+    .navbar-title-fokus {
+        font-weight: bold !important;
+        color: #388E3C !important;
+        font-size: 22px !important;
+        text-decoration: none !important;
+        letter-spacing: 0;
     }
 
     .navbar-category-title {
@@ -555,6 +580,30 @@
 </style>
 
 <div class="navbar">
+    <!-- Navbar Fokus (Checkout & Payment)-->
+    <a href="#" id="logo-brmp" class="navbar-title-fokus" style="display: none">Benih BRMP</a>
+    @if (request()->routeIs('payment') || request()->is('payment'))
+        <!-- Modal Konfirmasi Kembali Ke Home (khusus payment) -->
+        <div id="modal-konfirmasi-ke-home"
+            style="display:none;position:fixed;z-index:2000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);align-items:center;justify-content:center;">
+            <div
+                style="background:#fff;padding:32px 24px;border-radius:16px;max-width:400px;width:90vw;box-shadow:0 4px 24px rgba(0,0,0,0.10);text-align:center;">
+                <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:12px;">Anda Belum Menyelesaikan Pembayaran
+                </h2>
+                <p style="color:#444;margin-bottom:24px;">Silakan selesaikan pembayaran terlebih dahulu. Jika ingin
+                    kembali
+                    ke halaman utama, klik tombol di bawah ini.</p>
+                <button id="tetap-di-halaman-payment"
+                    style="width:100%;background:#19b15e;color:#fff;font-weight:700;padding:12px 0;border:none;border-radius:8px;font-size:1.1rem;margin-bottom:12px;">Tetap
+                    Di Halaman Ini</button>
+                <br>
+                <button id="kembali-ke-home"
+                    style="background:none;border:none;color:#19b15e;font-weight:700;font-size:1rem;">Kembali ke
+                    Home</button>
+            </div>
+        </div>
+    @endif
+
     <!-- Desktop Layout -->
     <!-- Kiri: Logo + Menu -->
     <div class="navbar-left">
@@ -607,6 +656,16 @@
     </div>
 
     <!-- Mobile Layout -->
+    <!-- Mobile Back Button -->
+    <button class="mobile-back-btn" onclick="window.history.back()" style="display:none;">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+
+    <!-- Mobile Title Keranjang (halaman cart) -->
+    <div class="mobile-cart-title" style="display:none;">
+        <h4>Keranjang</h4>
+    </div>
+
     <!-- Mobile Search Bar -->
     <div class="mobile-search-container" style="display:none;">
         <div class="searchbar-container">
@@ -626,6 +685,7 @@
     <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" style="display:none;">
         <i class="fas fa-bars"></i>
     </button>
+
 </div>
 
 <!-- Mobile Menu Overlay -->
@@ -759,6 +819,30 @@
 <div id="dropdownOverlay"
     style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);z-index:1000;transition:opacity 0.25s;opacity:0;">
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var logo = document.getElementById('logo-brmp');
+        if (logo) logo.onclick = function(e) {
+            e.preventDefault();
+            showModalKonfirmasiKeHome();
+        };
+
+        function showModalKonfirmasiKeHome() {
+            document.getElementById('modal-konfirmasi-ke-home').style.display = 'flex';
+        }
+
+        function hideModalKonfirmasiKeHome() {
+            document.getElementById('modal-konfirmasi-ke-home').style.display = 'none';
+        }
+        document.getElementById('tetap-di-halaman-payment').onclick = function() {
+            hideModalKonfirmasiKeHome();
+        };
+        document.getElementById('kembali-ke-home').onclick = function() {
+            window.location.href = '/'; // Route ke home
+        };
+    });
+</script>
 
 <script>
     // Dropdown kategori appbar (benar-benar full sepanjang navbar, animasi slide, overlay gelap)

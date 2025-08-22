@@ -91,12 +91,18 @@ class CartController extends Controller
         return redirect()->route('cart')->with('success', 'Produk berhasil ditambahkan ke keranjang!');
     }
 
-    public function deleteItem($cart_item)
-    {
+   public function deleteItem($cart_item)
+{
+    try {
         $item = CartItem::findOrFail($cart_item);
         $item->delete();
-        return back()->with('success', 'Item berhasil dihapus dari keranjang!');
+        // Kembalikan respons JSON sukses
+        return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+        // Tangani jika item tidak ditemukan atau ada error lain
+        return response()->json(['success' => false, 'message' => 'Gagal menghapus item.'], 500);
     }
+}
 
     public function updateQuantity(Request $request, $cart_item)
     {
