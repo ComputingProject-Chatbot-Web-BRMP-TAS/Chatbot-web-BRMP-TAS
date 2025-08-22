@@ -33,12 +33,6 @@ class PaymentController extends Controller
             $transaction->order_status = 'diproses';
             $transaction->save();
             
-            Log::info('Payment approved', [
-                'payment_id' => $payment->payment_id,
-                'transaction_id' => $transaction->transaction_id,
-                'admin_id' => auth()->id()
-            ]);
-            
             return redirect()->back()->with('success', 'Pembayaran berhasil dikonfirmasi dan pesanan akan diproses');
         } catch (\Exception $e) {
             Log::error('Error approving payment', [
@@ -75,13 +69,6 @@ class PaymentController extends Controller
             // Update transaction status back to menunggu_pembayaran
             $transaction->order_status = 'menunggu_pembayaran';
             $transaction->save();
-            
-            Log::info('Payment rejected', [
-                'payment_id' => $payment->payment_id,
-                'transaction_id' => $transaction->transaction_id,
-                'admin_id' => auth()->id(),
-                'reason' => $request->rejection_reason
-            ]);
             
             return redirect()->back()->with('success', 'Pembayaran ditolak. Customer akan diminta mengirim ulang bukti pembayaran.');
         } catch (\Exception $e) {

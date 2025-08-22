@@ -27,6 +27,10 @@ class PlantTypeSeeder extends Seeder
                 'comodity' => 'Tanaman Minyak Industri',
             ],
             [
+                'plant_type_name' => 'Rosela Herbal',
+                'comodity' => 'Tanaman Serat',
+            ],
+            [
                 'plant_type_name' => 'Kenaf',
                 'comodity' => 'Tanaman Serat',
             ],

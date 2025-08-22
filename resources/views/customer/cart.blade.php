@@ -1,31 +1,17 @@
 @extends('layouts.app')
 @section('content')
     <style>
-        .cart-container {
-            width: 100%;
-            max-width: 100%;
-            margin: 0;
-            padding: 0;
-            background: #f8f9fa;
-            min-height: 50vh;
-            color: #222;
-            position: relative;
-        }
-
         .cart-main {
             width: 100%;
-            max-width: 1200px;
-            margin: 60px auto 40px auto;
             display: flex !important;
             gap: 0px;
             align-items: flex-start;
-            padding: 0 20px;
             flex-direction: column;
         }
 
         .cart-left {
             flex: 1;
-            max-width: 800px;
+            max-width: 100%;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -80,17 +66,18 @@
             flex-direction: column;
             gap: 8px;
             min-width: 0;
+            height: 100%;
         }
 
         .cart-item-name {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             color: #222;
             line-height: 1.3;
         }
 
         .cart-item-price-qty {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             color: #388e3c;
             display: flex;
@@ -104,12 +91,11 @@
             border: 1px solid #e0e0e0;
             border-radius: 4px;
             text-align: center;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         .cart-item-subtotal {
-            font-size: 14px;
-            color: #666;
+            display: none;
         }
 
         .cart-item-actions {
@@ -169,9 +155,7 @@
         }
 
         .cart-summary-title {
-            font-weight: bold;
             margin-bottom: 24px;
-            font-size: 1.2rem;
             color: #222;
         }
 
@@ -180,30 +164,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 18px;
-        }
-
-        .cart-summary .btn {
-            width: 100%;
-            border-radius: 8px;
-            background: #388e3c;
-            color: #fff;
             font-weight: bold;
-            border: none;
-            padding: 16px;
-            font-size: 1.1rem;
-            margin-top: 24px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .cart-summary .btn:hover {
-            background: #2e7d32;
-        }
-
-        .cart-summary .btn:disabled {
-            background: #eee;
-            color: #bbb;
-            cursor: not-allowed;
         }
 
         .cart-row {
@@ -258,6 +219,10 @@
             background: #388e3c !important;
             color: #fff !important;
             pointer-events: auto !important;
+        }
+
+        .btn-active:disabled {
+            background: #f44336 !important;
         }
 
         .appbar-cart {
@@ -344,16 +309,14 @@
                 flex-wrap: wrap;
             }
 
-            .cart-item-subtotal {
-                display: none;
-            }
-
             .cart-summary {
                 position: fixed;
                 max-width: 100%;
                 min-width: 100%;
                 top: unset;
                 bottom: 0;
+                left: 0;
+                right: 0;
                 display: flex;
                 height: 80px;
                 border-radius: unset;
@@ -392,7 +355,7 @@
         }
     </style>
 
-    <div class="cart-container">
+    <div class="container"style="margin-bottom: 40px;">
 
         @if (session('error'))
             <div
@@ -456,7 +419,7 @@
                                 {{ $isOutOfStock || $isQuantityBelowMin ? 'disabled' : '' }}>
 
                             @if ($item->product->gambar)
-                                <img src="{{ asset('images/' . $item->product->gambar) }}"
+                                <img src="{{ asset('storage/products/' . $item->product->gambar) }}"
                                     alt="{{ $item->product->product_name }}" class="cart-item-image">
                             @else
                                 <div class="cart-item-image">
@@ -513,31 +476,33 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="cart-item-subtotal">
-                                    Subtotal: Rp<span class="item-subtotal"
-                                        id="subtotal{{ $item->cart_item_id }}">{{ number_format($item->price_per_unit * $item->quantity, 0, ',', '.') }}</span>
+                                <div class="cart-item-subtotal" id="subtotal{{ $item->cart_item_id }}">
+                                    {{ number_format($item->price_per_unit * $item->quantity, 0, ',', '.') }}
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
                 <div class="cart-summary">
-                    <div class="cart-summary-title">Ringkasan belanja</div>
+                    <div class="cart-summary-title">
+                        <h4>
+                            Ringkasan belanja
+                        </h4>
+                    </div>
                     <div class="checkall-container-mobile" style="display: none">
                         <input type="checkbox" id="checkAllMobile" class="checkall-box" onclick="toggleAll(this)">
                         <label for="checkAllMobile" class="checkall-label">Pilih Semua</label>
                     </div>
                     <div class="cart-summary-total">
-                        <span style="color:#666; font-size:16px;">Total</span>
-                        <span id="summaryTotal"
-                            style="color:#388e3c; font-size:20px; font-weight:700;">Rp{{ number_format($total, 0, ',', '.') }}</span>
+                        <span style="color:#666;">Total</span>
+                        <span id="summaryTotal" style="color:#388e3c;">Rp{{ number_format($total, 0, ',', '.') }}</span>
                     </div>
                     <form id="checkoutForm" method="POST" action="{{ route('checkout.process') }}" style="display:none;">
                         @csrf
                         <input type="hidden" name="checked_items" id="checkedItemsInput">
                     </form>
-                    <button class="btn" id="checkoutBtn" type="button" disabled onclick="submitCheckout()">Beli</button>
+                    <button class="btn-active" id="checkoutBtn" type="button" disabled
+                        onclick="submitCheckout()">Beli</button>
                 </div>
             </div>
         </div>
@@ -599,11 +564,6 @@
 
             if (checkoutBtn) {
                 checkoutBtn.disabled = checkedCount === 0 || hasInvalidItems;
-                if (checkedCount > 0 && !hasInvalidItems) {
-                    checkoutBtn.classList.add('btn-active');
-                } else {
-                    checkoutBtn.classList.remove('btn-active');
-                }
             }
 
             // Sinkronisasi checkbox 'Pilih Semua'

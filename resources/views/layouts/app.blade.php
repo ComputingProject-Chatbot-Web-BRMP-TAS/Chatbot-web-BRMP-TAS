@@ -35,6 +35,14 @@
             margin: 0;
             font-weight: bold;
         }
+
+        h1 {
+            color: white;
+        }
+
+        h2 {
+            color: #085c3d;
+        }
     </style>
     @stack('styles')
 </head>
@@ -43,20 +51,7 @@
     @if (empty($hideAppbar) || !$hideAppbar)
         @include('customer.partials.appbar')
     @endif
-    @php
-        $routeName = Route::currentRouteName();
-        $isHome = request()->is('/') || $routeName === 'home';
-        $isCart = $routeName === 'cart';
-        $isKategori = in_array($routeName, [
-            'kategori.tumbuhan',
-            'kategori.rempah',
-            'kategori.buah',
-            'kategori.sayuran',
-            'kategori.bunga',
-        ]);
-    @endphp
-    <div
-        style="min-height:50vh; margin-top: 0; @if ($isHome) padding-top: 24px;@else padding-top: 0; @endif">
+    <div style="min-height:50vh; padding-top: 65px; margin-top:0">
         @yield('content')
     </div>
     <!-- Bootstrap 5 JS Bundle -->

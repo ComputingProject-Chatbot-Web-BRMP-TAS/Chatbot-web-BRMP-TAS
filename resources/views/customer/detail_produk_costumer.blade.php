@@ -6,7 +6,7 @@
             <div class="product-detail-modern-left">
                 <div class="product-detail-main-image-wrapper">
                     @if ($product->image1)
-                        <img src="{{ asset('storage/' . $product->image1) }}" alt="{{ $product->product_name }}"
+                        <img src="{{ asset('storage/products/' . $product->image1) }}" alt="{{ $product->product_name }}"
                             class="product-detail-main-image" id="mainImage">
                     @else
                         <div class="product-detail-default-image" id="mainImage">
@@ -16,20 +16,20 @@
                 </div>
                 <div class="product-detail-thumbs">
                     @if ($product->image1)
-                        <img src="{{ asset('storage/' . $product->image1) }}" alt="thumb1" class="selected"
-                            onclick="changeImage(this, '{{ asset('storage/' . $product->image1) }}')">
+                        <img src="{{ asset('storage/products/' . $product->image1) }}" alt="thumb1" class="selected"
+                            onclick="changeImage(this, '{{ asset('storage/products/' . $product->image1) }}')">
                     @else
                         <div class="product-detail-thumb-default selected" onclick="changeImage(this, 'default')">
                             <i class="fas fa-seedling"></i>
                         </div>
                     @endif
                     @if ($product->image2)
-                        <img src="{{ asset('storage/' . $product->image2) }}" alt="thumb2"
-                            onclick="changeImage(this, '{{ asset('storage/' . $product->image2) }}')">
+                        <img src="{{ asset('storage/products/' . $product->image2) }}" alt="thumb2"
+                            onclick="changeImage(this, '{{ asset('storage/products/' . $product->image2) }}')">
                     @endif
                     @if ($product->image_certificate)
-                        <img src="{{ asset('storage/' . $product->image_certificate) }}" alt="certificate"
-                            onclick="changeImage(this, '{{ asset('storage/' . $product->image_certificate) }}')">
+                        <img src="{{ asset('storage/certificates/' . $product->image_certificate) }}" alt="certificate"
+                            onclick="changeImage(this, '{{ asset('storage/certificates/' . $product->image_certificate) }}')">
                     @endif
                 </div>
             </div>
@@ -124,8 +124,7 @@
                                         <div style="font-size: 0.9rem; margin-top: 4px; color: #666;">Stok telah habis</div>
                                     </div>
                                 @else
-                                    <form method="POST"
-                                        action="{{route('cart.add', $product->product_id)}}"
+                                    <form method="POST" action="{{ route('cart.add', $product->product_id) }}"
                                         class="addToCartForm">
                                         @csrf
                                         <div class="product-detail-card-qty">
@@ -169,8 +168,7 @@
                             <div style="font-size: 0.9rem; margin-top: 4px; color: #666;">Stok telah habis</div>
                         </div>
                     @else
-                        <form method="POST"
-                            action="{{route('cart.add', $product->product_id)}}"
+                        <form method="POST" action="{{ route('cart.add', $product->product_id) }}"
                             class="addToCartForm">
                             @csrf
                             <div class="product-detail-card-qty">
@@ -215,19 +213,19 @@
                         <div class="carousel-inner">
                             @if ($product->image1)
                                 <div class="carousel-item active">
-                                    <img src="{{ asset('storage/' . $product->image1) }}" class="d-block w-100"
+                                    <img src="{{ asset('storage/products/' . $product->image1) }}" class="d-block w-100"
                                         alt="{{ $product->product_name }}">
                                 </div>
                             @endif
                             @if ($product->image2)
                                 <div class="carousel-item">
-                                    <img src="{{ asset('storage/' . $product->image2) }}" class="d-block w-100"
+                                    <img src="{{ asset('storage/products/' . $product->image2) }}" class="d-block w-100"
                                         alt="{{ $product->product_name }}">
                                 </div>
                             @endif
                             @if ($product->image_certificate)
                                 <div class="carousel-item">
-                                    <img src="{{ asset('storage/' . $product->image_certificate) }}"
+                                    <img src="{{ asset('storage/certificates/' . $product->image_certificate) }}"
                                         class="d-block w-100" alt="{{ $product->product_name }}">
                                 </div>
                             @endif
@@ -670,159 +668,161 @@
     </style>
 @endpush
 @push('scripts')
-@push('scripts')
-    <script>
-        function changeImage(thumbElement, imageSrc) {
-            const mainImageContainer = document.getElementById('mainImage');
-            
-            if (imageSrc === 'default') {
-                mainImageContainer.src = '{{ asset('path/to/default/image.jpg') }}'; // Ganti dengan path gambar default jika ada
-                mainImageContainer.className = 'product-detail-default-image';
-            } else {
-                mainImageContainer.src = imageSrc;
-                mainImageContainer.className = 'product-detail-main-image';
-            }
-            
-            document.querySelectorAll('.product-detail-thumbs img, .product-detail-thumbs .product-detail-thumb-default')
-                .forEach(thumb => {
-                    thumb.classList.remove('selected');
-                });
-            thumbElement.classList.add('selected');
-        }
+    @push('scripts')
+        <script>
+            function changeImage(thumbElement, imageSrc) {
+                const mainImageContainer = document.getElementById('mainImage');
 
-        // --- Logika untuk Form Tambah ke Keranjang ---
-        @if (!$isOutOfStock)
-            document.addEventListener('DOMContentLoaded', function() {
-                const forms = document.querySelectorAll('.addToCartForm');
-                forms.forEach(button => {
-            button.addEventListener('click', function(e) {
-                const isUserLoggedIn = @json(Auth::check());
-                if (!isUserLoggedIn) {
-                    e.preventDefault(); 
-                    window.location.href = '{{ route('login') }}';
+                if (imageSrc === 'default') {
+                    mainImageContainer.src =
+                        '{{ asset('path/to/default/image.jpg') }}'; // Ganti dengan path gambar default jika ada
+                    mainImageContainer.className = 'product-detail-default-image';
+                } else {
+                    mainImageContainer.src = imageSrc;
+                    mainImageContainer.className = 'product-detail-main-image';
                 }
-            });
-        });
-                const unitProduk = @json($product->unit);
-                const minimumPurchase = {{ $product->minimum_purchase }};
-                const availableStock = {{ $availableStock }};
 
-                forms.forEach(form => {
-                    const qtyInput = form.querySelector('.qtyInput');
-                    const subtotalSpan = form.querySelector('.subtotal');
-                    const addToCartBtn = form.querySelector('.addToCartBtn');
-                    const stockWarning = form.querySelector('.stockWarning');
-                    const minPurchaseWarning = form.querySelector('.minPurchaseWarning');
+                document.querySelectorAll('.product-detail-thumbs img, .product-detail-thumbs .product-detail-thumb-default')
+                    .forEach(thumb => {
+                        thumb.classList.remove('selected');
+                    });
+                thumbElement.classList.add('selected');
+            }
 
-                    const updateSubtotal = () => {
-                        let qty = parseFloat(qtyInput.value.replace(',', '.')) || 0;
-                        let harga = {{ $product->price_per_unit }};
-
-                        // Reset warnings
-                        if (stockWarning) stockWarning.style.display = 'none';
-                        if (minPurchaseWarning) minPurchaseWarning.style.display = 'none';
-
-                        if (qty === 0 || qtyInput.value.trim() === '') {
-                            subtotalSpan.innerText = 'Rp0';
-                            if (addToCartBtn) {
-                                addToCartBtn.disabled = true;
-                                addToCartBtn.style.opacity = '0.6';
-                                addToCartBtn.style.cursor = 'not-allowed';
-                                addToCartBtn.style.background = '#ccc';
-                                addToCartBtn.style.color = '#666';
-                            }
-                            return;
-                        }
-
-                        let isValid = true;
-
-                        if (qty < minimumPurchase) {
-                            if (minPurchaseWarning) minPurchaseWarning.style.display = 'block';
-                            isValid = false;
-                        }
-
-                        if (qty > availableStock) {
-                            if (stockWarning) stockWarning.style.display = 'block';
-                            isValid = false;
-                        }
-
-                        subtotalSpan.innerText = 'Rp' + (harga * qty).toLocaleString('id-ID');
-                        
-                        if (addToCartBtn) {
-                            addToCartBtn.disabled = !isValid;
-                            addToCartBtn.style.opacity = isValid ? '1' : '0.6';
-                            addToCartBtn.style.cursor = isValid ? 'pointer' : 'not-allowed';
-                            addToCartBtn.style.background = isValid ? '#388e3c' : '#ccc';
-                            addToCartBtn.style.color = isValid ? '#fff' : '#666';
-                        }
-                    };
-
-                    if (qtyInput) {
-                        qtyInput.addEventListener('input', updateSubtotal);
-                        qtyInput.addEventListener('blur', updateSubtotal);
-                    }
-                    
-                    if (form) {
-                        form.addEventListener('submit', function(e) {
-                            let qty = parseFloat(qtyInput.value.replace(',', '.')) || 0;
-
-                            if (qty === 0 || qtyInput.value.trim() === '') {
+            // --- Logika untuk Form Tambah ke Keranjang ---
+            @if (!$isOutOfStock)
+                document.addEventListener('DOMContentLoaded', function() {
+                    const forms = document.querySelectorAll('.addToCartForm');
+                    forms.forEach(button => {
+                        button.addEventListener('click', function(e) {
+                            const isUserLoggedIn = @json(Auth::check());
+                            if (!isUserLoggedIn) {
                                 e.preventDefault();
-                                alert('Silakan masukkan jumlah yang ingin dibeli');
-                                return false;
-                            }
-                            
-                            if (qty < minimumPurchase) {
-                                e.preventDefault();
-                                alert('Minimal pembelian: ' + minimumPurchase + ' ' + unitProduk);
-                                return false;
-                            }
-                            
-                            if (qty > availableStock) {
-                                e.preventDefault();
-                                alert('Stok tidak mencukupi. Maksimal: ' + availableStock + ' ' + unitProduk);
-                                return false;
+                                window.location.href = '{{ route('login') }}';
                             }
                         });
-                    }
+                    });
+                    const unitProduk = @json($product->unit);
+                    const minimumPurchase = {{ $product->minimum_purchase }};
+                    const availableStock = {{ $availableStock }};
 
-                    // Panggil saat halaman dimuat
-                    updateSubtotal();
+                    forms.forEach(form => {
+                        const qtyInput = form.querySelector('.qtyInput');
+                        const subtotalSpan = form.querySelector('.subtotal');
+                        const addToCartBtn = form.querySelector('.addToCartBtn');
+                        const stockWarning = form.querySelector('.stockWarning');
+                        const minPurchaseWarning = form.querySelector('.minPurchaseWarning');
+
+                        const updateSubtotal = () => {
+                            let qty = parseFloat(qtyInput.value.replace(',', '.')) || 0;
+                            let harga = {{ $product->price_per_unit }};
+
+                            // Reset warnings
+                            if (stockWarning) stockWarning.style.display = 'none';
+                            if (minPurchaseWarning) minPurchaseWarning.style.display = 'none';
+
+                            if (qty === 0 || qtyInput.value.trim() === '') {
+                                subtotalSpan.innerText = 'Rp0';
+                                if (addToCartBtn) {
+                                    addToCartBtn.disabled = true;
+                                    addToCartBtn.style.opacity = '0.6';
+                                    addToCartBtn.style.cursor = 'not-allowed';
+                                    addToCartBtn.style.background = '#ccc';
+                                    addToCartBtn.style.color = '#666';
+                                }
+                                return;
+                            }
+
+                            let isValid = true;
+
+                            if (qty < minimumPurchase) {
+                                if (minPurchaseWarning) minPurchaseWarning.style.display = 'block';
+                                isValid = false;
+                            }
+
+                            if (qty > availableStock) {
+                                if (stockWarning) stockWarning.style.display = 'block';
+                                isValid = false;
+                            }
+
+                            subtotalSpan.innerText = 'Rp' + (harga * qty).toLocaleString('id-ID');
+
+                            if (addToCartBtn) {
+                                addToCartBtn.disabled = !isValid;
+                                addToCartBtn.style.opacity = isValid ? '1' : '0.6';
+                                addToCartBtn.style.cursor = isValid ? 'pointer' : 'not-allowed';
+                                addToCartBtn.style.background = isValid ? '#388e3c' : '#ccc';
+                                addToCartBtn.style.color = isValid ? '#fff' : '#666';
+                            }
+                        };
+
+                        if (qtyInput) {
+                            qtyInput.addEventListener('input', updateSubtotal);
+                            qtyInput.addEventListener('blur', updateSubtotal);
+                        }
+
+                        if (form) {
+                            form.addEventListener('submit', function(e) {
+                                let qty = parseFloat(qtyInput.value.replace(',', '.')) || 0;
+
+                                if (qty === 0 || qtyInput.value.trim() === '') {
+                                    e.preventDefault();
+                                    alert('Silakan masukkan jumlah yang ingin dibeli');
+                                    return false;
+                                }
+
+                                if (qty < minimumPurchase) {
+                                    e.preventDefault();
+                                    alert('Minimal pembelian: ' + minimumPurchase + ' ' + unitProduk);
+                                    return false;
+                                }
+
+                                if (qty > availableStock) {
+                                    e.preventDefault();
+                                    alert('Stok tidak mencukupi. Maksimal: ' + availableStock + ' ' +
+                                        unitProduk);
+                                    return false;
+                                }
+                            });
+                        }
+
+                        // Panggil saat halaman dimuat
+                        updateSubtotal();
+                    });
                 });
-            });
-        @endif
-        
-        // --- Logika untuk Modal ---
-        const openDetailCardBtn = document.getElementById('openDetailCardBtn');
-        const productDetailCardModal = document.getElementById('productDetailCardModal');
+            @endif
 
-        if (openDetailCardBtn && productDetailCardModal) {
-            openDetailCardBtn.addEventListener('click', function() {
-                const isUserLoggedIn = @json(Auth::check());
-                if (isUserLoggedIn) {
-                    const modal = new bootstrap.Modal(productDetailCardModal);
-                    modal.show();
-                } else {
-                    window.location.href = '{{ route('login') }}';
-                }
-            });
+            // --- Logika untuk Modal ---
+            const openDetailCardBtn = document.getElementById('openDetailCardBtn');
+            const productDetailCardModal = document.getElementById('productDetailCardModal');
 
-            productDetailCardModal.addEventListener('hide.bs.modal', function(event) {
-                const modalContent = productDetailCardModal.querySelector('.modal-content');
-                if (modalContent) {
-                    modalContent.classList.add('slide-down-animation');
-                }
-            });
+            if (openDetailCardBtn && productDetailCardModal) {
+                openDetailCardBtn.addEventListener('click', function() {
+                    const isUserLoggedIn = @json(Auth::check());
+                    if (isUserLoggedIn) {
+                        const modal = new bootstrap.Modal(productDetailCardModal);
+                        modal.show();
+                    } else {
+                        window.location.href = '{{ route('login') }}';
+                    }
+                });
 
-            productDetailCardModal.addEventListener('hidden.bs.modal', function(event) {
-                const modalContent = productDetailCardModal.querySelector('.modal-content');
-                if (modalContent) {
-                    modalContent.classList.remove('slide-down-animation');
-                }
-            });
-        }
-    </script>
-@endpush
-@section('after_content')
-    @include('customer.partials.mitra_footer')
-@endsection
+                productDetailCardModal.addEventListener('hide.bs.modal', function(event) {
+                    const modalContent = productDetailCardModal.querySelector('.modal-content');
+                    if (modalContent) {
+                        modalContent.classList.add('slide-down-animation');
+                    }
+                });
+
+                productDetailCardModal.addEventListener('hidden.bs.modal', function(event) {
+                    const modalContent = productDetailCardModal.querySelector('.modal-content');
+                    if (modalContent) {
+                        modalContent.classList.remove('slide-down-animation');
+                    }
+                });
+            }
+        </script>
+    @endpush
+    @section('after_content')
+        @include('customer.partials.mitra_footer')
+    @endsection

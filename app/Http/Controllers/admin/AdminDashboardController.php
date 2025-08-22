@@ -143,14 +143,6 @@ class AdminDashboardController extends Controller
         if ($selectedProduct) {
             $regencyDataQuery->where('p.product_id', $selectedProduct);
         }
-        
-        // Debug: Log query untuk memastikan filter bekerja dengan benar
-        \Log::info('Regency Data Query:', [
-            'selectedProvince' => $selectedProvince,
-            'selectedPlantType' => $selectedPlantType,
-            'query' => $regencyDataQuery->toSql(),
-            'bindings' => $regencyDataQuery->getBindings()
-        ]);
 
         $regencyData = $regencyDataQuery
             ->select(
@@ -206,16 +198,6 @@ class AdminDashboardController extends Controller
         $allRegencies = DB::table('reg_regencies')
             ->select('id as regency_id', 'name as regency_name', 'province_id')
             ->get();
-
-
-            
-        // Debug: Log data yang dikirim ke view
-        \Log::info('Data sent to view:', [
-            'provinceData_count' => $provinceData->count(),
-            'regencyData_count' => $regencyData->count(),
-            'regencyProducts_count' => count($regencyProducts),
-            'allRegencies_count' => $allRegencies->count()
-        ]);
         
         return view('admin.product_distribution', compact(
             'provinceData', 

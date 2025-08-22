@@ -137,14 +137,6 @@ class ProductController extends Controller
 
         // If AJAX request, return only the table body
         if ($request->ajax()) {
-            // Debug: Log the AJAX request
-            \Log::info('AJAX request received for products', [
-                'page' => $request->get('page'),
-                'search' => $request->get('search'),
-                'products_count' => $products->count(),
-                'total' => $products->total()
-            ]);
-            
             return view('admin.products.partials.table-body', compact('products'));
         }
 
