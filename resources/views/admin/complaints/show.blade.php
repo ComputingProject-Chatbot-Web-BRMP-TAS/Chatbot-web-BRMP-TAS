@@ -30,9 +30,10 @@
                     <div class="col-md-6">
                         <p><strong>Tipe Komplain:</strong> {{ $complaint->complaint_types ?? '-' }}</p>
                         <p><strong>Transaction ID:</strong> {{ $complaint->transaction_id ?? '-' }}</p>
+                        <p><strong>Nomor Kantong:</strong> {{ $complaint->nomor_kantong ?? '-' }}</p>
                     </div>
                     <div class="col-md-6">
-                        <strong>Produk & Quantity:</strong>
+                        <strong>Produk:</strong>
                         @php
                             $transaction = \App\Models\Transaction::with('transactionItems.product')->find($complaint->transaction_id);
                         @endphp
@@ -67,7 +68,7 @@
             
             @if($complaint->user && $complaint->user->phone)
             <div class="text-center mt-4">
-                <a href="https://wa.me/{{ preg_replace('/[^0-9]/','',$complaint->user->phone) }}?text=Halo {{ $complaint->user->name }}, kami telah menerima komplain Anda. Tim kami akan segera menghubungi Anda untuk menangani masalah ini. Terima kasih telah menghubungi kami." target="_blank" class="btn btn-success btn-lg">
+                <a href="https://wa.me/{{ preg_replace('/^0/', '62', preg_replace('/[^0-9]/','',$complaint->user->phone)) }}?text=Halo {{ $complaint->user->name }}, kami telah menerima komplain Anda. Tim kami akan segera menghubungi Anda untuk menangani masalah ini. Terima kasih telah menghubungi kami." target="_blank" class="btn btn-success btn-lg">
                     <i class="fab fa-whatsapp"></i> Hubungi via WhatsApp
                 </a>
             </div>

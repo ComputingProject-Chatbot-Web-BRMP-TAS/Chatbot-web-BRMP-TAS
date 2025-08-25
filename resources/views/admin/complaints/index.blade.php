@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('content')
-<div class="container" style="padding-top: 80px;max-width:1200px;">
+<div class="container" style="padding-top: 80px;max-width:1400px;">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 style="font-weight:700;margin-bottom:0;">Kelola Komplain</h2>
         <div>
@@ -21,8 +21,9 @@
                             <th>Nama</th>
                             <th>No. Telepon</th>
                             <th>Deskripsi</th>
-                            <th>Tipe Komplain</th> <!-- Tambahan -->
-                            <th>Transaction ID</th> <!-- Tambahan -->
+                            <th>Tipe Komplain</th>
+                            <th>Transaction ID</th>
+                            <th>Nomor Kantong</th>
                             <th>Bukti Gambar</th>
                             <th>Tanggal</th>
                             <th>Aksi</th>
@@ -35,8 +36,9 @@
                             <td>{{ $complaint->user->name ?? '-' }}</td>
                             <td>{{ $complaint->user->phone ?? '-' }}</td>
                             <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $complaint->description }}</td>
-                            <td>{{ $complaint->complaint_types ?? '-' }}</td> <!-- Tipe Komplain -->
-                            <td>{{ $complaint->transaction_id ?? '-' }}</td> <!-- Transaction ID -->
+                            <td>{{ $complaint->complaint_types ?? '-' }}</td>
+                            <td>{{ $complaint->transaction_id ?? '-' }}</td>
+                            <td>{{ $complaint->nomor_kantong ?? '-' }}</td>
                             <td>
                                 @if($complaint->photo_proof)
                                     <img src="{{ asset('storage/'.$complaint->photo_proof) }}" alt="Bukti" style="width:48px;height:48px;object-fit:cover;border-radius:8px;" data-bs-toggle="modal" data-bs-target="#imageModal{{ $complaint->complaint_id }}">
@@ -70,7 +72,7 @@
                         @endif
                     @empty
                         <tr>
-                            <td colspan="9" class="text-center py-4">
+                            <td colspan="11" class="text-center py-4">
                                 <div class="text-muted">
                                     <i class="fas fa-inbox fa-3x mb-3"></i>
                                     <p>Tidak ada komplain yang ditemukan</p>

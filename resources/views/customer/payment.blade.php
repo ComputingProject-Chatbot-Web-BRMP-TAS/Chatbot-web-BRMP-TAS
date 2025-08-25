@@ -1,8 +1,6 @@
-@php($hideAppbar = true)
 @extends('layouts.app')
 
 @section('content')
-@include('customer.partials.appbar_fokus')
 <style>
 .payment-container {
     max-width: 1200px;

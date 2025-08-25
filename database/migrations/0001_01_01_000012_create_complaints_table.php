@@ -10,6 +10,7 @@ return new class extends Migration {
             $table->foreignId('transaction_id')->constrained('transactions', 'transaction_id')->onDelete('cascade');
             $table->id('complaint_id');
             $table->foreignId('user_id')->constrained('users', 'user_id')->onDelete('cascade');
+            $table->bigInteger('nomor_kantong')->nullable();
             $table->string('complaint_types');
             $table->text('description');
             $table->string('photo_proof');

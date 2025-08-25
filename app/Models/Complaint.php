@@ -12,6 +12,7 @@ class Complaint extends Model
     protected $fillable = [
         'user_id',
         'transaction_id',
+        'nomor_kantong',
         'complaint_types',
         'description',
         'photo_proof',
@@ -21,4 +22,4 @@ class Complaint extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
-} 
+}
