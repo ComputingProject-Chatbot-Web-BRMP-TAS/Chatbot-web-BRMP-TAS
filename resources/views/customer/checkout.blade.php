@@ -350,9 +350,6 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="mt-2" style="color:#388e3c;">
-                                <i class="bi bi-shield-check"></i> Aman dengan Garansi Pembelian
-                            </div>
                         </div>
                     </div>
 

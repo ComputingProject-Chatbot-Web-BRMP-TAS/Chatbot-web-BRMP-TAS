@@ -36,7 +36,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/cart/add/{produk}', [CartController::class, 'addToCart'])->name('cart.add');
     Route::delete('/cart/delete/{cart_item}', [CartController::class, 'deleteItem'])->name('cart.delete');
     Route::post('/cart/update-qty/{cart_item}', [CartController::class, 'updateQuantity'])->name('cart.update_qty');
-    Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
     
     // Customer Complaint
     Route::get('/komplain', [ComplaintController::class, 'create'])->name('complaint.create');
@@ -47,8 +46,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
     Route::post('/checkout/next', [CheckoutController::class, 'next'])->name('checkout.next');
     Route::post('/checkout/set-address/{addressId}', [CheckoutController::class, 'setAddress'])->name('checkout.set_address');
-    Route::post('/payment/start', [PaymentController::class, 'start'])->name('payment.start');
-    Route::get('/payment', [PaymentController::class, 'show'])->name('payment.show');
     Route::post('/payment/upload-proof', [PaymentController::class, 'uploadProof'])->name('payment.upload');
     
     // Customer Transactions

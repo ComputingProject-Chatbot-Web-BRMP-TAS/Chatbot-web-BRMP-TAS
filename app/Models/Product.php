@@ -63,55 +63,32 @@ class Product extends Model
      */
     public function createHistoryRecord()
     {
-        try {
-            // Create history record without timestamps
-            $historyData = [
-                'product_id' => $this->product_id,
-                'plant_type_name' => $this->plantType->plant_type_name ?? '',
-                'product_name' => $this->product_name,
-                'description' => $this->description,
-                'stock' => $this->stock,
-                'minimum_stock' => $this->minimum_stock,
-                'unit' => $this->unit,
-                'price_per_unit' => $this->price_per_unit,
-                'minimum_purchase' => $this->minimum_purchase,
-                'image1' => $this->image1,
-                'image2' => $this->image2,
-                'image_certificate' => $this->image_certificate,
-                'certificate_number' => $this->certificate_number,
-                'certificate_class' => $this->certificate_class,
-                'valid_from' => $this->valid_from,
-                'valid_until' => $this->valid_until,
-                'recorded_at' => now(),
-            ];
-            
-            // Log the history creation attempt
-            \Log::info('Creating product history', [
-                'product_id' => $this->product_id,
-                'product_name' => $this->product_name,
-                'history_data' => $historyData
-            ]);
-            
-            // Use insert to avoid timestamps completely
-            $historyId = ProductHistory::insertGetId($historyData);
-            $history = ProductHistory::find($historyId);
-            
-            \Log::info('Product history created successfully', [
-                'history_id' => $history->history_id,
-                'product_id' => $this->product_id
-            ]);
-            
-            return $history;
-            
-        } catch (\Exception $e) {
-            \Log::error('Failed to create product history', [
-                'product_id' => $this->product_id,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
-            throw $e;
-        }
+        // Create history record without timestamps
+        $historyData = [
+            'product_id' => $this->product_id,
+            'plant_type_name' => $this->plantType->plant_type_name ?? '',
+            'product_name' => $this->product_name,
+            'description' => $this->description,
+            'stock' => $this->stock,
+            'minimum_stock' => $this->minimum_stock,
+            'unit' => $this->unit,
+            'price_per_unit' => $this->price_per_unit,
+            'minimum_purchase' => $this->minimum_purchase,
+            'image1' => $this->image1,
+            'image2' => $this->image2,
+            'image_certificate' => $this->image_certificate,
+            'certificate_number' => $this->certificate_number,
+            'certificate_class' => $this->certificate_class,
+            'valid_from' => $this->valid_from,
+            'valid_until' => $this->valid_until,
+            'recorded_at' => now(),
+        ];
+        
+        // Use insert to avoid timestamps completely
+        $historyId = ProductHistory::insertGetId($historyData);
+        $history = ProductHistory::find($historyId);
+        
+        return $history;
     }
 
     /**

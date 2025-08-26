@@ -418,8 +418,8 @@
                                 value="{{ $item->cart_item_id }}" onchange="updateSummary()" checked
                                 {{ $isOutOfStock || $isQuantityBelowMin ? 'disabled' : '' }}>
 
-                            @if ($item->product->gambar)
-                                <img src="{{ asset('storage/products/' . $item->product->gambar) }}"
+                            @if ($item->product->image1)
+                                <img src="{{ asset('storage/products/' . $item->product->image1) }}"
                                     alt="{{ $item->product->product_name }}" class="cart-item-image">
                             @else
                                 <div class="cart-item-image">
@@ -615,7 +615,7 @@
             formData.append('quantity', qty);
             formData.append('_token', '{{ csrf_token() }}');
 
-            fetch(`{{ url('/cart/update-qty') }}/${cartItemId}`, {
+            fetch(`{{ route('cart.update_qty', ['cart_item' => 'placeholder']) }}`.replace('placeholder', cartItemId), {
                     method: 'POST',
                     body: formData
                 })
@@ -703,7 +703,7 @@
         }
 
         function deleteItem(cartItemId) {
-            fetch(`{{ url('/cart/delete') }}/${cartItemId}`, {
+            fetch(`{{ route('cart.delete', ['cart_item' => 'placeholder']) }}`.replace('placeholder', cartItemId), {
                     method: 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',

@@ -25,6 +25,8 @@ return new class extends Migration
             $table->integer('total_price');
             $table->string('order_status');
             $table->string('delivery_method');
+            $table->string('total_ongkir')->nullable();
+            $table->string('no_resi')->nullable();
             $table->dateTime('order_date');
             $table->dateTime('done_date')->nullable();
             $table->dateTime('estimated_delivery_date')->nullable();

@@ -42,33 +42,14 @@ class ProductController extends Controller
             $limit = 10;
             $displayedProducts = session('displayed_products', []);
             
-            // Debug: cek session
-            \Log::info('Session check', [
-                'session_id' => session()->getId(),
-                'displayed_products' => $displayedProducts
-            ]);
             
-            // Debug: log untuk debugging
-            \Log::info('LoadMore called', [
-                'offset' => $offset,
-                'displayedProducts' => $displayedProducts,
-                'count' => count($displayedProducts)
-            ]);
-            
-            // Debug: cek apakah ada produk yang tersedia
-            $totalAvailable = Product::whereNotIn('product_id', $displayedProducts)->count();
-            \Log::info('Available products', ['total' => $totalAvailable]);
             
             $products = Product::whereNotIn('product_id', $displayedProducts)
                               ->inRandomOrder()
                               ->take($limit)
                               ->get();
             
-            \Log::info('Products found', [
-                'count' => $products->count(),
-                'product_ids' => $products->pluck('product_id')->toArray()
-            ]);
-            
+        
             $newDisplayedProducts = array_merge($displayedProducts, $products->pluck('product_id')->toArray());
             session(['displayed_products' => $newDisplayedProducts]);
             
@@ -80,16 +61,10 @@ class ProductController extends Controller
                     try {
                         $html .= view('customer.partials.product-card', compact('product'))->render();
                     } catch (\Exception $e) {
-                        \Log::error('Error rendering product card', [
-                            'product_id' => $product->product_id,
-                            'error' => $e->getMessage()
-                        ]);
                         // Skip produk yang error, lanjut ke produk berikutnya
                         continue;
                     }
                 }
-            } else {
-                \Log::info('No more products available to load');
             }
             
             $response = [
@@ -99,21 +74,10 @@ class ProductController extends Controller
                 'totalProducts' => $totalProducts
             ];
             
-            \Log::info('LoadMore response', [
-                'html_length' => strlen($html),
-                'hasMore' => $response['hasMore'],
-                'totalLoaded' => $response['totalLoaded'],
-                'totalProducts' => $response['totalProducts']
-            ]);
             
             return response()->json($response);
             
         } catch (\Exception $e) {
-            \Log::error('LoadMore error', [
-                'message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine()
-            ]);
             
             return response()->json([
                 'error' => 'Terjadi kesalahan saat memuat produk.',

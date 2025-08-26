@@ -186,7 +186,7 @@ class CheckoutController extends Controller
                 break;
         }
 
-        // Buat transaksi baru dengan status 'menunggu_pembayaran'
+        // Buat transaksi baru dengan status 'menunggu_kode_billing'
         $transaction = Transaction::create([
             'user_id' => $user->user_id,
             'shipping_address_id' => $address->address_id,
@@ -199,7 +199,7 @@ class CheckoutController extends Controller
             'regency_id' => $city,
             'order_date' => $order_date,
             'total_price' => $total + $ongkir + $asuransi,
-            'order_status' => 'menunggu_pembayaran',
+            'order_status' => 'menunggu_kode_billing',
             'delivery_method' => $shipping_method ?? 'reguler', // Pastikan tidak null
             'estimated_delivery_date' => $estimated_delivery_date,
         ]);
@@ -236,7 +236,7 @@ class CheckoutController extends Controller
         session(['checkout_shipping_method' => $shipping_method]);
         session(['current_transaction_id' => $transaction->transaction_id]);
 
-        // Redirect ke halaman payment
-        return redirect()->route('payment.show')->with('success', 'Transaksi berhasil dibuat! Silakan lakukan pembayaran.');
+        // Redirect ke halaman detail transaksi
+        return redirect()->route('transaksi.detail', ['id' => $transaction->transaction_id])->with('success', 'Transaksi berhasil dibuat! Silakan menunggu kode billing.');
     }
 }

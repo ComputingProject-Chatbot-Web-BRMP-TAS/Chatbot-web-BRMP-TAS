@@ -159,16 +159,4 @@ class CartController extends Controller
             'subtotal' => number_format($item->price_per_unit * $item->quantity, 0, ',', '.')
         ]);
     }
-
-    public function checkout(Request $request)
-    {
-        $checked = $request->input('checked_items', []);
-        $items = CartItem::whereIn('cart_item_id', $checked)->with('product')->get();
-        $total = $items->sum(function($item) { return $item->quantity * $item->price_per_unit; });
-        return view('customer.cart', [
-            'items' => $items,
-            'total' => $total,
-            'checkout_mode' => true
-        ]);
-    }
 } 

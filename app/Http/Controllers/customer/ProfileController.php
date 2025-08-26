@@ -53,7 +53,6 @@ class ProfileController extends Controller
         $user = Auth::user();
         $otp = rand(100000, 999999);
         session(['otp_phone' => $otp, 'otp_phone_number' => $user->phone]);
-        \Log::info("OTP untuk verifikasi nomor HP {$user->phone}: $otp");
         file_put_contents(storage_path('logs/otp_debug.txt'), "OTP: $otp untuk {$user->phone} pada ".date('Y-m-d H:i:s')."\n", FILE_APPEND);
         return back()->with('success', 'Kode OTP telah dikirim ke nomor HP Anda.');
     }

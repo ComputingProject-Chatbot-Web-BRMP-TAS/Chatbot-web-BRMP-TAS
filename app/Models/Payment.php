@@ -17,10 +17,12 @@ class Payment extends Model
         'transaction_id',
         'payment_date',
         'amount_paid',
-        'photo_proof_payment',
+        'billing_code_file',
+        'no_rek_ongkir',
+        'photo_proof_payment_billing',
+        'photo_proof_payment_ongkir',
         'payment_status',
         'rejection_reason',
-        'request_message',
     ];
 
     public function transaction()

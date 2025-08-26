@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\AdminDashboardController;
-use App\Http\Controllers\admin\PaymentController;
+use App\Http\Controllers\admin\AdminTransactionController;
 use App\Http\Controllers\admin\ComplaintController;
 use App\Http\Controllers\admin\ArticleController;
 
@@ -35,15 +35,17 @@ Route::group(['prefix' => 'ADMIN-BRMP-TAS'], function () {
         Route::get('/products/{id}/history', [App\Http\Controllers\admin\ProductController::class, 'history'])->name('admin.products.history');
         
         // Transaction routes
-        Route::get('/transactions', [AdminDashboardController::class, 'transactions'])->name('admin.transactions');
-        Route::get('/transactions/{id}', [AdminDashboardController::class, 'transactionDetail'])->name('admin.transaction.detail');
-        Route::put('/transactions/{id}/status', [AdminDashboardController::class, 'updateTransactionStatus'])->name('admin.transaction.status.update');
-        
+        Route::get('/transactions', [AdminTransactionController::class, 'index'])->name('admin.transactions.index');
+        Route::get('/transactions/{id}', [AdminTransactionController::class, 'show'])->name('admin.transactions.show');
+        Route::put('/transactions/{id}/status', [AdminTransactionController::class, 'updateTransactionStatus'])->name('admin.transactions.status.update');
+        Route::get('/transactions/{id}/billing', [AdminTransactionController::class, 'showBillingForm'])->name('admin.transactions.billing.form');
+        Route::post('/transactions/{id}/billing', [AdminTransactionController::class, 'storeBilling'])->name('admin.transactions.billing.store');
+
         // Payment routes
-        Route::post('/payments/{id}/approve', [PaymentController::class, 'approvePayment'])->name('admin.payment.approve');
-        Route::post('/payments/{id}/reject', [PaymentController::class, 'rejectPayment'])->name('admin.payment.reject');
-        Route::get('/payments/{id}', [PaymentController::class, 'showPayment'])->name('admin.payment.show');
-        
+        Route::post('/payments/{id}/approve', [AdminTransactionController::class, 'approvePayment'])->name('admin.transactions.payment.approve');
+        Route::post('/payments/{id}/reject', [AdminTransactionController::class, 'rejectPayment'])->name('admin.transactions.payment.reject');
+        Route::get('/payments/{id}', [AdminTransactionController::class, 'showPayment'])->name('admin.transactions.payment.show');
+
         // Article resource routes
         Route::resource('/articles', ArticleController::class)->names([
             'index' => 'admin.articles.index',

@@ -12,133 +12,78 @@ use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
-    // Handle POST from cart, store cart in session, redirect to payment page
-    public function start(Request $request)
-    {
-        $cart = $request->input('cart', []);
-        session(['cart' => $cart]);
-        return redirect()->route('payment.show');
-    }
-
-    // Show payment page, retrieve cart from session
-    public function show(Request $request)
-    {
-        $transactionId = session('current_transaction_id');
-        
-        if (!$transactionId) {
-            return redirect()->route('cart')->with('error', 'Silakan checkout ulang dari keranjang.');
-        }
-        
-        // Ambil transaksi dari database
-        $transaction = Transaction::with(['transactionItems.product', 'shippingAddress'])->find($transactionId);
-        
-        if (!$transaction) {
-            return redirect()->route('cart')->with('error', 'Transaksi tidak ditemukan.');
-        }
-        
-        // Check if user owns this transaction
-        if ($transaction->user_id !== Auth::id()) {
-            return redirect()->route('transaksi')->with('error', 'Anda tidak memiliki akses ke transaksi ini.');
-        }
-        
-        // Gunakan alamat dari transaksi jika tersedia, jika tidak gunakan dari session
-        $address = $transaction->shippingAddress;
-        if (!$address) {
-            $addressId = session('checkout_address_id');
-            if ($addressId) {
-                $address = \App\Models\Address::find($addressId);
-            }
-        }
-        
-        $cart = session('checkout_cart', []);
-        $total = session('checkout_total', 0);
-        $shipping = 0;
-        $insurance = 0;
-        $grand_total = $total + $shipping + $insurance;
-        $deadline = Carbon::parse($transaction->order_date)->addDay()->format('d M Y \\P\\u\\k\\u\\l H:i');
-        $shipping_method = session('checkout_shipping_method', 'Standard');
-
-        return view('customer.payment', [
-            'transaction' => $transaction,
-            'address' => $address,
-            'cart' => $cart,
-            'total' => $total,
-            'shipping' => $shipping,
-            'insurance' => $insurance,
-            'grand_total' => $grand_total,
-            'deadline' => $deadline,
-            'shipping_method' => $shipping_method,
-        ]);
-    }
-
-    // Handle upload bukti pembayaran
+    /**
+     * Handle upload bukti pembayaran untuk billing atau ongkir.
+     * Status transaksi hanya akan berubah setelah kedua file diunggah.
+     */
     public function uploadProof(Request $request)
     {
         $request->validate([
-            'bukti_pembayaran' => 'required|image|mimes:jpg,jpeg,png|max:10240',
+            'bukti_pembayaran_billing' => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
+            'bukti_pembayaran_ongkir' => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
             'transaction_id' => 'required|exists:transactions,transaction_id'
         ]);
         
         try {
-            // Ambil transaction_id dari form atau session
+            // Tentukan file mana yang diunggah dan nama kolomnya
+            if ($request->hasFile('bukti_pembayaran_billing')) {
+                $file = $request->file('bukti_pembayaran_billing');
+                $columnName = 'photo_proof_payment_billing';
+            } elseif ($request->hasFile('bukti_pembayaran_ongkir')) {
+                $file = $request->file('bukti_pembayaran_ongkir');
+                $columnName = 'photo_proof_payment_ongkir';
+            } else {
+                return redirect()->back()->with('error', 'Tidak ada file yang diunggah.');
+            }
+
             $transactionId = $request->input('transaction_id') ?? session('current_transaction_id');
             
-            if (!$transactionId) {
-                return redirect()->route('cart')->with('error', 'Transaksi tidak ditemukan.');
-            }
-            
+            // Validasi Transaksi dan Kepemilikan
             $transaction = Transaction::find($transactionId);
-            
-            if (!$transaction) {
-                return redirect()->route('cart')->with('error', 'Transaksi tidak ditemukan.');
-            }
-            
-            // Cek apakah user yang mengupload adalah pemilik transaksi
-            if ($transaction->user_id !== Auth::id()) {
+            if (!$transaction || $transaction->user_id !== Auth::id()) {
                 return redirect()->route('transaksi')->with('error', 'Anda tidak memiliki akses ke transaksi ini.');
             }
-            
-            // Cek apakah transaksi masih dalam status menunggu pembayaran
             if ($transaction->order_status !== 'menunggu_pembayaran') {
                 return redirect()->route('transaksi.detail', $transaction->transaction_id)->with('error', 'Transaksi tidak dapat menerima pembayaran karena status tidak valid.');
             }
+
+            // Cari record pembayaran yang sudah ada untuk transaksi ini
+            $payment = Payment::firstOrCreate(
+                ['transaction_id' => $transaction->transaction_id],
+                ['amount_paid' => $transaction->total_price, 'payment_date' => now('Asia/Jakarta'), 'payment_status' => 'pending']
+            );
             
-            // Cek apakah sudah ada payment untuk transaksi ini yang statusnya BUKAN rejected
-            $hasNonRejectedPayment = $transaction->payments()->where('payment_status', '!=', 'rejected')->exists();
-            if ($hasNonRejectedPayment) {
-                return redirect()->route('transaksi.detail', $transaction->transaction_id)->with('error', 'Bukti pembayaran sudah diupload dan sedang diproses untuk transaksi ini.');
-            }
-            
-            $file = $request->file('bukti_pembayaran');
-            $filename = 'bukti_' . time() . '_' . $transaction->transaction_id . '.' . $file->getClientOriginalExtension();
+            // Simpan file dan perbarui record pembayaran
+            $filename = 'bukti_' . time() . '_' . $transaction->transaction_id . '_' . $columnName . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/bukti_pembayaran', $filename);
             
-            // Buat payment baru dengan status 'pending'
-            $payment = Payment::create([
-                'transaction_id' => $transaction->transaction_id,
-                'payment_date' => now('Asia/Jakarta'),
-                'amount_paid' => $transaction->total_price,
-                'photo_proof_payment' => $filename,
-                'payment_status' => 'pending',
+            $payment->update([
+                $columnName => $filename,
             ]);
+
+            // Periksa apakah kedua bukti pembayaran sudah diunggah
+            $areBothProofsUploaded = $payment->photo_proof_payment_billing !== null && $payment->photo_proof_payment_ongkir !== null;
             
-            // Update status order menjadi "menunggu_konfirmasi_pembayaran"
-            $transaction->update([
-                'order_status' => 'menunggu_konfirmasi_pembayaran'
-            ]);
+            $successMessage = 'Bukti pembayaran berhasil diunggah!';
             
-            // Bersihkan session checkout jika ada
-            session()->forget(['checkout_cart', 'checkout_total', 'checkout_shipping_method', 'current_transaction_id']);
-            
+            if ($areBothProofsUploaded) {
+                // Jika kedua bukti sudah diunggah, perbarui status transaksi
+                $transaction->update(['order_status' => 'menunggu_konfirmasi_pembayaran']);
+                session()->forget(['checkout_cart', 'checkout_total', 'checkout_shipping_method', 'current_transaction_id']);
+                $successMessage = 'Kedua bukti pembayaran berhasil diunggah! Status order berubah menjadi "Menunggu Konfirmasi Pembayaran".';
+            }
+
             Log::info('Payment proof uploaded', [
-                'payment_id' => $payment->payment_id,
+                'payment_id' => $payment->id,
                 'transaction_id' => $transaction->transaction_id,
                 'user_id' => Auth::id(),
-                'filename' => $filename
+                'filename' => $filename,
+                'column' => $columnName,
+                'status_updated' => $areBothProofsUploaded
             ]);
             
-            // Redirect ke halaman detail transaksi
-            return redirect()->route('transaksi.detail', $transaction->transaction_id)->with('success', 'Bukti pembayaran berhasil diupload! Status order berubah menjadi "Menunggu Konfirmasi Pembayaran".');
+            return redirect()->route('transaksi.detail', $transaction->transaction_id)->with('success', $successMessage);
+
         } catch (\Exception $e) {
             Log::error('Error uploading payment proof', [
                 'transaction_id' => $request->input('transaction_id'),
@@ -148,4 +93,4 @@ class PaymentController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupload bukti pembayaran. Silakan coba lagi.');
         }
     }
-} 
+}

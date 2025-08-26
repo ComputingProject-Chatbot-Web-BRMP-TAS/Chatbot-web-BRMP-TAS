@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id('payment_id');
             $table->foreignId('transaction_id')->constrained('transactions', 'transaction_id')->onDelete('cascade');
-            $table->dateTime('payment_date');
-            $table->integer('amount_paid');
-            $table->string('photo_proof_payment');
+            $table->dateTime('payment_date')->nullable();
+            $table->string('billing_code_file');
+            $table->string('no_rek_ongkir')->nullable();
+            $table->string('photo_proof_payment_billing')->nullable();
+            $table->string('photo_proof_payment_ongkir')->nullable();
             $table->string('payment_status');
             $table->text('rejection_reason')->nullable();
-            $table->text('request_message')->nullable();
             $table->timestamps();
         });
     }

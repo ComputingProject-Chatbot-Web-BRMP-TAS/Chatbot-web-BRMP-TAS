@@ -19,18 +19,20 @@ class Transaction extends Model
         'user_id',
         'shipping_address_id',
         'recipient_name',
-        'shipping_address',
         'recipient_phone',
+        'shipping_address',
         'shipping_note',
         'purchase_purpose',
         'province_id',
         'regency_id',
-        'order_date',
         'total_price',
         'order_status',
         'delivery_method',
-        'estimated_delivery_date',
+        'total_ongkir',
+        'no_resi',
+        'order_date',
         'done_date',
+        'estimated_delivery_date',
     ];
 
     public function user()
@@ -69,48 +71,36 @@ class Transaction extends Model
     public function getDisplayStatusAttribute()
     {
         $payment = $this->payments->last();
-        
+        $adaKodeBilling = $this->billing_code_file !== null;
+
+        if (!$payment && !$adaKodeBilling && $this->order_status ==='menunggu_kode_billing') {
+            return 'Menunggu Kode Billing';
+        }
+
         // If no payment exists, show "Menunggu Pembayaran"
-        if (!$payment) {
+        if (!$payment && $adaKodeBilling && $this->order_status === 'menunggu_pembayaran') {
             return 'Menunggu Pembayaran';
         }
 
         // If payment is rejected, show "Pembayaran Ditolak"
-        if ($payment->payment_status === 'rejected') {
+        if ($payment && $payment->payment_status === 'rejected') {
             return 'Pembayaran Ditolak';
         }
 
         // If payment is pending, show order status
-        if ($payment->payment_status === 'pending') {
-            switch ($this->order_status) {
-                case 'menunggu_konfirmasi_pembayaran':
-                    return 'Menunggu Konfirmasi Pembayaran';
-                case 'menunggu_pembayaran':
-                    return 'Menunggu Pembayaran';
-                case 'diproses':
-                    return 'Pesanan Diproses';
-                case 'dikirim':
-                    return 'Pesanan Dikirim';
-                case 'selesai':
-                    return 'Pesanan Selesai';
-                case 'dibatalkan':
-                    return 'Pesanan Dibatalkan';
-                default:
-                    return 'Menunggu Pembayaran';
-            }
+        if ($payment && $payment->payment_status === 'pending' && $this->order_status === 'menunggu_konfirmasi_pembayaran') {
+            return 'Menunggu Konfirmasi Pembayaran';
         }
 
         // If payment is approved, show order status
-        if ($payment->payment_status === 'approved') {
+        if ($payment && $payment->payment_status === 'approved') {
             switch ($this->order_status) {
                 case 'diproses':
-                    return 'Pesanan Diproses';
-                case 'dikirim':
-                    return 'Pesanan Dikirim';
+                    return 'Pesanan sedang diproses';
                 case 'selesai':
-                    return 'Pesanan Selesai';
+                    return 'Pesanan telah dikirim';
                 case 'dibatalkan':
-                    return 'Pesanan Dibatalkan';
+                    return 'Pesanan telah dibatalkan';
                 default:
                     return 'Menunggu Pembayaran';
             }
@@ -118,110 +108,4 @@ class Transaction extends Model
 
         return 'Menunggu Pembayaran';
     }
-
-    /**
-     * Get the status class for CSS styling
-     */
-    public function getStatusClassAttribute()
-    {
-        $payment = $this->payments->last();
-        
-        if (!$payment) {
-            return 'menunggu-pembayaran';
-        }
-
-        if ($payment->payment_status === 'rejected') {
-            return 'pembayaran-ditolak';
-        }
-
-        if ($payment->payment_status === 'pending') {
-            switch ($this->order_status) {
-                case 'menunggu_konfirmasi_pembayaran':
-                    return 'menunggu-konfirmasi-pembayaran';
-                case 'menunggu_pembayaran':
-                    return 'menunggu-pembayaran';
-                case 'diproses':
-                    return 'pesanan-diproses';
-                case 'dikirim':
-                    return 'pesanan-dikirim';
-                case 'selesai':
-                    return 'pesanan-selesai';
-                case 'dibatalkan':
-                    return 'pesanan-dibatalkan';
-                default:
-                    return 'menunggu-pembayaran';
-            }
-        }
-
-        if ($payment->payment_status === 'approved') {
-            switch ($this->order_status) {
-                case 'diproses':
-                    return 'pesanan-diproses';
-                case 'dikirim':
-                    return 'pesanan-dikirim';
-                case 'selesai':
-                    return 'pesanan-selesai';
-                case 'dibatalkan':
-                    return 'pesanan-dibatalkan';
-                default:
-                    return 'menunggu-pembayaran';
-            }
-        }
-
-        return 'menunggu-pembayaran';
-    }
-
-    /**
-     * Get the payment status for display
-     */
-    public function getPaymentStatusAttribute()
-    {
-        $payment = $this->payments->last();
-        
-        if (!$payment) {
-            return 'Belum Ada Pembayaran';
-        }
-
-        switch ($payment->payment_status) {
-            case 'pending':
-                return 'Menunggu Konfirmasi';
-            case 'approved':
-                return 'Dikonfirmasi';
-            case 'rejected':
-                return 'Ditolak';
-            default:
-                return 'Tidak Diketahui';
-        }
-    }
-
-    /**
-     * Check if transaction can accept payment
-     */
-    public function canAcceptPayment()
-    {
-        // Can accept payment if status is menunggu_pembayaran and no pending/approved payments
-        if ($this->order_status !== 'menunggu_pembayaran') {
-            return false;
-        }
-
-        $hasNonRejectedPayment = $this->payments()->where('payment_status', '!=', 'rejected')->exists();
-        return !$hasNonRejectedPayment;
-    }
-
-    /**
-     * Check if transaction needs payment reupload
-     */
-    public function needsPaymentReupload()
-    {
-        $payment = $this->payments->last();
-        return $payment && $payment->payment_status === 'rejected';
-    }
-
-    /**
-     * Get the latest payment
-     */
-    public function getLatestPaymentAttribute()
-    {
-        return $this->payments->last();
-    }
-} 
+}

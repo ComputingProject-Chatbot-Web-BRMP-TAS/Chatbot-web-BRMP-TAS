@@ -42,11 +42,10 @@ class TransactionController extends Controller
         if ($status && $status !== 'semua') {
             switch ($status) {
                 case 'berlangsung':
-                    $query->whereIn('order_status', [
+                    $query->whereIn('order_status', ['menunggu_kode_billing',
                         'menunggu_pembayaran',
                         'menunggu_konfirmasi_pembayaran',
-                        'diproses',
-                        'dikirim'
+                        'diproses'
                     ]);
                     break;
                 case 'selesai':
@@ -54,6 +53,9 @@ class TransactionController extends Controller
                     break;
                 case 'tidak_berhasil':
                     $query->where('order_status', 'dibatalkan');
+                    break;
+                case 'menunggu_kode_billing':
+                    $query->where('order_status', 'menunggu_kode_billing');
                     break;
                 case 'menunggu_pembayaran':
                     $query->where('order_status', 'menunggu_pembayaran');
