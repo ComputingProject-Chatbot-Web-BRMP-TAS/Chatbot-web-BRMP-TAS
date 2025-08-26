@@ -42,17 +42,26 @@
                                                     <td><strong>Status:</strong></td>
                                                     <td>
                                                         @if ($transaction->order_status == 'menunggu_kode_billing')
-                                                            <span class="badge bg-secondary">Menunggu Kode Billing</span>
+                                                            <span class="badge"
+                                                                style="background-color: #AC8DF4; color: #44327A;">Menunggu
+                                                                Kode Billing</span>
                                                         @elseif($transaction->order_status == 'menunggu_pembayaran')
-                                                            <span class="badge bg-warning">Menunggu Pembayaran</span>
+                                                            <span class="badge"
+                                                                style="background-color: #FFD469; color: #D07F39;">Menunggu
+                                                                Pembayaran</span>
                                                         @elseif($transaction->order_status == 'menunggu_konfirmasi_pembayaran')
-                                                            <span class="badge bg-info">Menunggu Konfirmasi</span>
+                                                            <span class="badge"
+                                                                style="background-color: #FF97DA; color: #88135F;">Menunggu
+                                                                Konfirmasi Pembayaran</span>
                                                         @elseif($transaction->order_status == 'diproses')
-                                                            <span class="badge bg-primary">Diproses</span>
+                                                            <span class="badge"
+                                                                style="background-color: #81EBF1; color: #025B70;">Diproses</span>
                                                         @elseif($transaction->order_status == 'selesai')
-                                                            <span class="badge bg-success">Selesai</span>
+                                                            <span class="badge"
+                                                                style="background-color: #86F1B8; color: #178967;">Selesai</span>
                                                         @elseif($transaction->order_status == 'dibatalkan')
-                                                            <span class="badge bg-danger">Dibatalkan</span>
+                                                            <span class="badge"
+                                                                style="background-color: #FF7F98; color: #8E0116;">Dibatalkan</span>
                                                         @else
                                                             <span
                                                                 class="badge bg-secondary">{{ $transaction->order_status }}</span>
@@ -146,7 +155,7 @@
                                                         <td>
                                                             <div class="d-flex align-items-center">
                                                                 @if ($item->product && $item->product->image1)
-                                                                    <img src="{{ asset('storage/' . $item->product->image1) }}"
+                                                                    <img src="{{ asset('storage/products/' . $item->product->image1) }}"
                                                                         alt="{{ $item->product->product_name }}"
                                                                         class="me-3"
                                                                         style="width: 50px; height: 50px; object-fit: cover;">
@@ -196,7 +205,7 @@
                                                     Menunggu Pembayaran</option>
                                                 <option value="menunggu_konfirmasi_pembayaran"
                                                     {{ $transaction->order_status == 'menunggu_konfirmasi_pembayaran' ? 'selected' : '' }}>
-                                                    Menunggu Konfirmasi</option>
+                                                    Menunggu Konfirmasi Pembayaran</option>
                                                 <option value="diproses"
                                                     {{ $transaction->order_status == 'diproses' ? 'selected' : '' }}>
                                                     Diproses</option>
@@ -221,99 +230,155 @@
                                     <h5 class="mb-0">Informasi Pembayaran</h5>
                                 </div>
                                 <div class="card-body">
-                                    @if ($transaction->payments->count() > 0)
-                                        @foreach ($transaction->payments as $index => $payment)
-                                            <div class="border-bottom pb-3 mb-3">
-                                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                                    <strong>Pembayaran ke-{{ $index + 1 }}</strong>
-                                                    <span
-                                                        class="badge bg-{{ $payment->payment_status == 'approved' ? 'success' : ($payment->payment_status == 'rejected' ? 'danger' : 'warning') }}">
-                                                        {{ ucfirst($payment->payment_status) }}
-                                                    </span>
+                                    @php
+                                        $payment = $transaction->payments->first();
+                                    @endphp
+
+                                    @if ($payment)
+                                        <div class="mb-3">
+                                            <strong>Status Pembayaran:</strong>
+                                            @if ($payment->payment_status == 'no_payment')
+                                                <span class="badge"
+                                                    style="background-color: #AC8DF4; color: #44327A;">Belum Dibayar</span>
+                                            @elseif($payment->payment_status == 'pending')
+                                                <span class="badge"
+                                                    style="background-color: #FFD469; color: #D07F39;">Menunggu
+                                                    Konfirmasi</span>
+                                            @elseif($payment->payment_status == 'approved')
+                                                <span class="badge"
+                                                    style="background-color: #86F1B8; color: #178967;">Disetujui</span>
+                                            @elseif($payment->payment_status == 'rejected')
+                                                <span class="badge"
+                                                    style="background-color: #FF7F98; color: #8E0116;">Ditolak</span>
+                                            @endif
+                                        </div>
+                                        <div class="mb-2">
+                                            <strong>Tanggal Pembayaran:</strong>
+                                            {{ $payment->payment_date ? $payment->payment_date->format('d M Y H:i') : '-' }}
+                                        </div>
+                                        <div class="mb-2">
+                                            <strong>Kode Billing:</strong>
+                                            @if ($payment->billing_code_file)
+                                                <div class="mt-2">
+                                                    <a href="{{ asset('storage/' . $payment->billing_code_file) }}"
+                                                        target="_blank">
+                                                        <img src="{{ asset('storage/' . $payment->billing_code_file) }}"
+                                                            alt="Kode Billing" class="img-fluid rounded"
+                                                            style="width: 100%; max-height: 300px; object-fit: contain;">
+                                                    </a>
                                                 </div>
-                                                <p class="mb-1"><small>Jumlah: Rp
-                                                        {{ number_format($payment->amount_paid, 0, ',', '.') }}</small></p>
-                                                <p class="mb-1"><small>Tanggal:
-                                                        {{ $payment->payment_date ? $payment->payment_date->format('d M Y H:i') : $payment->created_at->format('d M Y H:i') }}</small>
-                                                </p>
+                                            @else
+                                                <span class="text-muted">Belum ada file</span>
+                                            @endif
+                                        </div>
+                                        <div class="mb-2">
+                                            <strong>No Rekening Ongkir:</strong>
+                                            @if ($payment->no_rek_ongkir)
+                                                <div class="mt-2">
+                                                    <a href="{{ asset('storage/' . $payment->no_rek_ongkir) }}"
+                                                        target="_blank">
+                                                        <img src="{{ asset('storage/' . $payment->no_rek_ongkir) }}"
+                                                            alt="No Rekening Ongkir" class="img-fluid rounded"
+                                                            style="width: 100%; max-height: 300px; object-fit: contain;">
+                                                    </a>
+                                                </div>
+                                            @else
+                                                <span class="text-muted">Belum ada file</span>
+                                            @endif
+                                        </div>
+                                        <div class="mb-2">
+                                            <strong>Total Ongkir:</strong>
+                                            Rp {{ number_format($transaction->total_ongkir, 0, ',', '.') }}
+                                        </div>
 
-                                                @if ($payment->rejection_reason)
-                                                    <div class="alert alert-danger mt-2">
-                                                        <strong>Alasan Penolakan:</strong><br>
-                                                        {{ $payment->rejection_reason }}
-                                                    </div>
-                                                @endif
-
-                                                @if ($payment->photo_proof_payment)
-                                                    <div class="mt-2">
-                                                        <strong>Bukti Pembayaran:</strong>
-                                                        <div class="mt-2">
-                                                            <img src="{{ asset('storage/bukti_pembayaran/' . $payment->photo_proof_payment) }}"
-                                                                alt="Bukti Pembayaran" class="img-fluid rounded"
-                                                                style="max-width: 100%; max-height: 300px; object-fit: contain;">
-                                                        </div>
-                                                    </div>
-                                                @endif
-
-                                                <!-- Payment Action Buttons -->
-                                                @if ($payment->payment_status == 'pending')
-                                                    <div class="mt-3">
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <form method="POST"
-                                                                    action="{{ route('admin.transactions.payment.approve', $payment->payment_id) }}"
-                                                                    class="d-inline">
-                                                                    @csrf
-                                                                    <button type="submit"
-                                                                        class="btn btn-success btn-sm w-100"
-                                                                        onclick="return confirm('Konfirmasi pembayaran ini?')">
-                                                                        <i class="fas fa-check"></i> Konfirmasi
-                                                                    </button>
-                                                                </form>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <button type="button" class="btn btn-danger btn-sm w-100"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#rejectModal{{ $payment->payment_id }}">
-                                                                    <i class="fas fa-times"></i> Tolak
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @endif
+                                        @if ($payment->rejection_reason)
+                                            <div class="alert alert-danger mt-2">
+                                                <strong>Alasan Penolakan:</strong><br>
+                                                {{ $payment->rejection_reason }}
                                             </div>
+                                        @endif
 
-                                            <!-- Reject Modal -->
-                                            <div class="modal fade" id="rejectModal{{ $payment->payment_id }}"
-                                                tabindex="-1">
-                                                <div class="modal-dialog modal-dialog-centered">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Tolak Pembayaran</h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal"></button>
-                                                        </div>
+                                        <div class="mb-2">
+                                            <strong>Bukti Pembayaran Billing:</strong>
+                                            @if ($payment->photo_proof_payment_billing)
+                                                <div class="mt-2">
+                                                    <img src="{{ asset('storage/bukti_pembayaran/' . $payment->photo_proof_payment_billing) }}"
+                                                        alt="Bukti Billing" class="img-fluid rounded"
+                                                        style="max-width: 100%; max-height: 300px; object-fit: contain;">
+                                                </div>
+                                            @else
+                                                <span class="text-muted">Belum ada bukti pembayaran billing</span>
+                                            @endif
+                                        </div>
+                                        <div class="mb-2">
+                                            <strong>Bukti Pembayaran Ongkir:</strong>
+                                            @if ($payment->photo_proof_payment_ongkir)
+                                                <div class="mt-2">
+                                                    <img src="{{ asset('storage/bukti_pembayaran/' . $payment->photo_proof_payment_ongkir) }}"
+                                                        alt="Bukti Ongkir" class="img-fluid rounded"
+                                                        style="max-width: 100%; max-height: 300px; object-fit: contain;">
+                                                </div>
+                                            @else
+                                                <span class="text-muted">Belum ada bukti pembayaran ongkir</span>
+                                            @endif
+                                        </div>
+
+                                        {{-- Payment Action Buttons --}}
+                                        @if ($payment->payment_status == 'pending')
+                                            <div class="mt-3">
+                                                <div class="row">
+                                                    <div class="col-md-6">
                                                         <form method="POST"
-                                                            action="{{ route('admin.transactions.payment.reject', $payment->payment_id) }}">
+                                                            action="{{ route('admin.transactions.payment.approve', $payment->payment_id) }}"
+                                                            class="d-inline">
                                                             @csrf
-                                                            <div class="modal-body">
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">Alasan Penolakan</label>
-                                                                    <textarea name="rejection_reason" class="form-control" rows="3" required
-                                                                        placeholder="Berikan alasan mengapa pembayaran ditolak..."></textarea>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Batal</button>
-                                                                <button type="submit" class="btn btn-danger">Tolak
-                                                                    Pembayaran</button>
-                                                            </div>
+                                                            <button type="submit" class="btn btn-success btn-sm w-100"
+                                                                onclick="return confirm('Konfirmasi pembayaran ini?')">
+                                                                <i class="fas fa-check"></i> Konfirmasi
+                                                            </button>
                                                         </form>
                                                     </div>
+                                                    <div class="col-md-6">
+                                                        <button type="button" class="btn btn-danger btn-sm w-100"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#rejectModal{{ $payment->payment_id }}">
+                                                            <i class="fas fa-times"></i> Tolak
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        @endforeach
+                                        @endif
+
+                                        <!-- Reject Modal -->
+                                        <div class="modal fade" id="rejectModal{{ $payment->payment_id }}"
+                                            tabindex="-1">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Tolak Pembayaran</h5>
+                                                        <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <form method="POST"
+                                                        action="{{ route('admin.transactions.payment.reject', $payment->payment_id) }}">
+                                                        @csrf
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Alasan Penolakan</label>
+                                                                <textarea name="rejection_reason" class="form-control" rows="3" required
+                                                                    placeholder="Berikan alasan mengapa pembayaran ditolak..."></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Batal</button>
+                                                            <button type="submit" class="btn btn-danger">Tolak
+                                                                Pembayaran</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @else
                                         @if ($transaction->order_status == 'menunggu_kode_billing')
                                             <a href="{{ route('admin.transactions.billing.form', $transaction->transaction_id) }}"
@@ -331,86 +396,144 @@
                                     <h5 class="mb-0">Status Alur Pembayaran</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <!-- Step 1: Order Created -->
+                                    <div class="timeline">
+                                        <!-- Step 1: Pesanan Dibuat -->
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="flex-shrink-0">
+                                                <i class="fas fa-shopping-cart text-primary"
+                                                    style="font-size: 1.5rem;"></i>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h6 class="mb-0">Pesanan Dibuat</h6>
+                                                <small
+                                                    class="text-muted">{{ $transaction->order_date->format('d M Y H:i') }}</small>
+                                            </div>
+                                            <div class="flex-shrink-0">
+                                                <i class="fas fa-check-circle text-success"></i>
+                                            </div>
+                                        </div>
+
+                                        <!-- Step 2: Input Kode Billing & Ongkir -->
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="flex-shrink-0">
+                                                <i class="fas fa-file-invoice text-info" style="font-size: 1.5rem;"></i>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h6 class="mb-0">Input Kode Billing & Ongkir</h6>
+                                                @if ($transaction->order_status == 'menunggu_kode_billing')
+                                                    <small class="text-warning">Menunggu input kode billing &
+                                                        ongkir</small>
+                                                @else
+                                                    <small class="text-success">Sudah diinput</small>
+                                                @endif
+                                            </div>
+                                            <div class="flex-shrink-0">
+                                                @if ($transaction->order_status == 'menunggu_kode_billing')
+                                                    <i class="fas fa-clock text-warning"></i>
+                                                @else
+                                                    <i class="fas fa-check-circle text-success"></i>
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                        <!-- Step 3: Pembayaran Diupload -->
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="flex-shrink-0">
+                                                <i class="fas fa-credit-card text-{{ $payment && $payment->payment_status == 'approved' ? 'success' : ($payment && $payment->payment_status == 'rejected' ? 'danger' : 'warning') }}"
+                                                    style="font-size: 1.5rem;"></i>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h6 class="mb-0">Bukti Pembayaran Diupload</h6>
+                                                @if ($payment)
+                                                    <small
+                                                        class="text-muted">{{ $payment->payment_date ? $payment->payment_date->format('d M Y H:i') : '-' }}</small>
+                                                    <br>
+                                                    <small
+                                                        class="text-{{ $payment->payment_status == 'approved' ? 'success' : ($payment->payment_status == 'rejected' ? 'danger' : 'warning') }}">
+                                                        Status:
+                                                        @if ($payment->payment_status == 'pending')
+                                                            Menunggu Konfirmasi
+                                                        @elseif($payment->payment_status == 'approved')
+                                                            Disetujui
+                                                        @elseif($payment->payment_status == 'rejected')
+                                                            Ditolak
+                                                        @else
+                                                            Belum Dibayar
+                                                        @endif
+                                                    </small>
+                                                @else
+                                                    <small class="text-warning">Belum ada pembayaran</small>
+                                                @endif
+                                            </div>
+                                            <div class="flex-shrink-0">
+                                                @if ($payment)
+                                                    @if ($payment->payment_status == 'pending')
+                                                        <i class="fas fa-clock text-warning"></i>
+                                                    @elseif($payment->payment_status == 'approved')
+                                                        <i class="fas fa-check-circle text-success"></i>
+                                                    @elseif($payment->payment_status == 'rejected')
+                                                        <i class="fas fa-times-circle text-danger"></i>
+                                                    @else
+                                                        <i class="fas fa-credit-card text-muted"></i>
+                                                    @endif
+                                                @else
+                                                    <i class="fas fa-credit-card text-muted"></i>
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                        <!-- Step 4: Pesanan Diproses (jika pembayaran disetujui) -->
+                                        @if ($payment && $payment->payment_status == 'approved')
                                             <div class="d-flex align-items-center mb-3">
                                                 <div class="flex-shrink-0">
-                                                    <i class="fas fa-shopping-cart text-primary"
-                                                        style="font-size: 1.5rem;"></i>
+                                                    <i class="fas fa-cog text-primary" style="font-size: 1.5rem;"></i>
                                                 </div>
                                                 <div class="flex-grow-1 ms-3">
-                                                    <h6 class="mb-0">Pesanan Dibuat</h6>
-                                                    <small
-                                                        class="text-muted">{{ $transaction->order_date->format('d M Y H:i') }}</small>
+                                                    <h6 class="mb-0">Pesanan Diproses</h6>
+                                                    <small class="text-muted">Status transaksi:
+                                                        {{ ucfirst(str_replace('_', ' ', $transaction->order_status)) }}</small>
                                                 </div>
                                                 <div class="flex-shrink-0">
                                                     <i class="fas fa-check-circle text-success"></i>
                                                 </div>
                                             </div>
+                                        @endif
 
-                                            <!-- Step 2: Payment Status -->
-                                            @if ($transaction->payments->count() > 0)
-                                                @php $latestPayment = $transaction->payments->last(); @endphp
-                                                <div class="d-flex align-items-center mb-3">
-                                                    <div class="flex-shrink-0">
-                                                        <i class="fas fa-credit-card text-{{ $latestPayment->payment_status == 'approved' ? 'success' : ($latestPayment->payment_status == 'rejected' ? 'danger' : 'warning') }}"
-                                                            style="font-size: 1.5rem;"></i>
-                                                    </div>
-                                                    <div class="flex-grow-1 ms-3">
-                                                        <h6 class="mb-0">Bukti Pembayaran Diupload</h6>
-                                                        <small
-                                                            class="text-muted">{{ $latestPayment->payment_date ? $latestPayment->payment_date->format('d M Y H:i') : $latestPayment->created_at->format('d M Y H:i') }}</small>
-                                                        <br>
-                                                        <small
-                                                            class="text-{{ $latestPayment->payment_status == 'approved' ? 'success' : ($latestPayment->payment_status == 'rejected' ? 'danger' : 'warning') }}">
-                                                            Status: {{ ucfirst($latestPayment->payment_status) }}
-                                                        </small>
-                                                    </div>
-                                                    <div class="flex-shrink-0">
-                                                        @if ($latestPayment->payment_status == 'pending')
-                                                            <i class="fas fa-clock text-warning"></i>
-                                                        @elseif($latestPayment->payment_status == 'approved')
-                                                            <i class="fas fa-check-circle text-success"></i>
-                                                        @elseif($latestPayment->payment_status == 'rejected')
-                                                            <i class="fas fa-times-circle text-danger"></i>
-                                                        @endif
-                                                    </div>
+                                        <!-- Step 5: Pesanan Selesai -->
+                                        @if ($transaction->order_status == 'selesai')
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-flag-checkered text-success"
+                                                        style="font-size: 1.5rem;"></i>
                                                 </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h6 class="mb-0">Pesanan Selesai</h6>
+                                                    <small
+                                                        class="text-muted">{{ $transaction->done_date ? $transaction->done_date->format('d M Y H:i') : '' }}</small>
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-check-circle text-success"></i>
+                                                </div>
+                                            </div>
+                                        @endif
 
-                                                <!-- Step 3: Order Processing (if approved) -->
-                                                @if ($latestPayment->payment_status == 'approved')
-                                                    <div class="d-flex align-items-center mb-3">
-                                                        <div class="flex-shrink-0">
-                                                            <i class="fas fa-cog text-primary"
-                                                                style="font-size: 1.5rem;"></i>
-                                                        </div>
-                                                        <div class="flex-grow-1 ms-3">
-                                                            <h6 class="mb-0">Pesanan Diproses</h6>
-                                                            <small class="text-muted">Status transaksi:
-                                                                {{ ucfirst(str_replace('_', ' ', $transaction->order_status)) }}</small>
-                                                        </div>
-                                                        <div class="flex-shrink-0">
-                                                            <i class="fas fa-check-circle text-success"></i>
-                                                        </div>
-                                                    </div>
-                                                @endif
-                                            @else
-                                                <div class="d-flex align-items-center mb-3">
-                                                    <div class="flex-shrink-0">
-                                                        <i class="fas fa-credit-card text-muted"
-                                                            style="font-size: 1.5rem;"></i>
-                                                    </div>
-                                                    <div class="flex-grow-1 ms-3">
-                                                        <h6 class="mb-0 text-muted">Bukti Pembayaran Diupload</h6>
-                                                        <small class="text-muted">Belum ada pembayaran</small>
-                                                    </div>
-                                                    <div class="flex-shrink-0">
-                                                        <i class="fas fa-clock text-muted"></i>
-                                                    </div>
+                                        <!-- Step 6: Pesanan Dibatalkan -->
+                                        @if ($transaction->order_status == 'dibatalkan')
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-times-circle text-danger"
+                                                        style="font-size: 1.5rem;"></i>
                                                 </div>
-                                            @endif
-                                        </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h6 class="mb-0 text-danger">Pesanan Dibatalkan</h6>
+                                                    <small
+                                                        class="text-muted">{{ $transaction->updated_at->format('d M Y H:i') }}</small>
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-times-circle text-danger"></i>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

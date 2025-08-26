@@ -11,11 +11,12 @@
                     <div class="mb-3">
                         <label for="billing_code_file" class="form-label">File Kode Billing</label>
                         <input type="file" class="form-control" name="billing_code_file" id="billing_code_file"
-                            accept=".jpg,.jpeg,.png,.pdf" required>
+                            accept=".jpg,.jpeg,.png" required>
                     </div>
                     <div class="mb-3">
                         <label for="no_rek_ongkir" class="form-label">No Rekening Ongkir</label>
-                        <input type="text" class="form-control" name="no_rek_ongkir" id="no_rek_ongkir" required>
+                        <input type="file" class="form-control" name="no_rek_ongkir" id="no_rek_ongkir"
+                            accept=".jpg,.jpeg,.png" required>
                     </div>
                     <div class="mb-3">
                         <label for="total_ongkir" class="form-label">Total Ongkir</label>

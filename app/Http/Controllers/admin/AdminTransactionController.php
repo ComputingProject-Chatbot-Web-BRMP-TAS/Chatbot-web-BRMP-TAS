@@ -142,22 +142,6 @@ class AdminTransactionController extends Controller
         }
     }
     
-    /**
-     * View payment details
-     */
-    public function showPayment($paymentId)
-    {
-        try {
-            $payment = Payment::with(['transaction.user', 'transaction.payments'])->findOrFail($paymentId);
-            return view('admin.payment_detail', compact('payment'));
-        } catch (\Exception $e) {
-            Log::error('Error showing payment', [
-                'payment_id' => $paymentId,
-                'error' => $e->getMessage()
-            ]);
-            return redirect()->back()->with('error', 'Pembayaran tidak ditemukan.');
-        }
-    }
     
     /**
      * Show billing form
@@ -174,31 +158,31 @@ class AdminTransactionController extends Controller
     public function storeBilling(Request $request, $transaction_id)
     {
         $request->validate([
-            'billing_code_file' => 'required|file|mimes:jpg,jpeg,png,pdf|max:10240',
-            'no_rek_ongkir' => 'required|string',
-            'total_ongkir' => 'required|numeric',
+            'billing_code_file' => 'required|file|mimes:jpg,jpeg,png|max:10240',
+            'no_rek_ongkir'     => 'required|file|mimes:jpg,jpeg,png|max:10240',
+            'total_ongkir'      => 'required|numeric',
         ]);
 
         $transaction = Transaction::findOrFail($transaction_id);
 
         // Simpan file billing
         $billingFile = $request->file('billing_code_file')->store('billing_codes', 'public');
+        // Simpan file no_rek_ongkir
+        $rekOngkirFile = $request->file('no_rek_ongkir')->store('rek_ongkir_files', 'public');
 
         // Buat payment baru
         Payment::create([
-            'transaction_id' => $transaction->transaction_id,
+            'transaction_id'    => $transaction->transaction_id,
             'billing_code_file' => $billingFile,
-            'no_rek_ongkir' => $request->no_rek_ongkir,
-            'payment_status' => 'no_payment',
+            'no_rek_ongkir'     => $rekOngkirFile,
+            'payment_status'    => 'no_payment',
         ]);
 
         // Update total_ongkir di transaksi
         $transaction->total_ongkir = $request->total_ongkir;
-
-        // Update status order
         $transaction->order_status = 'menunggu_pembayaran';
         $transaction->save();
 
-        return redirect()->route('admin.transactions.index', $transaction_id)->with('success', 'Billing dan ongkir berhasil disimpan.');
+        return redirect()->route('admin.transactions.index')->with('success', 'Billing dan ongkir berhasil disimpan.');
     }
 }

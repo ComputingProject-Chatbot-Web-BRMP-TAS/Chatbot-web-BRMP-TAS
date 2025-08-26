@@ -49,8 +49,7 @@ class PaymentController extends Controller
 
             // Cari record pembayaran yang sudah ada untuk transaksi ini
             $payment = Payment::firstOrCreate(
-                ['transaction_id' => $transaction->transaction_id],
-                ['amount_paid' => $transaction->total_price, 'payment_date' => now('Asia/Jakarta'), 'payment_status' => 'pending']
+                ['transaction_id' => $transaction->transaction_id]
             );
             
             // Simpan file dan perbarui record pembayaran
@@ -69,6 +68,7 @@ class PaymentController extends Controller
             if ($areBothProofsUploaded) {
                 // Jika kedua bukti sudah diunggah, perbarui status transaksi
                 $transaction->update(['order_status' => 'menunggu_konfirmasi_pembayaran']);
+                $payment->update(['payment_date' => now('Asia/Jakarta'), 'payment_status' => 'pending']);
                 session()->forget(['checkout_cart', 'checkout_total', 'checkout_shipping_method', 'current_transaction_id']);
                 $successMessage = 'Kedua bukti pembayaran berhasil diunggah! Status order berubah menjadi "Menunggu Konfirmasi Pembayaran".';
             }

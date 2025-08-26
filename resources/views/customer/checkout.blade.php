@@ -273,7 +273,7 @@
                         @if ($address)
                             <div class="fw-bold">{{ $address->address ?? '-' }}</div>
                             <div>{{ $address->recipient_name ?? '-' }}</div>
-                            <div>{{ $address->recipient_phone ?? '-' }}</div>
+                            <div>+{{ $address->recipient_phone ?? '-' }}</div>
                             @if (!empty($address->note))
                                 <div class="text-muted"><small>Catatan: {{ $address->note }}</small></div>
                             @endif

@@ -26,7 +26,7 @@
                                             Pembayaran</option>
                                         <option value="menunggu_konfirmasi_pembayaran"
                                             {{ request('status') == 'menunggu_konfirmasi_pembayaran' ? 'selected' : '' }}>
-                                            Menunggu Konfirmasi</option>
+                                            Menunggu Konfirmasi Pembayaran</option>
                                         <option value="diproses" {{ request('status') == 'diproses' ? 'selected' : '' }}>
                                             Diproses</option>
                                         <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>
@@ -119,17 +119,26 @@
                                                 </td>
                                                 <td>
                                                     @if ($transaction->order_status == 'menunggu_kode_billing')
-                                                        <span class="badge bg-secondary">Menunggu Kode Billing</span>
+                                                        <span class="badge"
+                                                            style="background-color: #AC8DF4; color: #44327A;">Menunggu Kode
+                                                            Billing</span>
                                                     @elseif ($transaction->order_status == 'menunggu_pembayaran')
-                                                        <span class="badge bg-warning">Menunggu Pembayaran</span>
+                                                        <span class="badge"
+                                                            style="background-color: #FFD469; color: #D07F39;">Menunggu
+                                                            Pembayaran</span>
                                                     @elseif($transaction->order_status == 'menunggu_konfirmasi_pembayaran')
-                                                        <span class="badge bg-info">Menunggu Konfirmasi</span>
+                                                        <span class="badge"
+                                                            style="background-color: #FF97DA; color: #88135F;">Menunggu
+                                                            Konfirmasi Pembayaran</span>
                                                     @elseif($transaction->order_status == 'diproses')
-                                                        <span class="badge bg-primary">Diproses</span>
+                                                        <span class="badge"
+                                                            style="background-color: #81EBF1; color: #025B70;">Diproses</span>
                                                     @elseif($transaction->order_status == 'selesai')
-                                                        <span class="badge bg-success">Selesai</span>
+                                                        <span class="badge"
+                                                            style="background-color: #86F1B8; color: #178967;">Selesai</span>
                                                     @elseif($transaction->order_status == 'dibatalkan')
-                                                        <span class="badge bg-danger">Dibatalkan</span>
+                                                        <span class="badge"
+                                                            style="background-color: #FF7F98; color: #8E0116;">Dibatalkan</span>
                                                     @else
                                                         <span
                                                             class="badge bg-secondary">{{ $transaction->order_status }}</span>
@@ -141,17 +150,21 @@
                                                     @endphp
                                                     @if ($latestPayment)
                                                         @if ($latestPayment->payment_status == 'approved')
-                                                            <span class="badge bg-success">Dikonfirmasi</span>
+                                                            <span class="badge"
+                                                                style="background-color: #86F1B8; color: #178967;">Dikonfirmasi</span>
                                                         @elseif($latestPayment->payment_status == 'rejected')
-                                                            <span class="badge bg-danger">Ditolak</span>
+                                                            <span class="badge"
+                                                                style="background-color: #FF7F98; color: #8E0116;">Ditolak</span>
                                                         @elseif($latestPayment->payment_status == 'pending')
-                                                            <span class="badge bg-info">Menunggu Konfirmasi</span>
+                                                            <span class="badge"
+                                                                style="background-color: #FFD469; color: #D07F39;">Menunggu
+                                                                Konfirmasi</span>
                                                         @elseif($latestPayment->payment_status == 'no_payment')
-                                                            <span class="badge bg-warning">Belum Bayar</span>
+                                                            <span class="badge"
+                                                                style="background-color: #AC8DF4; color: #44327A;">Belum
+                                                                Bayar</span>
                                                         @endif
                                                         <br>
-                                                        <small
-                                                            class="text-muted">{{ $latestPayment->payment_date ? $latestPayment->payment_date->format('d/m/Y') : $latestPayment->created_at->format('d/m/Y') }}</small>
                                                     @else
                                                         <span class="badge bg-secondary">Belum Ada Kode Billing</span>
                                                     @endif
@@ -165,14 +178,11 @@
                                                 <td>
                                                     <div class="btn-group" role="group">
                                                         <a href="{{ route('admin.transactions.show', $transaction->transaction_id) }}"
-                                                            class="btn btn-sm btn-info">
-                                                            <i class="fas fa-eye"></i> Detail
+                                                            class="btn btn-sm btn-info">Detail
                                                         </a>
                                                         @if ($latestPayment && $latestPayment->payment_status == 'pending')
-                                                            <a href="{{ route('admin.payment.show', $latestPayment->payment_id) }}"
-                                                                class="btn btn-sm btn-warning">
-                                                                <i class="fas fa-credit-card"></i> Konfirmasi Pembayaran
-                                                                ke-{{ $transaction->payments->where('payment_id', '<=', $latestPayment->payment_id)->count() }}
+                                                            <a href="{{ route('admin.transactions.payment.show', $latestPayment->payment_id) }}"
+                                                                class="btn btn-sm btn-warning">Konfirmasi Pembayaran
                                                             </a>
                                                         @endif
                                                     </div>

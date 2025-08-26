@@ -44,8 +44,7 @@ Route::group(['prefix' => 'ADMIN-BRMP-TAS'], function () {
         // Payment routes
         Route::post('/payments/{id}/approve', [AdminTransactionController::class, 'approvePayment'])->name('admin.transactions.payment.approve');
         Route::post('/payments/{id}/reject', [AdminTransactionController::class, 'rejectPayment'])->name('admin.transactions.payment.reject');
-        Route::get('/payments/{id}', [AdminTransactionController::class, 'showPayment'])->name('admin.transactions.payment.show');
-
+        
         // Article resource routes
         Route::resource('/articles', ArticleController::class)->names([
             'index' => 'admin.articles.index',

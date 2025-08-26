@@ -28,6 +28,15 @@ class AddressController extends Controller
             'recipient_name' => 'required|string|max:255',
             'recipient_phone' => 'required|string|max:20',
         ]);
+
+         // ** Tambahkan Logika Pengecekan Nomor Telepon di sini **
+        $phone = $request->input('recipient_phone');
+            if (str_starts_with($phone, '08')) {
+            $phone = '628' . substr($phone, 2);
+        }
+        // Setel kembali nilai recipient_phone di request
+        $request->merge(['recipient_phone' => $phone]);
+
         $isFirst = Auth::user()->addresses()->count() === 0;
         $address = Auth::user()->addresses()->create([
             'label' => $request->label,

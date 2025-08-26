@@ -663,14 +663,14 @@
                         @if ($transaction->shippingAddress)
                             {{ $transaction->shippingAddress->recipient_name }}<br>
                             {{ $transaction->shippingAddress->address }}<br>
-                            Telp: {{ $transaction->shippingAddress->recipient_phone }}
+                            Telp: +{{ $transaction->shippingAddress->recipient_phone }}
                             @if ($transaction->shippingAddress->note)
                                 <br><small class="text-muted">Catatan: {{ $transaction->shippingAddress->note }}</small>
                             @endif
                         @else
                             {{ $transaction->recipient_name }}<br>
                             {{ $transaction->shipping_address }}<br>
-                            Telp: {{ $transaction->recipient_phone }}
+                            Telp: +{{ $transaction->recipient_phone }}
                             @if ($transaction->shipping_note)
                                 <br><small class="text-muted">Catatan: {{ $transaction->shipping_note }}</small>
                             @endif
@@ -723,12 +723,8 @@
                         {{ $item->quantity }}{{ $item->product->unit ?? 'kg' }}
                     </div>
                 </div>
-                <!-- <div class="click-indicator">
-                                                                                                                                                                                                            <i class="fas fa-mouse-pointer" style="margin-right: 4px;"></i>
-                                                                                                                                                                                                            Klik untuk {{ $productHistory ? 'lihat history produk' : 'lihat detail produk' }}
-                                                                                                                                                                                                        </div> -->
-            @endforeach
         </div>
+        @endforeach
 
         <div class="transaksi-detail-total">
             Total Belanja: Rp{{ number_format($transaction->total_price, 0, ',', '.') }}
@@ -754,8 +750,12 @@
                         <div class="value">{{ $latestPayment->payment_date->format('d M Y H:i') }}</div>
                     </div>
                     <div class="payment-item">
-                        <div class="label">💰 Jumlah Dibayar</div>
-                        <div class="value">Rp {{ number_format($latestPayment->amount_paid, 0, ',', '.') }}</div>
+                        <div class="label">💰 Total Pembelian</div>
+                        <div class="value">Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</div>
+                    </div>
+                    <div class="payment-item">
+                        <div class="label">🚚 Total Ongkir</div>
+                        <div class="value">Rp {{ number_format($transaction->total_ongkir, 0, ',', '.') }}</div>
                     </div>
                     <div class="payment-item">
                         <div class="label">✅ Status Pembayaran</div>
@@ -852,6 +852,7 @@
                                 </form>
                             </div>
                         @endif
+
 
                     </div>
                 </div>
