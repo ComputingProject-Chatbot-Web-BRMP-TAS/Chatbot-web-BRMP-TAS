@@ -4,124 +4,37 @@
 
 @section('content')
     <style>
-        /* Floating leaves animation */
-        .floating-leaves {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .leaf {
-            position: absolute;
-            color: #4CAF50;
-            font-size: 20px;
-            animation: float 6s ease-in-out infinite;
-            opacity: 0.3;
-        }
-
-        .leaf:nth-child(1) {
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .leaf:nth-child(2) {
-            left: 20%;
-            animation-delay: 2s;
-        }
-
-        .leaf:nth-child(3) {
-            left: 30%;
-            animation-delay: 4s;
-        }
-
-        .leaf:nth-child(4) {
-            left: 40%;
-            animation-delay: 1s;
-        }
-
-        .leaf:nth-child(5) {
-            left: 50%;
-            animation-delay: 3s;
-        }
-
-        .leaf:nth-child(6) {
-            left: 60%;
-            animation-delay: 5s;
-        }
-
-        .leaf:nth-child(7) {
-            left: 70%;
-            animation-delay: 1.5s;
-        }
-
-        .leaf:nth-child(8) {
-            left: 80%;
-            animation-delay: 3.5s;
-        }
-
-        .leaf:nth-child(9) {
-            left: 90%;
-            animation-delay: 0.5s;
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 0.3;
-            }
-
-            90% {
-                opacity: 0.3;
-            }
-
-            50% {
-                transform: translateY(-20px) rotate(180deg);
-                opacity: 0.3;
-            }
+        .bg-image {
+            background-image: url('images/image 15.png');
+            background-repeat: no-repeat;
+            background-position: top center;
+            border-radius: 20px 20px 0 0;
         }
 
         .hero-banner {
-            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 50%, #CDDC39 100%);
-            border-radius: 20px;
-            padding: 40px;
+            border-radius: 16px;
+            background: rgba(146, 146, 146, 0.2);
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(5px);
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: white;
+            padding: 40px;
+            flex-direction: column;
+            align-items: flex-start;
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(76, 175, 80, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            z-index: 1;
-        }
-
-        .hero-content {
-            flex: 1;
-            max-width: 60%;
+            margin-bottom: 50px;
         }
 
         .hero-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            line-height: 1.2;
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 10px;
         }
 
         .hero-subtitle {
-            font-size: 1.1rem;
-            margin-bottom: 24px;
-            opacity: 0.95;
-            line-height: 1.4;
+            font-size: 14px;
+            margin-bottom: 43px;
+            color: #fff;
+            font-weight: 500;
         }
 
         .hero-btn {
@@ -137,31 +50,6 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        .hero-btn:hover {
-            background: #FFF59D;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-        }
-
-        .hero-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .hero-icon-circle {
-            width: 120px;
-            height: 120px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            color: white;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
 
         .container {
             max-width: 1200px;
@@ -183,230 +71,27 @@
             z-index: 1;
         }
 
-        .section h2,
-        .section h3 {
-            margin-top: 0;
-        }
-
-        .categories {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .category {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: #fff;
-            border: 2px solid #E0E0E0;
-            border-radius: 12px;
-            padding: 16px 20px;
-            min-width: 90px;
-            cursor: pointer;
-            transition: border 0.2s, background 0.2s;
-        }
-
-        .category.selected,
-        .category:hover {
-            border: 2px solid #4CAF50;
-            background: #E8F5E9;
-        }
-
-        .category i {
-            font-size: 28px;
-            color: #4CAF50;
-            margin-bottom: 8px;
-        }
-
-        .category span {
-            font-size: 15px;
-        }
-
-        .recommendations {
-            display: flex;
-            gap: 18px;
-            flex-wrap: wrap;
-        }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 24px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .product-card {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            height: 280px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 0;
-            margin-bottom: 0;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(76, 175, 80, 0.1);
-            position: relative;
-            overflow: hidden;
-            box-sizing: border-box;
-            width: 100%;
-        }
-
-        .product-badge {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: #4CAF50;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            z-index: 10;
-        }
-
-        .product-card .image-placeholder {
-            height: 120px;
-            background: #E0F2F1;
-            border-radius: 12px 12px 0 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #B2DFDB;
-            font-size: 32px;
-        }
-
-        .product-card .info {
-            padding: 12px 16px 16px 16px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .product-card .title {
-            font-weight: 500;
-            font-size: 16px;
-            margin-bottom: 4px;
-        }
-
-        .product-card .price {
-            color: #388E3C;
-            font-weight: bold;
-            font-size: 17px;
-            margin-bottom: 4px;
-        }
-
-        .product-card .desc {
-            font-size: 13px;
-            color: #757575;
-        }
-
-        .product-card .tag {
-            display: flex;
-            align-items: center;
-            font-size: 13px;
-            color: #FBC02D;
-            margin-top: 6px;
-        }
-
-        .product-card .tag i {
-            margin-right: 4px;
-        }
-
-        @media (max-width: 900px) {
-            .hero-banner {
-                flex-direction: column;
-                text-align: center;
-                padding: 32px 24px;
-            }
-
-            .hero-content {
-                max-width: 100%;
-                margin-bottom: 24px;
-            }
-
-            .hero-title {
-                font-size: 1.8rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1rem;
-            }
-
-            .hero-icon-circle {
-                width: 100px;
-                height: 100px;
-                font-size: 40px;
-            }
-
-            .recommendations {
-                flex-direction: column;
-                gap: 0;
-            }
-
-            .product-card {
-                width: 100%;
-                height: 260px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .product-grid {
-                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-                gap: 12px;
-            }
-
-            .product-card {
-                height: 240px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .product-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-
-            .product-card {
-                height: 220px;
-            }
-        }
-
         .hero-banner-margin {
             margin: 60px 0 32px 0;
         }
     </style>
-    <!-- Floating leaves animation -->
-    <div class="floating-leaves">
-        <div class="leaf">🍃</div>
-        <div class="leaf">🌿</div>
-        <div class="leaf">🍃</div>
-        <div class="leaf">🌱</div>
-        <div class="leaf">🍃</div>
-        <div class="leaf">🌿</div>
-        <div class="leaf">🍃</div>
-        <div class="leaf">🌱</div>
-        <div class="leaf">🍃</div>
-    </div>
+
     <div class="container">
-        <!-- Hapus search bar di homepage -->
         <!-- Hero Banner Section -->
-        <div class="hero-banner hero-banner-margin">
-            <div class="hero-content">
-                <h1 class="hero-title">Produk Baru Telah Hadir!</h1>
-                <p class="hero-subtitle">Temukan koleksi produk terbaru dengan penawaran menarik hanya di Benih BRMP.</p>
-                <button class="hero-btn" onclick="window.location.href='{{ route('produk.baru') }}'">Lihat Produk
-                    Baru</button>
-            </div>
-            <div class="hero-icon">
-                <div class="hero-icon-circle">
-                    <i class="fas fa-seedling"></i>
+        <div class="hero-banner">
+            <h1 class="hero-title">
+                <div>PRODUK BARU
                 </div>
-            </div>
+                <div>
+                    KINI
+                    <span style="color:#A1FF00">
+                        TELAH HADIR.
+                    </span>
+                </div>
+            </h1>
+            <p class="hero-subtitle">Temukan koleksi produk terbaru dengan penawaran menarik hanya di Benih BRMP.</p>
+            <button class="hero-btn" onclick="window.location.href='{{ route('produk.baru') }}'">Lihat Produk
+                Baru</button>
         </div>
 
         <div class="section" style="margin-bottom:24px;">
@@ -418,8 +103,7 @@
                 @endif
             </h2>
             @if ($products->count() > 0)
-                <div class="product-grid" id="productsGrid"
-                    style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+                <div class="product-grid" id="productsGrid">
                     @foreach ($products as $product)
                         @include('customer.partials.product-card', ['produk' => $product])
                     @endforeach

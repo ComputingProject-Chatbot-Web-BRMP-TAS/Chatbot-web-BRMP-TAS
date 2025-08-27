@@ -92,7 +92,23 @@
                                                 </tr>
                                                 <tr>
                                                     <td><strong>Telepon:</strong></td>
-                                                    <td>{{ $transaction->user->phone ?? 'N/A' }}</td>
+                                                    @php
+                                                        $phoneNumber = $transaction->user->phone;
+
+                                                        // Cek apakah nomor telepon dimulai dengan '08'
+                                                        if (strpos($phoneNumber, '08') === 0) {
+                                                            $phoneNumber = '628' . substr($phoneNumber, 2);
+                                                        }
+                                                    @endphp
+                                                    @if ($transaction->user->phone)
+                                                        <td>
+                                                            <a href="https://wa.me/{{ $phoneNumber }}">
+                                                                {{ $transaction->user->phone }}
+                                                            </a>
+                                                        </td>
+                                                    @else
+                                                        <td>N/A</td>
+                                                    @endif
                                                 </tr>
                                                 <tr>
                                                     <td><strong>Penerima:</strong></td>
@@ -100,7 +116,23 @@
                                                 </tr>
                                                 <tr>
                                                     <td><strong>Telepon Penerima:</strong></td>
-                                                    <td>{{ $transaction->recipient_phone ?? 'N/A' }}</td>
+                                                    @php
+                                                        $phoneNumber = $transaction->recipient_phone;
+
+                                                        // Cek apakah nomor telepon dimulai dengan '08'
+                                                        if (strpos($phoneNumber, '08') === 0) {
+                                                            $phoneNumber = '628' . substr($phoneNumber, 2);
+                                                        }
+                                                    @endphp
+                                                    @if ($transaction->recipient_phone)
+                                                        <td>
+                                                            <a href="https://wa.me/{{ $phoneNumber }}">
+                                                                {{ $transaction->recipient_phone }}
+                                                            </a>
+                                                        </td>
+                                                    @else
+                                                        <td>N/A</td>
+                                                    @endif
                                                 </tr>
                                             </table>
                                         </div>
@@ -302,9 +334,12 @@
                                             <strong>Bukti Pembayaran Billing:</strong>
                                             @if ($payment->photo_proof_payment_billing)
                                                 <div class="mt-2">
-                                                    <img src="{{ asset('storage/bukti_pembayaran/' . $payment->photo_proof_payment_billing) }}"
-                                                        alt="Bukti Billing" class="img-fluid rounded"
-                                                        style="max-width: 100%; max-height: 300px; object-fit: contain;">
+                                                    <a href="{{ asset('storage/bukti_pembayaran/' . $payment->photo_proof_payment_billing) }}"
+                                                        target="_blank">
+                                                        <img src="{{ asset('storage/bukti_pembayaran/' . $payment->photo_proof_payment_billing) }}"
+                                                            alt="Bukti Billing" class="img-fluid rounded"
+                                                            style="max-width: 100%; max-height: 300px; object-fit: contain;">
+                                                    </a>
                                                 </div>
                                             @else
                                                 <span class="text-muted">Belum ada bukti pembayaran billing</span>
@@ -314,9 +349,12 @@
                                             <strong>Bukti Pembayaran Ongkir:</strong>
                                             @if ($payment->photo_proof_payment_ongkir)
                                                 <div class="mt-2">
-                                                    <img src="{{ asset('storage/bukti_pembayaran/' . $payment->photo_proof_payment_ongkir) }}"
-                                                        alt="Bukti Ongkir" class="img-fluid rounded"
-                                                        style="max-width: 100%; max-height: 300px; object-fit: contain;">
+                                                    <a href="{{ asset('storage/bukti_pembayaran/' . $payment->photo_proof_payment_ongkir) }}"
+                                                        target="_blank">
+                                                        <img src="{{ asset('storage/bukti_pembayaran/' . $payment->photo_proof_payment_ongkir) }}"
+                                                            alt="Bukti Ongkir" class="img-fluid rounded"
+                                                            style="max-width: 100%; max-height: 300px; object-fit: contain;">
+                                                    </a>
                                                 </div>
                                             @else
                                                 <span class="text-muted">Belum ada bukti pembayaran ongkir</span>
@@ -400,8 +438,8 @@
                                         <!-- Step 1: Pesanan Dibuat -->
                                         <div class="d-flex align-items-center mb-3">
                                             <div class="flex-shrink-0">
-                                                <i class="fas fa-shopping-cart text-primary"
-                                                    style="font-size: 1.5rem;"></i>
+                                                <i class="fas fa-shopping-cart text-primary d-flex justify-content-center"
+                                                    style="font-size: 1.5rem;width:30px;"></i>
                                             </div>
                                             <div class="flex-grow-1 ms-3">
                                                 <h6 class="mb-0">Pesanan Dibuat</h6>
@@ -416,7 +454,8 @@
                                         <!-- Step 2: Input Kode Billing & Ongkir -->
                                         <div class="d-flex align-items-center mb-3">
                                             <div class="flex-shrink-0">
-                                                <i class="fas fa-file-invoice text-info" style="font-size: 1.5rem;"></i>
+                                                <i class="fas fa-file-invoice text-info d-flex justify-content-center"
+                                                    style="font-size: 1.5rem;width:30px;"></i>
                                             </div>
                                             <div class="flex-grow-1 ms-3">
                                                 <h6 class="mb-0">Input Kode Billing & Ongkir</h6>
@@ -439,8 +478,8 @@
                                         <!-- Step 3: Pembayaran Diupload -->
                                         <div class="d-flex align-items-center mb-3">
                                             <div class="flex-shrink-0">
-                                                <i class="fas fa-credit-card text-{{ $payment && $payment->payment_status == 'approved' ? 'success' : ($payment && $payment->payment_status == 'rejected' ? 'danger' : 'warning') }}"
-                                                    style="font-size: 1.5rem;"></i>
+                                                <i class="fas fa-credit-card text-{{ $payment && $payment->payment_status == 'approved' ? 'success' : ($payment && $payment->payment_status == 'rejected' ? 'danger' : 'warning') }} d-flex justify-content-center"
+                                                    style="font-size: 1.5rem;width:30px;"></i>
                                             </div>
                                             <div class="flex-grow-1 ms-3">
                                                 <h6 class="mb-0">Bukti Pembayaran Diupload</h6>
@@ -486,7 +525,8 @@
                                         @if ($payment && $payment->payment_status == 'approved')
                                             <div class="d-flex align-items-center mb-3">
                                                 <div class="flex-shrink-0">
-                                                    <i class="fas fa-cog text-primary" style="font-size: 1.5rem;"></i>
+                                                    <i class="fas fa-cog text-primary d-flex justify-content-center"
+                                                        style="font-size: 1.5rem;width:30px;"></i>
                                                 </div>
                                                 <div class="flex-grow-1 ms-3">
                                                     <h6 class="mb-0">Pesanan Diproses</h6>
@@ -503,8 +543,8 @@
                                         @if ($transaction->order_status == 'selesai')
                                             <div class="d-flex align-items-center mb-3">
                                                 <div class="flex-shrink-0">
-                                                    <i class="fas fa-flag-checkered text-success"
-                                                        style="font-size: 1.5rem;"></i>
+                                                    <i class="fas fa-flag-checkered text-success d-flex justify-content-center"
+                                                        style="font-size: 1.5rem;width:30px;"></i>
                                                 </div>
                                                 <div class="flex-grow-1 ms-3">
                                                     <h6 class="mb-0">Pesanan Selesai</h6>
@@ -521,8 +561,8 @@
                                         @if ($transaction->order_status == 'dibatalkan')
                                             <div class="d-flex align-items-center mb-3">
                                                 <div class="flex-shrink-0">
-                                                    <i class="fas fa-times-circle text-danger"
-                                                        style="font-size: 1.5rem;"></i>
+                                                    <i class="fas fa-times-circle text-danger d-flex justify-content-center"
+                                                        style="font-size: 1.5rem;width:30px;"></i>
                                                 </div>
                                                 <div class="flex-grow-1 ms-3">
                                                     <h6 class="mb-0 text-danger">Pesanan Dibatalkan</h6>
