@@ -511,6 +511,8 @@
     @include('customer.partials.modal_tambah_alamat')
 
     <script>
+        // Ambil id item baru dari session (jika ada)
+        const newCartItemId = @json(session('new_cart_item_id'));
         // Helper untuk localStorage
         function getCheckedCartItems() {
             try {
@@ -663,7 +665,27 @@
             // Set status checkbox sesuai localStorage
             let checkedIds = getCheckedCartItems();
             let checkboxes = document.querySelectorAll('.cart-item-checkbox');
-            if (checkedIds.length > 0) {
+
+            // Jika ada item baru, pastikan hanya item baru yang otomatis tercentang
+            let changed = false;
+            if (newCartItemId) {
+                checkboxes.forEach(cb => {
+                    if (cb.value == newCartItemId) {
+                        cb.checked = true;
+                        if (!checkedIds.includes(cb.value)) {
+                            checkedIds.push(cb.value);
+                            changed = true;
+                        }
+                    } else {
+                        // Status centang item lama tetap mengikuti localStorage
+                        cb.checked = checkedIds.includes(cb.value);
+                    }
+                });
+                if (changed) {
+                    setCheckedCartItems(checkedIds);
+                }
+            } else {
+                // Jika tidak ada item baru, status centang item lama tetap mengikuti localStorage
                 checkboxes.forEach(cb => {
                     cb.checked = checkedIds.includes(cb.value);
                 });
