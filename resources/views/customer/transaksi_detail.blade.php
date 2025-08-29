@@ -140,11 +140,11 @@
         }
 
         /* Product Cards Styles */
-        .product-cards-container {
+        .product-items-container {
             margin-bottom: 24px;
         }
 
-        .product-card {
+        .product-item {
             background: linear-gradient(135deg, #dcfce7, #bbf7d0);
             border-radius: 16px;
             padding: 20px;
@@ -158,7 +158,7 @@
             transition: all 0.3s ease;
         }
 
-        .product-card:hover {
+        .product-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
             border-color: rgba(34, 197, 94, 0.4);
@@ -172,7 +172,7 @@
             transition: color 0.3s ease;
         }
 
-        .product-card:hover+.click-indicator {
+        .product-item:hover+.click-indicator {
             color: #16a34a;
         }
 
@@ -560,7 +560,7 @@
                 text-align: center;
             }
 
-            .product-card {
+            .product-item {
                 flex-direction: column;
                 text-align: center;
                 gap: 12px;
@@ -681,7 +681,7 @@
         @endif
 
         <!-- Product Cards Section -->
-        <div class="product-cards-container">
+        <div class="product-items-container">
             @foreach ($transaction->transactionItems as $item)
                 @php
                     $productHistory = \App\Models\ProductHistory::where('product_id', $item->product->product_id)
@@ -689,7 +689,7 @@
                         ->orderBy('recorded_at', 'desc')
                         ->first();
                 @endphp
-                <div class="product-card" style="cursor: pointer;"
+                <div class="product-item" style="cursor: pointer;"
                     onclick="window.location.href='{{ $productHistory ? route('produk.history.detail', $productHistory->history_id) : route('produk.detail', $item->product->product_id) }}'">
                     <div class="product-left-column">
                         <div class="product-image-placeholder">

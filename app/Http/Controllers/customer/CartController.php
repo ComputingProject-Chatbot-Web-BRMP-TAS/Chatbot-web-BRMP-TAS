@@ -78,17 +78,22 @@ class CartController extends Controller
             // Update quantity
             $cartItem->quantity = $totalQuantity;
             $cartItem->save();
+            $newCartItemId = $cartItem->cart_item_id;
+
         } else {
             // Tambah item baru
-            CartItem::create([
+            $newItem = CartItem::create([
                 'cart_id' => $cart->cart_id,
                 'product_id' => $product->product_id,
                 'quantity' => $qty,
                 'price_per_unit' => $product->price_per_unit,
             ]);
+            $newCartItemId = $newItem->cart_item_id;
         }
-
-        return redirect()->route('cart')->with('success', 'Produk berhasil ditambahkan ke keranjang!');
+        return redirect()->route('cart')->with([
+            'success' => 'Produk berhasil ditambahkan ke keranjang!',
+            'new_cart_item_id' => $newCartItemId
+        ]);
     }
 
    public function deleteItem($cart_item)
