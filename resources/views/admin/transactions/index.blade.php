@@ -181,7 +181,7 @@
                                                             class="btn btn-sm btn-info">Detail
                                                         </a>
                                                         @if ($latestPayment && $latestPayment->payment_status == 'pending')
-                                                            <a href="{{ route('admin.transactions.payment.show', $latestPayment->payment_id) }}"
+                                                            <a href="{{ route('admin.transactions.show', $latestPayment->payment_id) }}"
                                                                 class="btn btn-sm btn-warning">Konfirmasi Pembayaran
                                                             </a>
                                                         @endif

@@ -723,8 +723,8 @@
                         {{ $item->quantity }}{{ $item->product->unit ?? 'kg' }}
                     </div>
                 </div>
+            @endforeach
         </div>
-        @endforeach
 
         <div class="transaksi-detail-total">
             Total Belanja: Rp{{ number_format($transaction->total_price, 0, ',', '.') }}
@@ -813,6 +813,13 @@
                         @if ($showBillingForm)
                             <div class="upload-form">
                                 <h4>Bukti Pembayaran Billing</h4>
+                                @if ($latestPayment && $latestPayment->billing_code_file)
+                                    <div class="mb-3 text-center">
+                                        <span class="proof-label">Kode Billing:</span><br>
+                                        <img src="{{ asset('storage/' . $latestPayment->billing_code_file) }}"
+                                            alt="Kode Billing" style="max-width:400px;width:100%;border-radius:16px;margin-bottom:12px;box-shadow:0 4px 16px rgba(0,0,0,0.12);">
+                                    </div>
+                                @endif
                                 <form enctype="multipart/form-data" method="POST" action="{{ route('payment.upload') }}">
                                     @csrf
                                     <input type="hidden" name="transaction_id" value="{{ $transaction->transaction_id }}">
@@ -834,6 +841,17 @@
                         @if ($showOngkirForm)
                             <div class="upload-form mt-4">
                                 <h4>Bukti Pembayaran Ongkir</h4>
+                                @if ($latestPayment && $latestPayment->no_rek_ongkir)
+                                    <div class="mb-3 text-center">
+                                        <span class="proof-label">Nomor Rekening Ongkir:</span><br>
+                                        <img src="{{ asset('storage/' . $latestPayment->no_rek_ongkir) }}"
+                                            alt="Nomor Rekening Ongkir" style="max-width:400px;width:100%;border-radius:16px;margin-bottom:12px;box-shadow:0 4px 16px rgba(0,0,0,0.12);">
+                                    </div>
+                                    <div class="mb-2 text-center">
+                                        <span class="proof-label">Total Ongkir:</span>
+                                        <span class="subtotal-amount">Rp{{ number_format($transaction->total_ongkir, 0, ',', '.') }}</span>
+                                    </div>
+                                @endif
                                 <form enctype="multipart/form-data" method="POST"
                                     action="{{ route('payment.upload') }}">
                                     @csrf

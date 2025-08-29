@@ -212,6 +212,196 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- Payment Flow Status -->
+                            <div class="card mb-4">
+                                @php
+                                    $payment = $transaction->payments->first();
+                                @endphp
+                                <div class="card-header">
+                                    <h5 class="mb-0">Status Alur Pembayaran</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="timeline">
+                                        <!-- Step 1: Pesanan Dibuat -->
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="flex-shrink-0">
+                                                <i class="fas fa-shopping-cart text-primary d-flex justify-content-center"
+                                                    style="font-size: 1.5rem;width:30px;"></i>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h6 class="mb-0">Pesanan Dibuat</h6>
+                                                <small
+                                                    class="text-muted">{{ $transaction->order_date->format('d M Y H:i') }}</small>
+                                            </div>
+                                            <div class="flex-shrink-0">
+                                                <i class="fas fa-check-circle text-success"></i>
+                                            </div>
+                                        </div>
+
+                                        <!-- Step 2: Input Kode Billing & Ongkir -->
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="flex-shrink-0">
+                                                <i class="fas fa-file-invoice text-info d-flex justify-content-center"
+                                                    style="font-size: 1.5rem;width:30px;"></i>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h6 class="mb-0">Input Kode Billing & Ongkir</h6>
+                                                @if ($transaction->order_status == 'menunggu_kode_billing')
+                                                    <small class="text-warning">Menunggu input kode billing &
+                                                        ongkir</small>
+                                                @else
+                                                    <small class="text-success">Sudah diinput</small>
+                                                @endif
+                                            </div>
+                                            <div class="flex-shrink-0">
+                                                @if ($transaction->order_status == 'menunggu_kode_billing')
+                                                    <i class="fas fa-clock text-warning"></i>
+                                                @else
+                                                    <i class="fas fa-check-circle text-success"></i>
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                        <!-- Step 3: Pembayaran Diupload -->
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="flex-shrink-0">
+                                                <i class="fas fa-credit-card text-{{ $payment && $payment->payment_status == 'approved' ? 'success' : ($payment && $payment->payment_status == 'rejected' ? 'danger' : 'warning') }} d-flex justify-content-center"
+                                                    style="font-size: 1.5rem;width:30px;"></i>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h6 class="mb-0">Bukti Pembayaran Diupload</h6>
+                                                @if ($payment)
+                                                    <small
+                                                        class="text-muted">{{ $payment->payment_date ? $payment->payment_date->format('d M Y H:i') : '-' }}</small>
+                                                    <br>
+                                                    <small
+                                                        class="text-{{ $payment->payment_status == 'approved' ? 'success' : ($payment->payment_status == 'rejected' ? 'danger' : 'warning') }}">
+                                                        Status:
+                                                        @if ($payment->payment_status == 'pending')
+                                                            Menunggu Konfirmasi
+                                                        @elseif($payment->payment_status == 'approved')
+                                                            Disetujui
+                                                        @elseif($payment->payment_status == 'rejected')
+                                                            Ditolak
+                                                        @else
+                                                            Belum Dibayar
+                                                        @endif
+                                                    </small>
+                                                @else
+                                                    <small class="text-warning">Belum ada pembayaran</small>
+                                                @endif
+                                            </div>
+                                            <div class="flex-shrink-0">
+                                                @if ($payment)
+                                                    @if ($payment->payment_status == 'pending')
+                                                        <i class="fas fa-clock text-warning"></i>
+                                                    @elseif($payment->payment_status == 'approved')
+                                                        <i class="fas fa-check-circle text-success"></i>
+                                                    @elseif($payment->payment_status == 'rejected')
+                                                        <i class="fas fa-times-circle text-danger"></i>
+                                                    @else
+                                                        <i class="fas fa-credit-card text-muted"></i>
+                                                    @endif
+                                                @else
+                                                    <i class="fas fa-credit-card text-muted"></i>
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                        <!-- Step 4: Pesanan Diproses (jika pembayaran disetujui) -->
+                                        @if ($payment && $payment->payment_status == 'approved')
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-cog text-primary d-flex justify-content-center"
+                                                        style="font-size: 1.5rem;width:30px;"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h6 class="mb-0">Pesanan Diproses</h6>
+                                                    <small class="text-muted">Status transaksi:
+                                                        {{ ucfirst(str_replace('_', ' ', $transaction->order_status)) }}</small>
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-check-circle text-success"></i>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        <!-- Step 5: Pesanan Selesai -->
+                                        @if ($transaction->order_status == 'selesai')
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-flag-checkered text-success d-flex justify-content-center"
+                                                        style="font-size: 1.5rem;width:30px;"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h6 class="mb-0">Pesanan Selesai</h6>
+                                                    <small
+                                                        class="text-muted">{{ $transaction->done_date ? $transaction->done_date->format('d M Y H:i') : '' }}</small>
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-check-circle text-success"></i>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        <!-- Step 6: Pesanan Dibatalkan -->
+                                        @if ($transaction->order_status == 'dibatalkan')
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-times-circle text-danger d-flex justify-content-center"
+                                                        style="font-size: 1.5rem;width:30px;"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h6 class="mb-0 text-danger">Pesanan Dibatalkan</h6>
+                                                    <small
+                                                        class="text-muted">{{ $transaction->updated_at->format('d M Y H:i') }}</small>
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-times-circle text-danger"></i>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Informasi Tambahan -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Informasi Tambahan</h5>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><strong>Tujuan Pembelian:</strong></td>
+                                            <td>{{ $transaction->purchase_purpose ?? 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Tempat Tanam - Provinsi:</strong></td>
+                                            <td>{{ $transaction->province->name ?? 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Tempat Tanam - Kota/Kabupaten:</strong></td>
+                                            <td>{{ $transaction->regency->name ?? 'N/A' }}</td>
+                                        </tr>
+                                        @if ($transaction->estimated_delivery_date)
+                                            <tr>
+                                                <td><strong>Estimasi Kirim:</strong></td>
+                                                <td>{{ $transaction->estimated_delivery_date->format('d M Y') }}</td>
+                                            </tr>
+                                        @endif
+                                        <tr>
+                                            <td><strong>Dibuat:</strong></td>
+                                            <td>{{ $transaction->created_at->format('d M Y H:i') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Diupdate:</strong></td>
+                                            <td>{{ $transaction->updated_at->format('d M Y H:i') }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Sidebar -->
@@ -425,193 +615,6 @@
                                             </a>
                                         @endif
                                     @endif
-                                </div>
-                            </div>
-
-                            <!-- Payment Flow Status -->
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <h5 class="mb-0">Status Alur Pembayaran</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="timeline">
-                                        <!-- Step 1: Pesanan Dibuat -->
-                                        <div class="d-flex align-items-center mb-3">
-                                            <div class="flex-shrink-0">
-                                                <i class="fas fa-shopping-cart text-primary d-flex justify-content-center"
-                                                    style="font-size: 1.5rem;width:30px;"></i>
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <h6 class="mb-0">Pesanan Dibuat</h6>
-                                                <small
-                                                    class="text-muted">{{ $transaction->order_date->format('d M Y H:i') }}</small>
-                                            </div>
-                                            <div class="flex-shrink-0">
-                                                <i class="fas fa-check-circle text-success"></i>
-                                            </div>
-                                        </div>
-
-                                        <!-- Step 2: Input Kode Billing & Ongkir -->
-                                        <div class="d-flex align-items-center mb-3">
-                                            <div class="flex-shrink-0">
-                                                <i class="fas fa-file-invoice text-info d-flex justify-content-center"
-                                                    style="font-size: 1.5rem;width:30px;"></i>
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <h6 class="mb-0">Input Kode Billing & Ongkir</h6>
-                                                @if ($transaction->order_status == 'menunggu_kode_billing')
-                                                    <small class="text-warning">Menunggu input kode billing &
-                                                        ongkir</small>
-                                                @else
-                                                    <small class="text-success">Sudah diinput</small>
-                                                @endif
-                                            </div>
-                                            <div class="flex-shrink-0">
-                                                @if ($transaction->order_status == 'menunggu_kode_billing')
-                                                    <i class="fas fa-clock text-warning"></i>
-                                                @else
-                                                    <i class="fas fa-check-circle text-success"></i>
-                                                @endif
-                                            </div>
-                                        </div>
-
-                                        <!-- Step 3: Pembayaran Diupload -->
-                                        <div class="d-flex align-items-center mb-3">
-                                            <div class="flex-shrink-0">
-                                                <i class="fas fa-credit-card text-{{ $payment && $payment->payment_status == 'approved' ? 'success' : ($payment && $payment->payment_status == 'rejected' ? 'danger' : 'warning') }} d-flex justify-content-center"
-                                                    style="font-size: 1.5rem;width:30px;"></i>
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <h6 class="mb-0">Bukti Pembayaran Diupload</h6>
-                                                @if ($payment)
-                                                    <small
-                                                        class="text-muted">{{ $payment->payment_date ? $payment->payment_date->format('d M Y H:i') : '-' }}</small>
-                                                    <br>
-                                                    <small
-                                                        class="text-{{ $payment->payment_status == 'approved' ? 'success' : ($payment->payment_status == 'rejected' ? 'danger' : 'warning') }}">
-                                                        Status:
-                                                        @if ($payment->payment_status == 'pending')
-                                                            Menunggu Konfirmasi
-                                                        @elseif($payment->payment_status == 'approved')
-                                                            Disetujui
-                                                        @elseif($payment->payment_status == 'rejected')
-                                                            Ditolak
-                                                        @else
-                                                            Belum Dibayar
-                                                        @endif
-                                                    </small>
-                                                @else
-                                                    <small class="text-warning">Belum ada pembayaran</small>
-                                                @endif
-                                            </div>
-                                            <div class="flex-shrink-0">
-                                                @if ($payment)
-                                                    @if ($payment->payment_status == 'pending')
-                                                        <i class="fas fa-clock text-warning"></i>
-                                                    @elseif($payment->payment_status == 'approved')
-                                                        <i class="fas fa-check-circle text-success"></i>
-                                                    @elseif($payment->payment_status == 'rejected')
-                                                        <i class="fas fa-times-circle text-danger"></i>
-                                                    @else
-                                                        <i class="fas fa-credit-card text-muted"></i>
-                                                    @endif
-                                                @else
-                                                    <i class="fas fa-credit-card text-muted"></i>
-                                                @endif
-                                            </div>
-                                        </div>
-
-                                        <!-- Step 4: Pesanan Diproses (jika pembayaran disetujui) -->
-                                        @if ($payment && $payment->payment_status == 'approved')
-                                            <div class="d-flex align-items-center mb-3">
-                                                <div class="flex-shrink-0">
-                                                    <i class="fas fa-cog text-primary d-flex justify-content-center"
-                                                        style="font-size: 1.5rem;width:30px;"></i>
-                                                </div>
-                                                <div class="flex-grow-1 ms-3">
-                                                    <h6 class="mb-0">Pesanan Diproses</h6>
-                                                    <small class="text-muted">Status transaksi:
-                                                        {{ ucfirst(str_replace('_', ' ', $transaction->order_status)) }}</small>
-                                                </div>
-                                                <div class="flex-shrink-0">
-                                                    <i class="fas fa-check-circle text-success"></i>
-                                                </div>
-                                            </div>
-                                        @endif
-
-                                        <!-- Step 5: Pesanan Selesai -->
-                                        @if ($transaction->order_status == 'selesai')
-                                            <div class="d-flex align-items-center mb-3">
-                                                <div class="flex-shrink-0">
-                                                    <i class="fas fa-flag-checkered text-success d-flex justify-content-center"
-                                                        style="font-size: 1.5rem;width:30px;"></i>
-                                                </div>
-                                                <div class="flex-grow-1 ms-3">
-                                                    <h6 class="mb-0">Pesanan Selesai</h6>
-                                                    <small
-                                                        class="text-muted">{{ $transaction->done_date ? $transaction->done_date->format('d M Y H:i') : '' }}</small>
-                                                </div>
-                                                <div class="flex-shrink-0">
-                                                    <i class="fas fa-check-circle text-success"></i>
-                                                </div>
-                                            </div>
-                                        @endif
-
-                                        <!-- Step 6: Pesanan Dibatalkan -->
-                                        @if ($transaction->order_status == 'dibatalkan')
-                                            <div class="d-flex align-items-center mb-3">
-                                                <div class="flex-shrink-0">
-                                                    <i class="fas fa-times-circle text-danger d-flex justify-content-center"
-                                                        style="font-size: 1.5rem;width:30px;"></i>
-                                                </div>
-                                                <div class="flex-grow-1 ms-3">
-                                                    <h6 class="mb-0 text-danger">Pesanan Dibatalkan</h6>
-                                                    <small
-                                                        class="text-muted">{{ $transaction->updated_at->format('d M Y H:i') }}</small>
-                                                </div>
-                                                <div class="flex-shrink-0">
-                                                    <i class="fas fa-times-circle text-danger"></i>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Informasi Tambahan -->
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="mb-0">Informasi Tambahan</h5>
-                                </div>
-                                <div class="card-body">
-                                    <table class="table table-borderless">
-                                        <tr>
-                                            <td><strong>Tujuan Pembelian:</strong></td>
-                                            <td>{{ $transaction->purchase_purpose ?? 'N/A' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Tempat Tanam - Provinsi:</strong></td>
-                                            <td>{{ $transaction->province->name ?? 'N/A' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Tempat Tanam - Kota/Kabupaten:</strong></td>
-                                            <td>{{ $transaction->regency->name ?? 'N/A' }}</td>
-                                        </tr>
-                                        @if ($transaction->estimated_delivery_date)
-                                            <tr>
-                                                <td><strong>Estimasi Kirim:</strong></td>
-                                                <td>{{ $transaction->estimated_delivery_date->format('d M Y') }}</td>
-                                            </tr>
-                                        @endif
-                                        <tr>
-                                            <td><strong>Dibuat:</strong></td>
-                                            <td>{{ $transaction->created_at->format('d M Y H:i') }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Diupdate:</strong></td>
-                                            <td>{{ $transaction->updated_at->format('d M Y H:i') }}</td>
-                                        </tr>
-                                    </table>
                                 </div>
                             </div>
                         </div>
