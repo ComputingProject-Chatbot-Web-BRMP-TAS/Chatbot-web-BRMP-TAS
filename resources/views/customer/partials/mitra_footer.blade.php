@@ -1,59 +1,10 @@
 @once
     <style>
-        .mitra-section {
-            background: #fafbfa;
-            padding: 48px 0 32px 0;
-            border-top: 2px solid #f3f3f3;
-        }
-
         /* Sembunyikan mitra dan kontak di mobile */
         @media (max-width: 1023px) {
-            .mitra-section {
-                display: none;
-            }
-
             .footer-contact {
                 display: none;
             }
-        }
-
-
-        .mitra-logos {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 18px;
-            justify-content: center;
-            margin-top: 24px;
-        }
-
-        .mitra-logo-box {
-            width: 160px;
-            height: 80px;
-            background: #e0e0e0;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10), 0 1.5px 4px rgba(0, 0, 0, 0.08);
-            transition: box-shadow 0.25s, transform 0.25s;
-        }
-
-        .mitra-logo-box:hover {
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18), 0 3px 12px rgba(0, 0, 0, 0.12);
-            transform: scale(1.07);
-        }
-
-        .mitra-logo-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 1;
-            padding: 0;
-            margin: 0;
-            display: block;
-            transition: transform 0.25s;
         }
 
         .footer-contact {
@@ -181,42 +132,7 @@
         }
     </style>
 @endonce
-<div class="mitra-section">
-    <div class="container">
-        <h2>Mitra</h2>
-        <p>Dalam melaksanakan tugas dan fungsinya, BRMP berkolaborasi dengan mitra dari dalam negeri dan mitra
-            internasional.</p>
-        <div class="mitra-logos">
-            <a href="https://www.irri.org/" target="_blank">
-                <div class="mitra-logo-box"><img src="{{ asset('images/IRRI.webp') }}" alt="IRRI"></div>
-            </a>
-            <a href="https://www.fao.org/fao-who-codexalimentarius/en" target="_blank">
-                <div class="mitra-logo-box"><img src="{{ asset('images/Codex.webp') }}" alt="Codex"></div>
-            </a>
-            <a href="https://www.fao.org/home/en" target="_blank">
-                <div class="mitra-logo-box"><img src="{{ asset('images/FAO.webp') }}" alt="FAO"></div>
-            </a>
-            <a href="https://www.afaci.org/" target="_blank">
-                <div class="mitra-logo-box"><img src="{{ asset('images/AFACI.webp') }}" alt="AFACI"></div>
-            </a>
-            <a href="https://www.jircas.go.jp/en" target="_blank">
-                <div class="mitra-logo-box"><img src="{{ asset('images/JIRCAS.webp') }}" alt="JIRCAS"></div>
-            </a>
-            <a href="https://kan.or.id/" target="_blank">
-                <div class="mitra-logo-box"><img src="{{ asset('images/KAN.webp') }}" alt="KAN"></div>
-            </a>
-            <a href="https://www.bsn.go.id/" target="_blank">
-                <div class="mitra-logo-box"><img src="{{ asset('images/BSN.webp') }}" alt="BSN"></div>
-            </a>
-            <a href="https://www.ekon.go.id/" target="_blank">
-                <div class="mitra-logo-box"><img src="{{ asset('images/Pancasila.webp') }}" alt="Pancasila"></div>
-            </a>
-            <a href="https://www.pertanian.go.id/" target="_blank">
-                <div class="mitra-logo-box"><img src="{{ asset('images/BRMP.webp') }}" alt="BRMP"></div>
-            </a>
-        </div>
-    </div>
-</div>
+
 <div class="footer-contact">
     <div class="container" style="margin-bottom: 20px;">
         <div class="map">

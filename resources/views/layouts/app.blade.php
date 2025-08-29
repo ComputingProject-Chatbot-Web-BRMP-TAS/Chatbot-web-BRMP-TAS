@@ -153,8 +153,7 @@
         $routeName = Route::currentRouteName();
         $isAuth = $routeName === 'login' || $routeName === 'register' || $routeName === 'verification.notice';
     @endphp
-    <div class="bg-image"
-        style="padding-top: 65px; margin-top:0; @if ($isAuth) padding-top:0px; @endif">
+    <div style="padding-top: 65px; margin-top:0; @if ($isAuth) padding-top:0px; @endif">
         @yield('content')
     </div>
     <!-- Bootstrap 5 JS Bundle -->
