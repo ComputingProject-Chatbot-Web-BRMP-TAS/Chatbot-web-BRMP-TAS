@@ -232,34 +232,8 @@
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            width: 100px;
-        }
-
-        .buy-again-btn {
-            background: linear-gradient(135deg, #16a34a, #22c55e);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
             width: 100%;
         }
-
-        .buy-again-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
-            color: white;
-            text-decoration: none;
-        }
-
-
 
         .quantity-badge {
             background: linear-gradient(135deg, #16a34a, #22c55e);
@@ -457,25 +431,6 @@
             font-size: 0.9rem;
             color: #6b7280;
             margin-top: 4px;
-        }
-
-        .upload-btn {
-            background: linear-gradient(135deg, #16a34a, #22c55e);
-            border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-weight: 600;
-            font-size: 1rem;
-            color: white;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
-            margin-top: 16px;
-        }
-
-        .upload-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
-            background: linear-gradient(135deg, #15803d, #16a34a);
         }
 
         .payment-instructions {
@@ -702,10 +657,10 @@
                             @endif
                         </div>
                         <div class="product-actions">
-                            <a href="{{ route('produk.detail', $item->product->product_id) }}" class="buy-again-btn"
-                                onclick="event.stopPropagation();">
+                            <button href="{{ route('produk.detail', $item->product->product_id) }}"
+                                class="btn-green w-100 py-1" onclick="event.stopPropagation();">
                                 Beli Lagi
-                            </a>
+                            </button>
                         </div>
                     </div>
                     <div class="product-info">
@@ -823,7 +778,7 @@
                                             name="bukti_pembayaran_billing" accept=".jpg,.jpeg,.png" required>
                                         <div class="form-text">Format yang didukung: JPG, JPEG, PNG (Max. 10MB)</div>
                                     </div>
-                                    <button type="submit" class="upload-btn">
+                                    <button type="submit" class="btn-green px-3">
                                         📤 Upload Bukti Pembayaran Billing
                                     </button>
                                 </form>
@@ -846,7 +801,7 @@
                                             name="bukti_pembayaran_ongkir" accept=".jpg,.jpeg,.png" required>
                                         <div class="form-text">Format yang didukung: JPG, JPEG, PNG (Max. 10MB)</div>
                                     </div>
-                                    <button type="submit" class="upload-btn">
+                                    <button type="submit" class="btn-green px-3">
                                         📤 Upload Bukti Pembayaran Ongkir
                                     </button>
                                 </form>

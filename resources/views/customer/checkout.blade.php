@@ -60,23 +60,6 @@
             font-size: 1.2rem;
         }
 
-        .checkout-summary .btn {
-            width: 100%;
-            border-radius: 8px;
-            background: #388e3c;
-            color: #fff;
-            font-weight: 600;
-            border: none;
-            padding: 12px;
-            font-size: 1.1rem;
-            margin-top: 18px;
-        }
-
-        .checkout-summary .btn:disabled {
-            background: #eee;
-            color: #bbb;
-        }
-
         .order-item-img {
             width: 48px;
             height: 48px;
@@ -134,7 +117,7 @@
             display: flex;
             justify-content: space-between;
             font-size: 0.98rem;
-            margin-bottom: 8px;
+            margin-bottom: 15px;
         }
 
         .checkout-section-title {
@@ -214,7 +197,7 @@
             font-weight: 500;
         }
 
-        .checkout-mobile-pay-btn {
+        .checkout-mobile-pay {
             position: fixed;
             left: 0;
             bottom: 0;
@@ -228,22 +211,12 @@
             z-index: 100;
         }
 
-        .checkout-mobile-pay-btn .total {
+        .checkout-mobile-pay .total {
             font-weight: 700;
             font-size: 1.15rem;
             color: #000000ff;
         }
 
-        .checkout-mobile-pay-btn .btn {
-            background: #388E3C;
-            color: #fff;
-            font-weight: 700;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 32px;
-            font-size: 1.1rem;
-            box-shadow: 0 2px 8px rgba(25, 177, 94, 0.10);
-        }
 
         @media (max-width: 1023px) {
             .checkout-summary {
@@ -256,7 +229,7 @@
                 display: none !important;
             }
 
-            .checkout-mobile-pay-btn {
+            .checkout-mobile-pay {
                 display: none !important;
             }
         }
@@ -281,7 +254,7 @@
                                 data-bs-target="#modalGantiAlamat">Ganti</button>
                         @else
                             <div class="text-muted">Belum ada alamat utama</div>
-                            <a href="{{ route('addresses') }}" class="btn btn-sm btn-success mt-2">Tambah Alamat</a>
+                            <a href="{{ route('addresses') }}" class="btn-green mt-2">Tambah Alamat</a>
                         @endif
                     </div>
 
@@ -394,9 +367,9 @@
                         </div>
                     </div>
                     <!-- Tombol Bayar -->
-                    <div class="checkout-mobile-pay-btn">
+                    <div class="checkout-mobile-pay">
                         <span class="total">Rp{{ number_format($grand_total ?? $total, 0, ',', '.') }}</span>
-                        <button type="submit" class="btn">Bayar Sekarang</button>
+                        <button type="submit" class="btn-green px-2">Bayar Sekarang</button>
                     </div>
                 </div>
 
@@ -438,7 +411,8 @@
                         <span>Total</span>
                         <span>Rp{{ number_format($total, 0, ',', '.') }}</span>
                     </div>
-                    <button type="submit" class="btn">Bayar Sekarang <i class="bi bi-chevron-right"></i></button>
+                    <button type="submit" class="btn-green w-100">Bayar Sekarang <i
+                            class="bi bi-chevron-right"></i></button>
                 </div>
             </div>
         </div>
@@ -455,7 +429,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <button type="button" class="btn btn-success w-100 mb-3" data-bs-toggle="modal"
+                    <button type="button" class="btn-green w-100 mb-3" data-bs-toggle="modal"
                         data-bs-target="#modalTambahAlamat">+ Tambah Alamat Baru</button>
                     <!-- Daftar alamat, ganti dengan loop data alamat user -->
                     @php
@@ -544,12 +518,12 @@
             style="background:#fff;padding:32px 24px;border-radius:16px;max-width:400px;width:90vw;box-shadow:0 4px 24px rgba(0,0,0,0.10);text-align:center;">
             <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:12px;">Kembali Ke Keranjang?</h2>
             <p style="color:#444;margin-bottom:24px;">Perubahan yang Anda lakukan di halaman ini tidak akan disimpan</p>
-            <button id="tetap-di-halaman"
-                style="width:100%;background:#19b15e;color:#fff;font-weight:700;padding:12px 0;border:none;border-radius:8px;font-size:1.1rem;margin-bottom:12px;">Tetap
+            <button id="tetap-di-halaman" class="btn-green w-100">Tetap
                 Di Halaman Ini</button>
             <br>
-            <button id="kembali-hapus-perubahan"
-                style="background:none;border:none;color:#19b15e;font-weight:700;font-size:1rem;">Kembali & Hapus
+            <button id="kembali-hapus-perubahan" class="btn-green w-100"
+                style="background:#fff;color:#3C9A40;border:none;">Kembali &
+                Hapus
                 Perubahan</button>
         </div>
     </div>

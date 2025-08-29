@@ -102,7 +102,7 @@
                         <div style="color:#d32f2f;font-size:0.9rem;">*Minimal Pembelian
                             {{ number_format($product->minimum_purchase, 0, ',', '') }}{{ $product->unit }}</div>
                     </div>
-                    <button id="openDetailCardBtn" class="btn-green w-50" style="white-space: nowrap; padding: 12px 20px;">
+                    <button id="openDetailCardBtn" class="btn-green w-50">
                         + Keranjang
                     </button>
                 </div>
@@ -150,9 +150,8 @@
                                             Subtotal
                                             <span class="subtotal">Rp0</span>
                                         </div>
-                                        <button class="btn-green w-100 addToCartBtn"
-                                            style="margin-bottom:10px;opacity:0.6;cursor:not-allowed;background:#ccc !important;color:#666 !important;"
-                                            type="submit" disabled>+ Keranjang</button>
+                                        <button class="btn-green w-100 addToCartBtn" type="submit" disabled>+
+                                            Keranjang</button>
                                     </form>
                                 @endif
                             </div>
@@ -193,9 +192,7 @@
                                 Subtotal
                                 <span class="subtotal">Rp0</span>
                             </div>
-                            <button class="btn-green w-100 addToCartBtn"
-                                style="margin-bottom:10px;opacity:0.6;cursor:not-allowed;background:#ccc !important;color:#666 !important;"
-                                type="submit" disabled>+ Keranjang</button>
+                            <button class="btn-green w-100 addToCartBtn" type="submit" disabled>+ Keranjang</button>
                         </form>
                     @endif
                 </div>
@@ -383,21 +380,6 @@
             margin-bottom: 18px;
         }
 
-        .product-detail-info-list {
-            margin-bottom: 18px;
-        }
-
-        .product-detail-info-list .label {
-            color: #888;
-            font-weight: 500;
-            margin-right: 8px;
-        }
-
-        .product-detail-info-list .value {
-            color: #222;
-            font-weight: 500;
-        }
-
         .product-detail-desc {
             margin-top: 18px;
             color: #444;
@@ -437,29 +419,6 @@
             margin-bottom: 12px;
         }
 
-        .qty-btn {
-            background: #f3f3f3;
-            border: none;
-            border-radius: 6px;
-            width: 32px;
-            height: 32px;
-            font-size: 1.2rem;
-            color: #388E3C;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .qty-btn:hover {
-            background: #E8F5E9;
-        }
-
-        .product-detail-card-stock {
-            color: #888;
-            font-size: 0.98rem;
-            margin-left: 10px;
-        }
-
         .product-detail-card-subtotal {
             display: flex;
             justify-content: space-between;
@@ -468,60 +427,6 @@
             font-weight: 500;
             margin-bottom: 18px;
             margin-top: 8px;
-        }
-
-        .btn-green {
-            background: #4CAF50;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 32px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-green:hover {
-            background: #388E3C;
-        }
-
-        .btn-outline {
-            background: #fff;
-            color: #388E3C;
-            border: 2px solid #4CAF50;
-            border-radius: 8px;
-            padding: 12px 32px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background 0.2s, color 0.2s;
-        }
-
-        .btn-outline:hover {
-            background: #E8F5E9;
-            color: #222;
-        }
-
-        .product-detail-card-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 16px;
-            font-size: 1.05rem;
-            color: #888;
-        }
-
-        .icon-action {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .icon-action:hover {
-            color: #388E3C;
         }
 
         .bar-pesan {

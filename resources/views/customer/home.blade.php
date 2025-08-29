@@ -39,16 +39,20 @@
         }
 
         .hero-btn {
-            background: #FFF176;
-            color: #388E3C;
-            border: none;
-            border-radius: 12px;
-            padding: 12px 28px;
-            font-weight: 600;
+            border-radius: 50px;
+            border: 2px solid #D7D7D7;
+            background: #FFF;
+            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
+            color: #929292;
+            font-weight: 700;
             font-size: 16px;
-            cursor: pointer;
+            padding: 4px 16px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
 
         .mitra-section {
@@ -143,6 +147,23 @@
             margin: 60px 0 32px 0;
         }
 
+        .btn-LebihBanyak {
+            border-radius: 50px;
+            border: 2px solid #054D33;
+            background: #085C3D;
+            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
+            padding: 4px 16px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-LebihBanyak:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
         @media (max-width: 1023px) {
             .mitra-section {
                 display: none;
@@ -232,8 +253,7 @@
 
                 <!-- Tombol Lebih Banyak -->
                 <div id="loadMoreContainer" style="text-align:center;margin-top:30px;">
-                    <button id="loadMoreBtn" class="btn-green"
-                        style="background:#4CAF50;color:#fff;border:none;border-radius:8px;padding:12px 32px;font-weight:600;transition:all 0.3s ease;">
+                    <button id="loadMoreBtn" class="btn-LebihBanyak">
                         <i class="fas fa-plus" style="margin-right:8px;"></i>
                         Lebih Banyak
                     </button>
