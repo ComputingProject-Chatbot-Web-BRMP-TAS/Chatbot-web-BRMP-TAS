@@ -64,5 +64,9 @@ Route::group(['prefix' => 'ADMIN-BRMP-TAS'], function () {
         
         // Admin Logout
         Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+
+        //Invoice
+        Route::get('/transactions/{id}/invoice', [AdminTransactionController::class, 'viewInvoice'])->name('admin.transactions.invoice.view');
+        Route::get('/transactions/{id}/invoice/download', [AdminTransactionController::class, 'downloadInvoice'])->name('admin.transactions.invoice.download');
     });
 });

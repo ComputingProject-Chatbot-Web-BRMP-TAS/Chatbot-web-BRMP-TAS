@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TransactionController extends Controller
 {
@@ -84,5 +85,28 @@ class TransactionController extends Controller
             ->where('transaction_id', $id)
             ->firstOrFail();
         return view('customer.transaksi_detail', compact('transaction'));
+    }
+
+    public function viewInvoice($id)
+    {
+        $user = Auth::user();
+        $transaction = Transaction::with(['transactionItems.product', 'payments', 'shippingAddress'])
+            ->where('user_id', $user->user_id)
+            ->where('transaction_id', $id)
+            ->firstOrFail();
+
+        return view('customer.invoice_pdf', compact('transaction'));
+    }
+
+    public function downloadInvoice($id)
+    {
+        $user = Auth::user();
+        $transaction = Transaction::with(['transactionItems.product', 'payments', 'shippingAddress'])
+            ->where('user_id', $user->user_id)
+            ->where('transaction_id', $id)
+            ->firstOrFail();
+
+        $pdf = Pdf::loadView('customer.invoice_pdf', compact('transaction'));
+        return $pdf->download('kuitansi_'.$transaction->transaction_id.'.pdf');
     }
 } 

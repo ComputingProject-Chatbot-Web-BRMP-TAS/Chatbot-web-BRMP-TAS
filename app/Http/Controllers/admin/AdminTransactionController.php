@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminTransactionController extends Controller
 {
@@ -199,5 +200,24 @@ class AdminTransactionController extends Controller
 
         return redirect()->route('admin.transactions.show', $transaction->transaction_id)
             ->with('success', 'Nomor resi berhasil disimpan dan status transaksi diubah menjadi selesai.');
+    }
+
+    public function viewInvoice($id)
+    {
+        $transaction = Transaction::with(['transactionItems.product', 'payments', 'shippingAddress'])
+            ->where('transaction_id', $id)
+            ->firstOrFail();
+
+        return view('admin.transactions.invoice_pdf', compact('transaction'));
+    }
+
+    public function downloadInvoice($id)
+    {
+        $transaction = Transaction::with(['transactionItems.product', 'payments', 'shippingAddress'])
+            ->where('transaction_id', $id)
+            ->firstOrFail();
+
+        $pdf = Pdf::loadView('admin.transactions.invoice_pdf', compact('transaction'));
+        return $pdf->download('kuitansi_'.$transaction->transaction_id.'.pdf');
     }
 }

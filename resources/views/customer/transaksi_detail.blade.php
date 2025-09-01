@@ -689,6 +689,17 @@
         <div class="transaksi-detail-total">
             Total Belanja: Rp{{ number_format($transaction->total_price, 0, ',', '.') }}
         </div>
+        
+        <div class="d-flex justify-content-end gap-2 my-3">
+            <a href="{{ route('transaksi.invoice.view', $transaction->transaction_id) }}" 
+            class="btn btn-outline-success" style="border-radius:8px;font-weight:600;">
+                <i class="fas fa-file-invoice"></i> Lihat Kuitansi
+            </a>
+            <a href="{{ route('transaksi.invoice.download', $transaction->transaction_id) }}" 
+            class="btn btn-success" style="border-radius:8px;font-weight:600;">
+                <i class="fas fa-download"></i> Unduh Kuitansi
+            </a>
+        </div>
 
         <div class="transaksi-detail-payment">
             <div class="payment-title"><b>Pembayaran</b></div>
