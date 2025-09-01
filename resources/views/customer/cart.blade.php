@@ -124,21 +124,6 @@
         }
 
 
-        .cart-empty-content .btn-green {
-            background: #4CAF50;
-            color: white;
-            text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: bold;
-            display: inline-block;
-            transition: background 0.2s;
-        }
-
-        .cart-empty-content .btn-green:hover {
-            background: #2e7d32;
-        }
-
         .cart-summary {
             flex: 1;
             background: #fff;
@@ -213,16 +198,6 @@
             height: 20px;
             border-radius: 4px;
             margin-right: 10px;
-        }
-
-        .btn-active {
-            background: #388e3c !important;
-            color: #fff !important;
-            pointer-events: auto !important;
-        }
-
-        .btn-active:disabled {
-            background: #f44336 !important;
         }
 
         .appbar-cart {
@@ -501,7 +476,7 @@
                         @csrf
                         <input type="hidden" name="checked_items" id="checkedItemsInput">
                     </form>
-                    <button class="btn-active" id="checkoutBtn" type="button" disabled
+                    <button class="btn-green w-100" id="checkoutBtn" type="button" disabled
                         onclick="submitCheckout()">Beli</button>
                 </div>
             </div>

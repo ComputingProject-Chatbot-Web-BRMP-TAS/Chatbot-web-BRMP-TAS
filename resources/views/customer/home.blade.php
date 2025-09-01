@@ -6,9 +6,10 @@
     <style>
         .bg-image {
             background-image: url('images/image 15.png');
+            background-size: cover;
             background-repeat: no-repeat;
             background-position: top center;
-            border-radius: 20px 20px 0 0;
+            border-radius: 0 0 20px 20px;
         }
 
         .hero-banner {
@@ -21,7 +22,7 @@
             flex-direction: column;
             align-items: flex-start;
             position: relative;
-            margin-bottom: 50px;
+            margin-bottom: 60px;
         }
 
         .hero-title {
@@ -38,16 +39,87 @@
         }
 
         .hero-btn {
-            background: #FFF176;
-            color: #388E3C;
-            border: none;
-            border-radius: 12px;
-            padding: 12px 28px;
-            font-weight: 600;
+            border-radius: 50px;
+            border: 2px solid #D7D7D7;
+            background: #FFF;
+            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
+            color: #929292;
+            font-weight: 700;
             font-size: 16px;
-            cursor: pointer;
+            padding: 4px 16px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .mitra-section {
+            color: #fff;
+        }
+
+        .mitra-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .mitra-logos-carousel {
+            overflow: hidden;
+            width: 100%;
+            padding: 10px 0;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .mitra-logos-carousel:hover .mitra-logos-track {
+            animation-play-state: paused;
+        }
+
+        .mitra-logos-track {
+            display: inline-flex;
+            animation: 20s slide infinite linear;
+        }
+
+        @keyframes slide {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .mitra-logo-box {
+            width: 120px;
+            height: 60px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 0 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: box-shadow 0.25s, transform 0.25s;
+        }
+
+        .mitra-logo-box:hover {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18), 0 3px 12px rgba(0, 0, 0, 0.12);
+            transform: scale(1.07);
+        }
+
+        .mitra-logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 1;
+            padding: 0;
+            margin: 0;
+            display: block;
+            transition: transform 0.25s;
         }
 
 
@@ -74,26 +146,96 @@
         .hero-banner-margin {
             margin: 60px 0 32px 0;
         }
+
+        .btn-LebihBanyak {
+            border-radius: 50px;
+            border: 2px solid #054D33;
+            background: #085C3D;
+            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
+            padding: 4px 16px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-LebihBanyak:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (max-width: 1023px) {
+            .mitra-section {
+                display: none;
+            }
+
+            .hero-banner {
+                margin-bottom: 0px;
+            }
+        }
     </style>
 
-    <div class="container">
-        <!-- Hero Banner Section -->
-        <div class="hero-banner">
-            <h1 class="hero-title">
-                <div>PRODUK BARU
-                </div>
-                <div>
-                    KINI
-                    <span style="color:#A1FF00">
-                        TELAH HADIR.
-                    </span>
-                </div>
-            </h1>
-            <p class="hero-subtitle">Temukan koleksi produk terbaru dengan penawaran menarik hanya di Benih BRMP.</p>
-            <button class="hero-btn" onclick="window.location.href='{{ route('produk.baru') }}'">Lihat Produk
-                Baru</button>
-        </div>
+    <div class="bg-image">
+        <div class="container" style="margin-top: 0px; margin-bottom: 60px; padding-top: 65px; padding-bottom: 40px;">
+            <!-- Hero Banner Section -->
+            <div class="hero-banner">
+                <h1 class="hero-title">
+                    <div>PRODUK BARU
+                    </div>
+                    <div>
+                        KINI
+                        <span style="color:#A1FF00">
+                            TELAH HADIR.
+                        </span>
+                    </div>
+                </h1>
+                <p class="hero-subtitle">Temukan koleksi produk terbaru dengan penawaran menarik hanya di Benih BRMP.</p>
+                <button class="hero-btn" onclick="window.location.href='{{ route('produk.baru') }}'">Lihat Produk
+                    Baru</button>
+            </div>
 
+            <div class="mitra-section">
+                <div class="mitra-text">
+                    <h2 style="color: #fff">Mitra Kami</h2>
+                    <div>Dalam melaksanakan tugas dan fungsinya, BRMP berkolaborasi dengan mitra dari dalam negeri dan mitra
+                        internasional.</div>
+                </div>
+                <div class="mitra-logos-carousel">
+                    <div class="mitra-logos-track">
+                        <a href="https://www.irri.org/" target="_blank">
+                            <div class="mitra-logo-box"><img src="{{ asset('images/IRRI.webp') }}" alt="IRRI"></div>
+                        </a>
+                        <a href="https://www.fao.org/fao-who-codexalimentarius/en" target="_blank">
+                            <div class="mitra-logo-box"><img src="{{ asset('images/Codex.webp') }}" alt="Codex"></div>
+                        </a>
+                        <a href="https://www.fao.org/home/en" target="_blank">
+                            <div class="mitra-logo-box"><img src="{{ asset('images/FAO.webp') }}" alt="FAO"></div>
+                        </a>
+                        <a href="https://www.afaci.org/" target="_blank">
+                            <div class="mitra-logo-box"><img src="{{ asset('images/AFACI.webp') }}" alt="AFACI"></div>
+                        </a>
+                        <a href="https://www.jircas.go.jp/en" target="_blank">
+                            <div class="mitra-logo-box"><img src="{{ asset('images/JIRCAS.webp') }}" alt="JIRCAS"></div>
+                        </a>
+                        <a href="https://kan.or.id/" target="_blank">
+                            <div class="mitra-logo-box"><img src="{{ asset('images/KAN.webp') }}" alt="KAN"></div>
+                        </a>
+                        <a href="https://www.bsn.go.id/" target="_blank">
+                            <div class="mitra-logo-box"><img src="{{ asset('images/BSN.webp') }}" alt="BSN"></div>
+                        </a>
+                        <a href="https://www.ekon.go.id/" target="_blank">
+                            <div class="mitra-logo-box"><img src="{{ asset('images/Pancasila.webp') }}" alt="Pancasila">
+                            </div>
+                        </a>
+                        <a href="https://www.pertanian.go.id/" target="_blank">
+                            <div class="mitra-logo-box"><img src="{{ asset('images/BRMP.webp') }}" alt="BRMP"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
         <div class="section" style="margin-bottom:24px;">
             <h2 style="font-weight:bold; margin-bottom:18px;">
                 @if (isset($q) && $q)
@@ -111,8 +253,7 @@
 
                 <!-- Tombol Lebih Banyak -->
                 <div id="loadMoreContainer" style="text-align:center;margin-top:30px;">
-                    <button id="loadMoreBtn" class="btn-green"
-                        style="background:#4CAF50;color:#fff;border:none;border-radius:8px;padding:12px 32px;font-weight:600;transition:all 0.3s ease;">
+                    <button id="loadMoreBtn" class="btn-LebihBanyak">
                         <i class="fas fa-plus" style="margin-right:8px;"></i>
                         Lebih Banyak
                     </button>
@@ -121,12 +262,15 @@
                 <div style="padding:32px 0;text-align:center;color:#888;font-size:18px;">Produk tidak ditemukan.</div>
             @endif
         </div>
-        {{-- Hapus section rekomendasi --}}
     </div>
 @endsection
 
 @section('after_content')
     @include('customer.partials.mitra_footer')
+    <script>
+        let copy = document.querySelector('.mitra-logos-track').cloneNode(true);
+        document.querySelector('.mitra-logos-carousel').appendChild(copy);
+    </script>
     <script>
         let currentOffset = {{ $products->count() }};
         let totalProducts = {{ \App\Models\Product::count() }};

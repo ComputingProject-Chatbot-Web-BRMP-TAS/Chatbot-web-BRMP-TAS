@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verify Your Email Address</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
+
 <body>
     <div class="container mt-5">
         <div class="row justify-content-center">
@@ -22,7 +24,7 @@
                         <p>If you did not receive the email,</p>
                         <form class="d-inline" method="POST" action="{{ route('verification.send') }}">
                             @csrf
-                            <button type="submit" class="btn btn-link p-0 m-0 align-baseline">click here to request another</button>.
+                            <button type="submit" class="btn-green p-3">click here to request another</button>.
                         </form>
                     </div>
                 </div>
@@ -30,4 +32,5 @@
         </div>
     </div>
 </body>
+
 </html>

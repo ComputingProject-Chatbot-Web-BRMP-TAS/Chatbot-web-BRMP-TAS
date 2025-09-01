@@ -106,10 +106,10 @@
                                 Stok: {{ $currentProduct->stock - $currentProduct->minimum_stock }}
                                 {{ $currentProduct->unit }}
                             </div>
-                            <a href="{{ route('produk.detail', $currentProduct->product_id) }}" class="btn-green"
-                                style="margin-top: 16px; display: inline-block; text-decoration: none;">
+                            <button onclick="location.href='{{ route('produk.detail', $currentProduct->product_id) }}'"
+                                class="btn-green w-100 mt-3">
                                 Lihat Detail Produk Terkini
-                            </a>
+                            </button>
                         </div>
                     @else
                         <div style="text-align: center; padding: 20px; color: #d32f2f; font-weight: 500;">
@@ -125,21 +125,20 @@
                                 @endif
                             </div>
                             @if ($currentProduct)
-                                <a href="{{ route('produk.detail', $currentProduct->product_id) }}" class="btn-outline"
-                                    style="margin-top: 16px; display: inline-block; text-decoration: none;">
+                                <button onclick="location.href='{{ route('produk.detail', $currentProduct->product_id) }}'"
+                                    class="btn-outline w-100 mt-3">
                                     Lihat Detail Produk Terkini
-                                </a>
+                                </button>
                             @endif
                         </div>
                     @endif
 
                     <!-- Tombol Kembali -->
-                    <div style="margin-top: 20px; text-align: center;">
-                        <a href="{{ url()->previous() }}" class="btn-outline"
-                            style="display: inline-block; text-decoration: none;">
+                    <div>
+                        <button onclick="location.href='{{ url()->previous() }}'" class="btn-outline w-100">
                             <i class="fas fa-arrow-left" style="margin-right: 6px;"></i>
                             Kembali
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -369,40 +368,20 @@
             margin-bottom: 16px;
         }
 
-        .btn-green {
-            background: #4CAF50;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 32px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-green:hover {
-            background: #388E3C;
-            color: #fff;
-            text-decoration: none;
-        }
-
         .btn-outline {
-            background: #fff;
-            color: #388E3C;
-            border: 2px solid #4CAF50;
             border-radius: 8px;
-            padding: 12px 32px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background 0.2s, color 0.2s;
+            border: 2px solid #3C9A40;
+            background: #fff;
+            color: #3C9A40;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 10px 0;
+            white-space: nowrap;
+            transition: all 0.3s ease;
         }
 
         .btn-outline:hover {
-            background: #E8F5E9;
-            color: #222;
-            text-decoration: none;
+            transform: translateY(-2px);
         }
 
         .certificate-info {

@@ -205,25 +205,6 @@
             font-weight: 500;
         }
 
-        .btn-primary {
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary:hover {
-            background: #45a049 !important;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
-        }
-
-        .btn-primary:disabled {
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
 
         .btn-loading i {
             margin-right: 5px;
@@ -536,8 +517,7 @@
                 </div>
 
                 <!-- Apply Filter Button -->
-                <button type="submit" class="btn btn-primary w-100" id="applyFilterBtn"
-                    style="background: #4CAF50; border: none; padding: 10px; border-radius: 6px; font-weight: 500; transition: all 0.2s;">
+                <button type="submit" class="btn-green w-100" id="applyFilterBtn">
                     <span class="btn-text">Terapkan Filter</span>
                     <span class="btn-loading" style="display: none;">
                         <i class="fas fa-spinner fa-spin"></i> Memproses...
@@ -637,8 +617,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100" id="applyFilterBtnMobile"
-                            style="background: #4CAF50; margin-top:20px; border: none; padding: 10px; border-radius: 6px; font-weight: 500; transition: all 0.2s;">
+                        <button type="submit" class="btn-green w-100" id="applyFilterBtnMobile">
                             <span class="btn-text">Terapkan Filter</span>
                             <span class="btn-loading" style="display: none;">
                                 <i class="fas fa-spinner fa-spin"></i> Memproses...

@@ -141,6 +141,29 @@
                 gap: 10px;
             }
         }
+
+        .btn-green {
+            border-radius: 8px;
+            border: 2px solid #3C9A40;
+            background: #4CAF50;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 10px 0;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .btn-green:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-green:disabled {
+            border: 2px solid #929292;
+            background: #D9D9D9;
+            cursor: not-allowed;
+            transform: none;
+        }
     </style>
     @stack('styles')
 </head>
@@ -153,8 +176,7 @@
         $routeName = Route::currentRouteName();
         $isAuth = $routeName === 'login' || $routeName === 'register' || $routeName === 'verification.notice';
     @endphp
-    <div class="bg-image"
-        style="padding-top: 65px; margin-top:0; @if ($isAuth) padding-top:0px; @endif">
+    <div style="padding-top: 65px; margin-top:0; @if ($isAuth) padding-top:0px; @endif">
         @yield('content')
     </div>
     <!-- Bootstrap 5 JS Bundle -->
