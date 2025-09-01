@@ -412,37 +412,69 @@
                                     <h5 class="mb-0">Update Status</h5>
                                 </div>
                                 <div class="card-body">
-                                    <form method="POST"
-                                        action="{{ route('admin.transactions.status.update', $transaction->transaction_id) }}">
+                                    @if($transaction->order_status == 'menunggu_kode_billing')
+                                    <form method="POST" action="{{ route('admin.transactions.billing.store', $transaction->transaction_id) }}"
+                                        enctype="multipart/form-data">
                                         @csrf
-                                        @method('PUT')
                                         <div class="mb-3">
-                                            <label class="form-label">Status Baru</label>
-                                            <select name="status" class="form-select" required>
-                                                <option value="menunggu_kode_billing"
-                                                    {{ $transaction->order_status == 'menunggu_kode_billing' ? 'selected' : '' }}>
-                                                    Menunggu Kode Billing</option>
-                                                <option value="menunggu_pembayaran"
-                                                    {{ $transaction->order_status == 'menunggu_pembayaran' ? 'selected' : '' }}>
-                                                    Menunggu Pembayaran</option>
-                                                <option value="menunggu_konfirmasi_pembayaran"
-                                                    {{ $transaction->order_status == 'menunggu_konfirmasi_pembayaran' ? 'selected' : '' }}>
-                                                    Menunggu Konfirmasi Pembayaran</option>
-                                                <option value="diproses"
-                                                    {{ $transaction->order_status == 'diproses' ? 'selected' : '' }}>
-                                                    Diproses</option>
-                                                <option value="selesai"
-                                                    {{ $transaction->order_status == 'selesai' ? 'selected' : '' }}>Selesai
-                                                </option>
-                                                <option value="dibatalkan"
-                                                    {{ $transaction->order_status == 'dibatalkan' ? 'selected' : '' }}>
-                                                    Dibatalkan</option>
-                                            </select>
+                                            <label for="billing_code_file" class="form-label">File Kode Billing</label>
+                                            <input type="file" class="form-control" name="billing_code_file" id="billing_code_file"
+                                                accept=".jpg,.jpeg,.png" required>
                                         </div>
-                                        <button type="submit" class="btn btn-primary w-100">
-                                            <i class="fas fa-save"></i> Update Status
-                                        </button>
+                                        <div class="mb-3">
+                                            <label for="no_rek_ongkir" class="form-label">No Rekening Ongkir</label>
+                                            <input type="file" class="form-control" name="no_rek_ongkir" id="no_rek_ongkir"
+                                                accept=".jpg,.jpeg,.png" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="total_ongkir" class="form-label">Total Ongkir</label>
+                                            <input type="number" class="form-control" name="total_ongkir" id="total_ongkir" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">Simpan</button>
                                     </form>
+                                    @elseif($transaction->order_status == 'menunggu_pembayaran')
+                                        <div>
+                                            Menunggu pelanggan melakukan pembayaran.
+                                        </div>
+                                    @elseif($transaction->order_status == 'menunggu_konfirmasi_pembayaran' && $payment->payment_status == 'pending')
+                                        <div class="mt-3">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <form method="POST"
+                                                        action="{{ route('admin.transactions.payment.approve', $payment->payment_id) }}"
+                                                        class="d-inline">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-success btn-sm w-100"
+                                                            onclick="return confirm('Konfirmasi pembayaran ini?')">
+                                                            <i class="fas fa-check"></i> Konfirmasi
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <button type="button" class="btn btn-danger btn-sm w-100"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#rejectModal{{ $payment->payment_id }}">
+                                                        <i class="fas fa-times"></i> Tolak
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @elseif($transaction->order_status == 'diproses')
+                                        <form method="POST" action="{{ route('admin.transactions.resi.update', $transaction->transaction_id) }}">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="mb-3">
+                                                <label for="no_resi" class="form-label">Nomor Resi</label>
+                                                <input type="text" class="form-control" name="no_resi" id="no_resi" required
+                                                    value="{{ $transaction->no_resi }}">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary w-100">Simpan</button>
+                                        </form>
+                                    @elseif($transaction->order_status == 'selesai')
+                                        <div class="alert alert-success" role="alert">
+                                            Transaksi telah selesai. Nomor resi: {{ $transaction->no_resi }}
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
 
@@ -551,32 +583,6 @@
                                             @endif
                                         </div>
 
-                                        {{-- Payment Action Buttons --}}
-                                        @if ($payment->payment_status == 'pending')
-                                            <div class="mt-3">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <form method="POST"
-                                                            action="{{ route('admin.transactions.payment.approve', $payment->payment_id) }}"
-                                                            class="d-inline">
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-success btn-sm w-100"
-                                                                onclick="return confirm('Konfirmasi pembayaran ini?')">
-                                                                <i class="fas fa-check"></i> Konfirmasi
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <button type="button" class="btn btn-danger btn-sm w-100"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#rejectModal{{ $payment->payment_id }}">
-                                                            <i class="fas fa-times"></i> Tolak
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endif
-
                                         <!-- Reject Modal -->
                                         <div class="modal fade" id="rejectModal{{ $payment->payment_id }}"
                                             tabindex="-1">
@@ -609,10 +615,7 @@
                                         </div>
                                     @else
                                         @if ($transaction->order_status == 'menunggu_kode_billing')
-                                            <a href="{{ route('admin.transactions.billing.form', $transaction->transaction_id) }}"
-                                                class="btn btn-primary w-100 mt-2">
-                                                Input Kode Billing & Ongkir
-                                            </a>
+                                            <div> Masukkan Kode Billing dan Nomor Rekening Ongkir </div>
                                         @endif
                                     @endif
                                 </div>

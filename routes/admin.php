@@ -44,6 +44,9 @@ Route::group(['prefix' => 'ADMIN-BRMP-TAS'], function () {
         // Payment routes
         Route::post('/payments/{id}/approve', [AdminTransactionController::class, 'approvePayment'])->name('admin.transactions.payment.approve');
         Route::post('/payments/{id}/reject', [AdminTransactionController::class, 'rejectPayment'])->name('admin.transactions.payment.reject');
+
+        // Nomor Resi routes
+        Route::put('/transactions/{id}/resi', [AdminTransactionController::class, 'updateResi'])->name('admin.transactions.resi.update');
         
         // Article resource routes
         Route::resource('/articles', ArticleController::class)->names([

@@ -595,8 +595,13 @@
                 <span><b>Tanggal:</b> {{ $transaction->order_date->format('d M Y H:i') }}</span>
             </div>
             <span class="transaksi-detail-status">{{ $transaction->display_status }}</span>
+            @if ($transaction->order_status == 'selesai' && $transaction->no_resi)
+                <div class="date-info">
+                    <span><b>Nomor Resi:</b> {{ $transaction->no_resi }}</span>
+                </div>
+            @endif
         </div>
-
+        
         <div class="delivery-info">
             <div class="info-item">
                 <span class="info-label"><b>Metode Pengiriman:</b></span>

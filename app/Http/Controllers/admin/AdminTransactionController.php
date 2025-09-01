@@ -183,6 +183,21 @@ class AdminTransactionController extends Controller
         $transaction->order_status = 'menunggu_pembayaran';
         $transaction->save();
 
-        return redirect()->route('admin.transactions.index')->with('success', 'Billing dan ongkir berhasil disimpan.');
+        return redirect()->route('admin.transactions.show', $transaction->transaction_id)->with('success', 'Billing dan ongkir berhasil disimpan.');
+    }
+    
+    public function updateResi(Request $request, $id)
+    {
+        $request->validate([
+            'no_resi' => 'required|string|max:255',
+        ]);
+
+        $transaction = Transaction::findOrFail($id);
+        $transaction->no_resi = $request->no_resi;
+        $transaction->order_status = 'selesai';
+        $transaction->save();
+
+        return redirect()->route('admin.transactions.show', $transaction->transaction_id)
+            ->with('success', 'Nomor resi berhasil disimpan dan status transaksi diubah menjadi selesai.');
     }
 }
