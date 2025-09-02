@@ -22,94 +22,36 @@
             position: relative;
         }
 
-        .transaksi-title::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, #16a34a, #22c55e);
-            border-radius: 2px;
-        }
-
         .transaksi-filters {
             display: flex;
             flex-wrap: wrap;
             gap: 16px;
             margin-bottom: 32px;
             align-items: center;
-            background: rgba(255, 255, 255, 0.7);
+            background: #fff;
             padding: 24px;
-            border-radius: 16px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid #4CAF50;
         }
 
         .transaksi-filters input[type="text"] {
-            border-radius: 12px;
-            border: 2px solid #e5e7eb;
-            padding: 12px 18px;
+            flex: 2;
+            padding: 12px 16px;
+            border: 1px solid #4CAF50;
+            border-radius: 8px;
             font-size: 1rem;
-            min-width: 280px;
-            background: rgba(255, 255, 255, 0.9);
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        .transaksi-filters input[type="text"]:focus {
-            outline: none;
-            border-color: #16a34a;
-            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
-            background: #fff;
-        }
-
-        .transaksi-filters select,
-        .transaksi-filters button,
-        .transaksi-filters .status-btn {
-            border-radius: 12px;
-            border: 2px solid #e5e7eb;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 12px 20px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
 
         .transaksi-filters select {
-            min-width: 180px;
-        }
-
-        .transaksi-filters select:focus {
-            outline: none;
-            border-color: #16a34a;
-            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            padding: 12px 16px;
+            border: 1px solid #4CAF50;
+            border-radius: 8px;
+            font-size: 1rem;
             background: #fff;
-        }
-
-        .transaksi-filters a.status-btn {
-            text-decoration: none;
-            display: inline-block;
-            color: inherit;
-        }
-
-        .transaksi-filters .status-btn:hover {
-            background: rgba(22, 163, 74, 0.05);
-            border-color: #16a34a;
-            transform: translateY(-1px);
-        }
-
-        .transaksi-filters .status-btn.active,
-        .transaksi-filters .status-btn:focus {
-            background: linear-gradient(135deg, #16a34a, #22c55e);
-            color: #fff;
-            border: 2px solid #16a34a;
-            font-weight: 600;
-            box-shadow: 0 4px 16px rgba(22, 163, 74, 0.3);
-            transform: translateY(-1px);
+            color: #1a1a1a;
+            transition: all 0.3s ease;
         }
 
         .transaksi-list {
@@ -131,48 +73,26 @@
             overflow: hidden;
         }
 
-        .transaksi-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #16a34a, #22c55e, #16a34a);
-            background-size: 200% 100%;
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% {
-                background-position: -200% 0;
-            }
-
-            100% {
-                background-position: 200% 0;
-            }
-        }
 
         .transaksi-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
         }
 
-        .transaksi-card .transaksi-row {
+        .transaksi-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
         }
 
-        .transaksi-card .transaksi-row-item {
+        .transaksi-row-item {
             display: flex;
             align-items: center;
             justify-content: flex-start;
             flex-wrap: nowrap;
         }
 
-        .transaksi-card .transaksi-status {
+        .transaksi-status {
             padding: 8px 16px;
             border-radius: 12px;
             font-size: 0.9rem;
@@ -186,70 +106,14 @@
             box-shadow: 0 2px 8px rgba(22, 163, 74, 0.2);
         }
 
-        .transaksi-card .transaksi-status.menunggu-pembayaran {
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
-            color: #92400e;
-            border-color: #d97706;
-            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.2);
-        }
-
-        .transaksi-card .transaksi-status.pembayaran-diproses {
-            background: linear-gradient(135deg, #dbeafe, #93c5fd);
-            color: #1e40af;
-            border-color: #3b82f6;
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
-        }
-
-        .transaksi-card .transaksi-status.menunggu-konfirmasi-pembayaran {
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
-            color: #92400e;
-            border-color: #d97706;
-            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.2);
-        }
-
-        .transaksi-card .transaksi-status.pembayaran-ditolak {
-            background: linear-gradient(135deg, #fecaca, #fca5a5);
-            color: #dc2626;
-            border-color: #dc2626;
-            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
-        }
-
-        .transaksi-card .transaksi-status.pesanan-diproses {
-            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
-            color: #3730a3;
-            border-color: #6366f1;
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
-        }
-
-        .transaksi-card .transaksi-status.pesanan-dikirim {
-            background: linear-gradient(135deg, #dbeafe, #93c5fd);
-            color: #1e40af;
-            border-color: #3b82f6;
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
-        }
-
-        .transaksi-card .transaksi-status.pesanan-selesai {
-            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
-            color: #15803d;
-            border-color: #16a34a;
-            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.2);
-        }
-
-        .transaksi-card .transaksi-status.pesanan-dibatalkan {
-            background: linear-gradient(135deg, #fecaca, #fca5a5);
-            color: #dc2626;
-            border-color: #dc2626;
-            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
-        }
-
-        .transaksi-card .transaksi-product {
+        .transaksi-product {
             font-size: 1.2rem;
             font-weight: 700;
             color: #1f2937;
             line-height: 1.4;
         }
 
-        .transaksi-card .transaksi-date {
+        .transaksi-date {
             color: #6b7280;
             font-size: 1rem;
             font-weight: 500;
@@ -258,7 +122,7 @@
             border-radius: 8px;
         }
 
-        .transaksi-card .transaksi-total {
+        .transaksi-total {
             font-weight: 800;
             color: #16a34a;
             font-size: 1.2rem;
@@ -282,37 +146,17 @@
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
         }
 
-        .transaksi-empty .empty-title {
+        .empty-title {
             font-size: 1.4rem;
             font-weight: 700;
             color: #1f2937;
             margin-bottom: 12px;
         }
 
-        .transaksi-empty .empty-desc {
+        .empty-desc {
             color: #6b7280;
             margin-bottom: 24px;
             font-size: 1.1rem;
-        }
-
-        .transaksi-empty .btn-belanja {
-            background: linear-gradient(135deg, #16a34a, #22c55e);
-            color: #fff;
-            border-radius: 12px;
-            padding: 14px 32px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            border: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 16px rgba(22, 163, 74, 0.3);
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .transaksi-empty .btn-belanja:hover {
-            background: linear-gradient(135deg, #15803d, #16a34a);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
         }
 
         .btn-outline-success {
@@ -374,7 +218,7 @@
 
         .delivery-estimate {
             color: #16a34a;
-            font-size: 0.95rem;
+            font-size: 0.95em;
             margin-top: 8px;
             font-weight: 600;
             background: rgba(22, 163, 74, 0.1);
@@ -388,9 +232,8 @@
             color: #6b7280;
             padding: 4px 8px;
             border-radius: 6px;
-            font-size: 0.9rem;
+            font-size: 0.9em;
             font-weight: 500;
-            margin-left: 8px;
         }
 
         .search-highlight {
@@ -424,35 +267,66 @@
 
         @media (max-width: 1023px) {
 
+            .mobile-back-btn {
+                display: flex !important;
+            }
+
+            .mobile-transaksi-title {
+                display: flex !important;
+            }
+
+            .mobile-search-container {
+                display: none !important;
+            }
+
             .transaksi-container {
-                width: 90%;
-                max-width: 90%;
+                margin-top: 0px;
+                padding: 10px;
+                box-shadow: none;
+                background: none;
+            }
+
+            .transaksi-date {
+                font-size: 12px;
+                padding: 6px;
+            }
+
+            .transaksi-status {
+                font-size: 12px;
+                padding: 6px;
             }
 
             .transaksi-title {
-                font-size: 1.6rem;
+                display: none;
             }
 
             .transaksi-card {
-                padding: 20px 16px;
+                padding: 12px;
+                margin-bottom: 10px
+            }
+
+            .transaksi-product {
+                font-size: 12px;
             }
 
             .transaksi-filters {
                 flex-direction: column;
                 align-items: stretch;
+                padding: 12px;
+                margin-bottom: 15px;
             }
 
             .transaksi-filters input[type="text"] {
-                min-width: 100%;
-            }
-
-            .transaksi-filters .status-btn {
-                flex: 1;
-                text-align: center;
+                width: 100%;
             }
 
             .transaksi-filters select {
-                min-width: 100%;
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .transaksi-total {
+                font-size: 1em;
             }
         }
     </style>
@@ -464,23 +338,28 @@
         <form method="GET" action="{{ route('transaksi') }}" id="filterForm">
             <div class="transaksi-filters">
                 <input type="text" name="search" placeholder="Cari transaksimu di sini" value="{{ $search ?? '' }}" />
+                <div style="display: flex; gap: 12px; flex-direction:row; width: 100%;">
+                    <select name="status" onchange="this.form.submit()">
+                        <option value="semua" {{ ($status ?? '') === 'semua' ? 'selected' : '' }}>Semua Status</option>
+                        <option value="berlangsung" {{ ($status ?? '') === 'berlangsung' ? 'selected' : '' }}>Berlangsung
+                        </option>
+                        <option value="selesai" {{ ($status ?? '') === 'selesai' ? 'selected' : '' }}>Selesai</option>
+                        <option value="dibatalkan" {{ ($status ?? '') === 'dibatalkan' ? 'selected' : '' }}>Dibatalkan
+                        </option>
+                        <option value="menunggu_pembayaran"
+                            {{ ($status ?? '') === 'menunggu_pembayaran' ? 'selected' : '' }}>
+                            Menunggu Pembayaran</option>
+                        <option value="menunggu_konfirmasi"
+                            {{ ($status ?? '') === 'menunggu_konfirmasi' ? 'selected' : '' }}>
+                            Menunggu Konfirmasi</option>
+                        <option value="menunggu_kode_billing"
+                            {{ ($status ?? '') === 'menunggu_kode_billing' ? 'selected' : '' }}>Menunggu Kode Billing
+                        </option>
+                    </select>
 
-                <select name="status" onchange="this.form.submit()">
-                    <option value="semua" {{ ($status ?? '') === 'semua' ? 'selected' : '' }}>Semua Status</option>
-                    <option value="berlangsung" {{ ($status ?? '') === 'berlangsung' ? 'selected' : '' }}>Berlangsung
-                    </option>
-                    <option value="selesai" {{ ($status ?? '') === 'selesai' ? 'selected' : '' }}>Selesai</option>
-                    <option value="dibatalkan" {{ ($status ?? '') === 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
-                    <option value="menunggu_pembayaran" {{ ($status ?? '') === 'menunggu_pembayaran' ? 'selected' : '' }}>
-                        Menunggu Pembayaran</option>
-                    <option value="menunggu_konfirmasi" {{ ($status ?? '') === 'menunggu_konfirmasi' ? 'selected' : '' }}>
-                        Menunggu Konfirmasi</option>
-                    <option value="menunggu_kode_billing"
-                        {{ ($status ?? '') === 'menunggu_kode_billing' ? 'selected' : '' }}>Menunggu Kode Billing</option>
-                </select>
-
-                <a href="{{ route('transaksi') }}" class="status-btn"
-                    style="text-decoration: none; display: inline-block;">Reset Filter</a>
+                    <button type="button" onclick="window.location.href='{{ route('transaksi') }}'" class="btn-green"
+                        style="width:85px;">Reset</button>
+                </div>
             </div>
         </form>
         <div class="transaksi-list">
@@ -500,11 +379,11 @@
                                 status "{{ ucfirst(str_replace('_', ' ', $status)) }}"
                             @endif
                         </div>
-                        <a href="{{ route('transaksi') }}" class="btn-belanja">Lihat Semua Transaksi</a>
+                        <a href="{{ route('transaksi') }}" class="btn-green px-3">Lihat Semua Transaksi</a>
                     @else
                         <div class="empty-title">Kamu belum pernah bertransaksi</div>
                         <div class="empty-desc">Yuk, mulai belanja dan penuhi kebutuhanmu!</div>
-                        <a href="/" class="btn-belanja">Mulai Belanja</a>
+                        <a href="/" class="btn-green px-3">Mulai Belanja</a>
                     @endif
                 </div>
             @else
@@ -561,8 +440,7 @@
                                             <span class="quantity-badge">({{ $firstItem->quantity }}
                                                 {{ $firstItem->product->unit }})</span>
                                             @if ($itemCount > 1)
-                                                <span
-                                                    style="color:#6b7280; font-size:0.98em; font-weight:500; margin-left:8px;">+
+                                                <span style="color:#6b7280; font-size:0.98em; font-weight:500;">+
                                                     {{ $itemCount - 1 }} produk lainnya</span>
                                             @endif
                                         </div>
@@ -617,9 +495,6 @@
     </div>
 
     <script>
-        // Hapus auto-submit pada event input
-        // Form akan submit hanya saat user tekan Enter (default behavior) atau memilih status
-
         document.getElementById('filterForm').addEventListener('submit', function(e) {
             const searchInput = this.querySelector('input[name="search"]');
             const statusSelect = this.querySelector('select[name="status"]');

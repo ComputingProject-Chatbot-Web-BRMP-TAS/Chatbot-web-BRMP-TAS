@@ -12,6 +12,14 @@
             border-radius: 0 0 20px 20px;
         }
 
+
+        .container-hero {
+            margin-top: 0px;
+            margin-bottom: 60px;
+            padding-top: 65px;
+            padding-bottom: 40px;
+        }
+
         .hero-banner {
             border-radius: 16px;
             background: rgba(146, 146, 146, 0.2);
@@ -169,14 +177,40 @@
                 display: none;
             }
 
+            .container-hero {
+                margin-top: 0px;
+                padding-top: 35px;
+                padding-bottom: 35px;
+                margin-bottom: 35px;
+            }
+
             .hero-banner {
                 margin-bottom: 0px;
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .hero-subtitle {
+                margin-bottom: 30px;
+            }
+
+            .section {
+                padding: 0 0;
+                background: none;
+                box-shadow: none;
+            }
+
+            .cs-bubble {
+                bottom: 12px;
+                right: 12px;
             }
         }
     </style>
 
     <div class="bg-image">
-        <div class="container" style="margin-top: 0px; margin-bottom: 60px; padding-top: 65px; padding-bottom: 40px;">
+        <div class="container container-hero">
             <!-- Hero Banner Section -->
             <div class="hero-banner">
                 <h1 class="hero-title">
