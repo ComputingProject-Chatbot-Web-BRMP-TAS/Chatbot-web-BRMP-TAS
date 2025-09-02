@@ -181,7 +181,7 @@
         .mobile-transaksi-title,
         .mobile-detail-transaksi-title,
         .mobile-cart-title {
-            font-size: 16px;
+            font-size: 20px;
             font-weight: 800;
             width: 100%;
         }
@@ -669,17 +669,17 @@
 
     <!-- Mobile Title Keranjang (halaman cart) -->
     <div class="mobile-cart-title" style="display:none;">
-        <h4>Keranjang</h4>
+        <div>Keranjang</div>
     </div>
 
     <!-- Mobile Title Transaksi (halaman transaksi) -->
     <div class="mobile-transaksi-title" style="display:none;">
-        <h4>Transaksi</h4>
+        <div>Transaksi</div>
     </div>
 
     <!-- Mobile Title Detail Transaksi (halaman detail transaksi) -->
     <div class="mobile-detail-transaksi-title" style="display:none;">
-        <h4>Detail Transaksi</h4>
+        <div>Detail Transaksi</div>
     </div>
 
     <!-- Mobile Search Bar -->

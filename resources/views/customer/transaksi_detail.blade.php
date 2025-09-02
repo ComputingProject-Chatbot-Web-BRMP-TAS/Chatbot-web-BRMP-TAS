@@ -3,58 +3,14 @@
 @section('content')
     <style>
         .transaksi-detail-container {
-            max-width: 700px;
-            margin: 100px auto 0 auto;
-            /* Tambah margin-top agar tidak mepet Appbar */
+            max-width: 1000px;
+            margin: 40px auto 40px auto;
             background: #f8fafc;
-            border-radius: 18px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-            padding: 32px 24px;
-        }
-
-        .transaksi-detail-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 6px;
-            background: linear-gradient(90deg, #16a34a, #22c55e, #16a34a);
-            background-size: 200% 100%;
-            animation: shimmer 3s infinite;
-        }
-
-        @keyframes shimmer {
-            0% {
-                background-position: -200% 0;
-            }
-
-            100% {
-                background-position: 200% 0;
-            }
-        }
-
-        .back-button {
-            background: linear-gradient(135deg, rgba(22, 163, 74, 0.1), rgba(34, 197, 94, 0.1));
-            color: #16a34a;
-            border: 2px solid #16a34a;
-            border-radius: 12px;
-            padding: 12px 20px;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 24px;
-            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.2);
-        }
-
-        .back-button:hover {
-            background: linear-gradient(135deg, #16a34a, #22c55e);
-            color: #fff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(22, 163, 74, 0.3);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            padding: 40px 32px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .transaksi-detail-title {
@@ -95,9 +51,9 @@
 
         .transaksi-detail-status {
             display: inline-block;
-            padding: 10px 18px;
+            padding: 10px;
             border-radius: 12px;
-            font-size: 0.9rem;
+            font-size: 0.9em;
             font-weight: 700;
             background: linear-gradient(135deg, #dcfce7, #bbf7d0);
             color: #15803d;
@@ -195,7 +151,6 @@
             flex-direction: column;
             gap: 12px;
             align-items: center;
-            min-width: 120px;
         }
 
         .product-info {
@@ -204,8 +159,8 @@
             flex-direction: column;
             justify-content: space-between;
             height: 100%;
-            margin-top: 12px;
-            min-height: 140px;
+            min-height: 128px;
+            min-width: 0;
         }
 
         .product-details {
@@ -215,14 +170,17 @@
         }
 
         .product-name {
-            font-size: 1.1rem;
+            font-size: 1.3em;
             font-weight: 700;
             color: #1f2937;
             margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
         }
 
         .product-price {
-            font-size: 1rem;
             font-weight: 600;
             color: #16a34a;
             margin: 0;
@@ -233,21 +191,6 @@
             align-items: center;
             justify-content: flex-start;
             width: 100%;
-        }
-
-        .quantity-badge {
-            background: linear-gradient(135deg, #16a34a, #22c55e);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-align: center;
-            min-width: 50px;
-            display: inline-block;
-            position: absolute;
-            top: 28px;
-            right: 20px;
         }
 
         .subtotal-info {
@@ -275,7 +218,7 @@
             border-radius: 16px;
             font-weight: 800;
             color: white;
-            font-size: 1.3rem;
+            font-size: 1.3em;
             text-align: right;
             margin-top: 16px;
             box-shadow: 0 4px 16px rgba(22, 163, 74, 0.2);
@@ -288,7 +231,6 @@
             padding: 24px;
             margin-top: 24px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-            border: 1px solid rgba(229, 231, 235, 0.5);
         }
 
         .payment-title {
@@ -375,14 +317,6 @@
             border: 2px dashed #d1d5db;
         }
 
-        .payment-upload-form {
-            background: linear-gradient(135deg, #fff, #f8fafc);
-            border-radius: 16px;
-            padding: 24px;
-            margin-top: 16px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-            border: 1px solid rgba(229, 231, 235, 0.5);
-        }
 
         .upload-form-title {
             font-size: 1.2rem;
@@ -499,86 +433,68 @@
             opacity: 1;
         }
 
-        .kuitansi-btn {
-            border: 2px solid #16a34a;
-            color: #16a34a;
-            background: #fff;
-            transition: all 0.3s;
-        }
+        @media (max-width: 1023px) {
+            .btn-green {
+                font-size: 12px;
+            }
 
-        .kuitansi-btn:hover {
-            background: linear-gradient(135deg, #16a34a, #22c55e);
-            color: #fff !important;
-            border-color: #16a34a;
-            box-shadow: 0 2px 8px rgba(22,163,74,0.15);
-        }
-
-        @media (max-width: 768px) {
             .transaksi-detail-container {
-                padding: 24px 16px;
-                margin: 60px 16px 0 16px;
+                padding: 10px;
+                font-size: 12px;
+                margin: 0 0;
+                background: none;
+                box-shadow: none;
+
+            }
+
+            .mobile-back-btn,
+            .mobile-detail-transaksi-title {
+                display: flex !important;
+            }
+
+            .mobile-cart-btn,
+            .mobile-menu-toggle,
+            .mobile-search-container {
+                display: none !important;
+            }
+
+            .btn-kembali-transaksi {
+                display: none;
             }
 
             .transaksi-detail-title {
-                font-size: 1.6rem;
+                font-size: 2em;
+                margin-bottom: 20px;
             }
 
             .transaksi-detail-info {
-                flex-direction: column;
-                align-items: stretch;
-                text-align: center;
+                font-size: 1em;
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+
+            .delivery-info {
+                padding: 12px;
+                font-size: 0.9em;
+                margin-bottom: 12px;
+
+            }
+
+            .transaksi-detail-payment {
+                padding: 0 0;
+                background: none;
+                box-shadow: none;
+
             }
 
             .product-item {
-                flex-direction: column;
-                text-align: center;
-                gap: 12px;
-                align-items: center;
-            }
-
-            .product-left-column {
-                min-width: auto;
-                width: 100%;
+                padding: 12px;
+                margin-bottom: 10px;
             }
 
             .product-image-placeholder {
-                width: 60px;
-                height: 60px;
-                font-size: 1.5rem;
-            }
-
-            .quantity-badge {
-                position: static;
-                margin: 0 auto;
-            }
-
-            .product-actions {
-                justify-content: center;
-                margin-top: 8px;
-            }
-
-            .payment-info {
-                grid-template-columns: 1fr;
-            }
-
-            .transaksi-detail-payment img {
-                max-width: 100%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .transaksi-detail-container {
-                padding: 20px 12px;
-                margin: 40px 8px 0 8px;
-            }
-
-            .transaksi-detail-title {
-                font-size: 1.4rem;
-            }
-
-            .back-button {
-                padding: 10px 16px;
-                font-size: 0.9rem;
+                width: 80px;
+                height: 80px;
             }
         }
     </style>
@@ -598,9 +514,10 @@
             </div>
         @endif
 
-        <a href="{{ route('transaksi') }}" class="btn btn-outline-success mb-3" style="border-radius:8px;font-weight:600;">
+        <button onclick="location.href='{{ route('transaksi') }}'" class="btn-green btn-kembali-transaksi mb-3 px-3"
+            style="background:none;color:#4CAF50">
             Kembali ke Daftar Transaksi
-        </a>
+        </button>
 
         <div class="transaksi-detail-title">Detail Transaksi #{{ $transaction->transaction_id }}</div>
 
@@ -615,7 +532,7 @@
                 </div>
             @endif
         </div>
-        
+
         <div class="delivery-info">
             <div class="info-item">
                 <span class="info-label"><b>Metode Pengiriman:</b></span>
@@ -684,17 +601,17 @@
                     </div>
                     <div class="product-info">
                         <div class="product-details">
-                            <h5 class="product-name">{{ $item->product->product_name ?? '-' }}</h5>
-                            <p class="product-price">Rp{{ number_format($item->unit_price, 0, ',', '.') }} /
-                                {{ $item->product->unit ?? 'kg' }}</p>
+                            <div class="product-name">{{ $item->product->product_name ?? '-' }}</div>
+                            <div class="product-price"><span style="color: black;">
+                                    {{ $item->quantity }} {{ $item->product->unit ?? 'kg' }} x
+                                </span>
+                                Rp{{ number_format($item->unit_price, 0, ',', '.') }} /
+                                {{ $item->product->unit ?? 'kg' }}</div>
                         </div>
                         <div class="subtotal-info">
                             <span class="subtotal-label">Subtotal:</span>
                             <span class="subtotal-amount">Rp{{ number_format($item->subtotal, 0, ',', '.') }}</span>
                         </div>
-                    </div>
-                    <div class="quantity-badge">
-                        {{ $item->quantity }}{{ $item->product->unit ?? 'kg' }}
                     </div>
                 </div>
             @endforeach
@@ -703,18 +620,23 @@
         <div class="transaksi-detail-total">
             Total Belanja: Rp{{ number_format($transaction->total_price, 0, ',', '.') }}
         </div>
-        
-        <div class="d-flex justify-content-end gap-2 my-3">
-            <a href="{{ route('transaksi.invoice.view', $transaction->transaction_id) }}" 
-            class="btn btn-outline-success kuitansi-btn" style="border-radius:8px;font-weight:600;">
-                <i class="fas fa-file-invoice"></i> Lihat Kuitansi
-            </a>
-            <a href="{{ route('transaksi.invoice.download', $transaction->transaction_id) }}" 
-                class="btn btn-outline-success kuitansi-btn" style="border-radius:8px;font-weight:600;">
+        @php
+            $payment = $transaction->payments->first();
+        @endphp
+        @if ($payment && $payment->payment_status == 'approved')
+            <div class="d-flex justify-content-end gap-2 my-3">
+                <button
+                    onclick="window.location.href='{{ route('transaksi.invoice.view', $transaction->transaction_id) }}'"
+                    class="btn-green px-3" style="background: none;color:#4CAF50; border:2px solid #4CAF50;">
+                    <i class="fas fa-file-invoice"></i> Lihat Kuitansi
+                </button>
+                <button
+                    onclick="window.location.href='{{ route('transaksi.invoice.download', $transaction->transaction_id) }}'"
+                    class="btn-green px-3">
                     <i class="fas fa-download"></i> Unduh Kuitansi
-            </a>
-        </div>
-
+                </button>
+            </div>
+        @endif
         <div class="transaksi-detail-payment">
             <div class="payment-title"><b>Pembayaran</b></div>
             @php
@@ -752,15 +674,21 @@
                 <div class="payment-proof">
                     <span class="proof-label">📸 Bukti Pembayaran Billing:</span>
                     <br>
-                    <img src="{{ asset('storage/bukti_pembayaran/' . $latestPayment->photo_proof_payment_billing) }}"
-                        alt="Bukti Pembayaran Billing">
+                    <a href="{{ asset('storage/bukti_pembayaran/' . $latestPayment->photo_proof_payment_billing) }}"
+                        target="_blank">
+                        <img src="{{ asset('storage/bukti_pembayaran/' . $latestPayment->photo_proof_payment_billing) }}"
+                            alt="Bukti Pembayaran Billing">
+                    </a>
                 </div>
                 @if ($latestPayment->photo_proof_payment_ongkir)
                     <div class="payment-proof">
                         <span class="proof-label">📸 Bukti Pembayaran Ongkir:</span>
                         <br>
-                        <img src="{{ asset('storage/bukti_pembayaran/' . $latestPayment->photo_proof_payment_ongkir) }}"
-                            alt="Bukti Pembayaran Ongkir">
+                        <a href="{{ asset('storage/bukti_pembayaran/' . $latestPayment->photo_proof_payment_ongkir) }}"
+                            target="_blank">
+                            <img src="{{ asset('storage/bukti_pembayaran/' . $latestPayment->photo_proof_payment_ongkir) }}"
+                                alt="Bukti Pembayaran Ongkir">
+                        </a>
                     </div>
                 @endif
             @elseif(!$hasPayments && !$hasKodeBilling)
@@ -769,95 +697,99 @@
                 </div>
             @endif
             @if ($showBillingForm || $showOngkirForm)
-                <div class="payment-upload-form">
-                    <div class="payment-instructions">
-                        <div class="instructions-title">Petunjuk Pembayaran:</div>
-                        <ul>
-                            <li>Transfer sejumlah <strong>Rp
-                                    {{ number_format($transaction->total_price, 0, ',', '.') }}</strong></li>
-                            <li>Simpan bukti transfer (screenshot atau foto)</li>
-                            <li>Upload bukti transfer di bawah ini</li>
-                            <li>Tim kami akan memverifikasi pembayaran Anda</li>
+                <div class="payment-instructions">
+                    <div class="instructions-title">Petunjuk Pembayaran:</div>
+                    <ul>
+                        <li>Transfer sejumlah <strong>Rp
+                                {{ number_format($transaction->total_price, 0, ',', '.') }}</strong></li>
+                        <li>Simpan bukti transfer (screenshot atau foto)</li>
+                        <li>Upload bukti transfer di bawah ini</li>
+                        <li>Tim kami akan memverifikasi pembayaran Anda</li>
+                    </ul>
+                </div>
+                <div class="upload-form-title">
+                    📤 Upload Bukti Pembayaran
+                </div>
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
                         </ul>
                     </div>
-                    <div class="upload-form-title">
-                        📤 Upload Bukti Pembayaran
-                    </div>
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
+                @endif
+                <div class="upload-form-container">
+
+                    {{-- Formulir Unggah Bukti Pembayaran Billing --}}
+                    @if ($showBillingForm)
+                        <div class="upload-form">
+                            <h4>Bukti Pembayaran Billing</h4>
+                            @if ($latestPayment && $latestPayment->billing_code_file)
+                                <div class="mb-3 text-center">
+                                    <span class="proof-label">Kode Billing:</span><br>
+                                    <a href="{{ asset('storage/' . $latestPayment->billing_code_file) }}"
+                                        target="_blank">
+                                        <img src="{{ asset('storage/' . $latestPayment->billing_code_file) }}"
+                                            alt="Kode Billing"
+                                            style="max-width:400px;width:100%;border-radius:16px;margin-bottom:12px;box-shadow:0 4px 16px rgba(0,0,0,0.12);">
+                                    </a>
+                                </div>
+                            @endif
+                            <form enctype="multipart/form-data" method="POST" action="{{ route('payment.upload') }}">
+                                @csrf
+                                <input type="hidden" name="transaction_id" value="{{ $transaction->transaction_id }}">
+                                <div class="mb-3">
+                                    <label for="buktiPembayaranBilling" class="form-label">Pilih file gambar bukti
+                                        transfer</label>
+                                    <input class="form-control" type="file" id="buktiPembayaranBilling"
+                                        name="bukti_pembayaran_billing" accept=".jpg,.jpeg,.png" required>
+                                    <div class="form-text">Format yang didukung: JPG, JPEG, PNG (Max. 10MB)</div>
+                                </div>
+                                <button type="submit" class="btn-green px-3">
+                                    📤 Upload Bukti Pembayaran Billing
+                                </button>
+                            </form>
                         </div>
                     @endif
-                    <div class="upload-form-container">
 
-                        {{-- Formulir Unggah Bukti Pembayaran Billing --}}
-                        @if ($showBillingForm)
-                            <div class="upload-form">
-                                <h4>Bukti Pembayaran Billing</h4>
-                                @if ($latestPayment && $latestPayment->billing_code_file)
-                                    <div class="mb-3 text-center">
-                                        <span class="proof-label">Kode Billing:</span><br>
-                                        <img src="{{ asset('storage/' . $latestPayment->billing_code_file) }}"
-                                            alt="Kode Billing" style="max-width:400px;width:100%;border-radius:16px;margin-bottom:12px;box-shadow:0 4px 16px rgba(0,0,0,0.12);">
-                                    </div>
-                                @endif
-                                <form enctype="multipart/form-data" method="POST" action="{{ route('payment.upload') }}">
-                                    @csrf
-                                    <input type="hidden" name="transaction_id" value="{{ $transaction->transaction_id }}">
-                                    <div class="mb-3">
-                                        <label for="buktiPembayaranBilling" class="form-label">Pilih file gambar bukti
-                                            transfer</label>
-                                        <input class="form-control" type="file" id="buktiPembayaranBilling"
-                                            name="bukti_pembayaran_billing" accept=".jpg,.jpeg,.png" required>
-                                        <div class="form-text">Format yang didukung: JPG, JPEG, PNG (Max. 10MB)</div>
-                                    </div>
-                                    <button type="submit" class="btn-green px-3">
-                                        📤 Upload Bukti Pembayaran Billing
-                                    </button>
-                                </form>
-                            </div>
-                        @endif
-
-                        {{-- Formulir Unggah Bukti Pembayaran Ongkir --}}
-                        @if ($showOngkirForm)
-                            <div class="upload-form mt-4">
-                                <h4>Bukti Pembayaran Ongkir</h4>
-                                @if ($latestPayment && $latestPayment->no_rek_ongkir)
-                                    <div class="mb-3 text-center">
-                                        <span class="proof-label">Nomor Rekening Ongkir:</span><br>
+                    {{-- Formulir Unggah Bukti Pembayaran Ongkir --}}
+                    @if ($showOngkirForm)
+                        <div class="upload-form mt-4">
+                            <h4>Bukti Pembayaran Ongkir</h4>
+                            @if ($latestPayment && $latestPayment->no_rek_ongkir)
+                                <div class="mb-3 text-center">
+                                    <span class="proof-label">Nomor Rekening Ongkir:</span><br>
+                                    <a href="{{ asset('storage/' . $latestPayment->no_rek_ongkir) }}" target="_blank">
                                         <img src="{{ asset('storage/' . $latestPayment->no_rek_ongkir) }}"
-                                            alt="Nomor Rekening Ongkir" style="max-width:400px;width:100%;border-radius:16px;margin-bottom:12px;box-shadow:0 4px 16px rgba(0,0,0,0.12);">
-                                    </div>
-                                    <div class="mb-2 text-center">
-                                        <span class="proof-label">Total Ongkir:</span>
-                                        <span class="subtotal-amount">Rp{{ number_format($transaction->total_ongkir, 0, ',', '.') }}</span>
-                                    </div>
-                                @endif
-                                <form enctype="multipart/form-data" method="POST"
-                                    action="{{ route('payment.upload') }}">
-                                    @csrf
-                                    <input type="hidden" name="transaction_id"
-                                        value="{{ $transaction->transaction_id }}">
-                                    <div class="mb-3">
-                                        <label for="buktiPembayaranOngkir" class="form-label">Pilih file gambar bukti
-                                            transfer</label>
-                                        <input class="form-control" type="file" id="buktiPembayaranOngkir"
-                                            name="bukti_pembayaran_ongkir" accept=".jpg,.jpeg,.png" required>
-                                        <div class="form-text">Format yang didukung: JPG, JPEG, PNG (Max. 10MB)</div>
-                                    </div>
-                                    <button type="submit" class="btn-green px-3">
-                                        📤 Upload Bukti Pembayaran Ongkir
-                                    </button>
-                                </form>
-                            </div>
-                        @endif
+                                            alt="Nomor Rekening Ongkir"
+                                            style="max-width:400px;width:100%;border-radius:16px;margin-bottom:12px;box-shadow:0 4px 16px rgba(0,0,0,0.12);">
+                                    </a>
+                                </div>
+                                <div class="mb-2 text-center">
+                                    <span class="proof-label">Total Ongkir:</span>
+                                    <span
+                                        class="subtotal-amount">Rp{{ number_format($transaction->total_ongkir, 0, ',', '.') }}</span>
+                                </div>
+                            @endif
+                            <form enctype="multipart/form-data" method="POST" action="{{ route('payment.upload') }}">
+                                @csrf
+                                <input type="hidden" name="transaction_id" value="{{ $transaction->transaction_id }}">
+                                <div class="mb-3">
+                                    <label for="buktiPembayaranOngkir" class="form-label">Pilih file gambar bukti
+                                        transfer</label>
+                                    <input class="form-control" type="file" id="buktiPembayaranOngkir"
+                                        name="bukti_pembayaran_ongkir" accept=".jpg,.jpeg,.png" required>
+                                    <div class="form-text">Format yang didukung: JPG, JPEG, PNG (Max. 10MB)</div>
+                                </div>
+                                <button type="submit" class="btn-green px-3">
+                                    📤 Upload Bukti Pembayaran Ongkir
+                                </button>
+                            </form>
+                        </div>
+                    @endif
 
 
-                    </div>
                 </div>
             @endif
         </div>

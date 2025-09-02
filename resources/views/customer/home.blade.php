@@ -16,8 +16,12 @@
         .container-hero {
             margin-top: 0px;
             margin-bottom: 60px;
+            margin-inline: auto;
             padding-top: 65px;
             padding-bottom: 40px;
+            padding-inline: 16px;
+            max-width: 1200px;
+            z-index: 1;
         }
 
         .hero-banner {
@@ -210,7 +214,7 @@
     </style>
 
     <div class="bg-image">
-        <div class="container container-hero">
+        <div class="container-hero">
             <!-- Hero Banner Section -->
             <div class="hero-banner">
                 <h1 class="hero-title">

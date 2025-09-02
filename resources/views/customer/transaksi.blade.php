@@ -4,7 +4,7 @@
     <style>
         .transaksi-container {
             max-width: 1000px;
-            margin: 80px auto 80px auto;
+            margin: 40px auto 40px auto;
             background: #f8fafc;
             border-radius: 24px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
