@@ -478,16 +478,15 @@
                                 </div>
                             </div>
                             
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <h5 class="mb-0">Kuitansi Pembayaran</h5>
-                                </div>
-                                <div class="card-body">
-                                    @php
-                                        $payment = $transaction->payments->first();
-                                    @endphp
-
-                                    @if($payment->payment_status == 'approved')
+                            @php
+                                $payment = $transaction->payments->first();
+                            @endphp
+                            @if($payment && $payment->payment_status == 'approved')
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Kuitansi Pembayaran</h5>
+                                    </div>
+                                    <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center mb-4">
                                             <div>
                                                 <a href="{{ route('admin.transactions.invoice.view', $transaction->transaction_id) }}" class="btn btn-outline-success me-2" style="border-radius:8px;font-weight:600;">
@@ -498,9 +497,9 @@
                                                 </a>
                                             </div>
                                         </div>
-                                    @endif
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
  
                             <!-- Informasi Pembayaran -->
                             <div class="card mb-4">
