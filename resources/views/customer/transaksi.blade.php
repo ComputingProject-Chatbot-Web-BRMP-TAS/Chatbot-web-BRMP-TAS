@@ -379,11 +379,12 @@
                                 status "{{ ucfirst(str_replace('_', ' ', $status)) }}"
                             @endif
                         </div>
-                        <a href="{{ route('transaksi') }}" class="btn-green px-3">Lihat Semua Transaksi</a>
+                        <button onclick="window.location.href='{{ route('transaksi') }}'" class="btn-green px-3">Lihat
+                            Semua Transaksi</button>
                     @else
                         <div class="empty-title">Kamu belum pernah bertransaksi</div>
                         <div class="empty-desc">Yuk, mulai belanja dan penuhi kebutuhanmu!</div>
-                        <a href="/" class="btn-green px-3">Mulai Belanja</a>
+                        <button onclick="window.location.href='/'" class="btn-green px-3">Mulai Belanja</button>
                     @endif
                 </div>
             @else

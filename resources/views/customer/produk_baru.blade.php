@@ -18,7 +18,10 @@
             background: #f8f9fa;
             min-height: 100vh;
             padding: 20px;
-            margin-top: 80px;
+            display: flex;
+            gap: 20px;
+            flex-direction: row;
+            justify-content: center;
         }
 
         .main-content {
@@ -100,6 +103,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .sort-dropdown label {
@@ -123,12 +127,6 @@
             box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
         }
 
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-        }
-
 
 
 
@@ -147,6 +145,20 @@
         .no-products-subtitle {
             font-size: 0.9rem;
             color: #bbb;
+        }
+
+        @media (max-width: 1023px) {
+
+            .content-wrapper {
+                padding: 10px;
+            }
+
+            .main-content {
+                padding: 0 0;
+                background: none;
+                border: none;
+                box-shadow: none;
+            }
         }
     </style>
 
@@ -207,7 +219,7 @@
                             </div>
                         </div>
 
-                        <div class="products-grid" id="productsGrid">
+                        <div class="product-grid" id="productsGrid">
                             @forelse($products as $product)
                                 @include('customer.partials.product-card', ['product' => $product])
                             @empty
