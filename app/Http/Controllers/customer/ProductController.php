@@ -113,7 +113,21 @@ class ProductController extends Controller
 
     public function baru()
     {
-        $products = Product::orderBy('product_id', 'desc')->take(5)->get();
+        $kategori = request('kategori', []);
+        $query = Product::orderBy('product_id', 'desc');
+        if (!empty($kategori)) {
+            $query->whereHas('plantType', function($q) use ($kategori) {
+                $map = [
+                    'pemanis' => 'Tanaman Pemanis',
+                    'serat' => 'Tanaman Serat',
+                    'tembakau' => 'Tanaman Tembakau',
+                    'minyak' => 'Tanaman Minyak Industri',
+                ];
+                $comodities = array_map(fn($k) => $map[$k] ?? $k, $kategori);
+                $q->whereIn('comodity', $comodities);
+            });
+        }
+        $products = $query->take(5)->get();
         $latestProducts = Product::orderBy('product_id', 'desc')->take(5)->pluck('product_id')->toArray();
         return view('customer.produk_baru', compact('products', 'latestProducts'));
     }

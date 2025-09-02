@@ -70,6 +70,12 @@
             width: 100%;
         }
 
+
+        .product-card:hover {
+            border-color: #4CAF50;
+            transform: translateY(-2px);
+        }
+
         .product-badge {
             position: absolute;
             top: 8px;

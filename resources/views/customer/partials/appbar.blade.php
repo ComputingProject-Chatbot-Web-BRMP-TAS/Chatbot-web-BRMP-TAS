@@ -587,7 +587,9 @@
 
 <div class="navbar">
     <!-- Navbar Fokus (Checkout & Payment)-->
-    <a href="#" id="logo-brmp" class="navbar-title-fokus" style="display: none">Benih BRMP</a>
+    <a href="#" id="logo-brmp" class="navbar-title-fokus" style="display: none"><img
+            src="{{ asset('images/LOGO-UPBS.png') }}" alt="UPBS"
+            style="height:40px;width:auto;max-width:160px;object-fit:contain;"></a>
     @if (request()->routeIs('payment') || request()->is('payment'))
         <!-- Modal Konfirmasi Kembali Ke Home (khusus payment) -->
         <div id="modal-konfirmasi-ke-home"
@@ -613,7 +615,8 @@
     <!-- Desktop Layout -->
     <!-- Kiri: Logo + Menu -->
     <div class="navbar-left">
-        <a href="/" class="navbar-title">Benih BRMP</a>
+        <a href="/" class="navbar-title"><img src="{{ asset('images/LOGO-UPBS.png') }}" alt="UPBS"
+                style="height:40px;width:auto;max-width:160px;object-fit:contain;margin-right:8px;"></a>
         <span class="navbar-category-title" id="appbarCategoryBtn"
             style="margin-right:0px;cursor:pointer;position:relative;">Komoditas</span>
         <a href="{{ route('articles.index') }}" class="navbar-article-link" style="margin-left:0px;">Artikel</a>
