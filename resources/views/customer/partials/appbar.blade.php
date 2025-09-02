@@ -178,6 +178,8 @@
             line-height: 1;
         }
 
+        .mobile-transaksi-title,
+        .mobile-detail-transaksi-title,
         .mobile-cart-title {
             font-size: 16px;
             font-weight: 800;
@@ -232,6 +234,10 @@
             flex: 1;
             position: relative;
             align-items: center;
+        }
+
+        .mobile-search-container .searchbar-container {
+            margin: 0 5px;
         }
 
         .mobile-search-container input[type="text"] {
@@ -664,6 +670,16 @@
     <!-- Mobile Title Keranjang (halaman cart) -->
     <div class="mobile-cart-title" style="display:none;">
         <h4>Keranjang</h4>
+    </div>
+
+    <!-- Mobile Title Transaksi (halaman transaksi) -->
+    <div class="mobile-transaksi-title" style="display:none;">
+        <h4>Transaksi</h4>
+    </div>
+
+    <!-- Mobile Title Detail Transaksi (halaman detail transaksi) -->
+    <div class="mobile-detail-transaksi-title" style="display:none;">
+        <h4>Detail Transaksi</h4>
     </div>
 
     <!-- Mobile Search Bar -->

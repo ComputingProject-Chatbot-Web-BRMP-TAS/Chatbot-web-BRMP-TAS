@@ -382,7 +382,6 @@
 
         .product-detail-desc {
             margin-top: 18px;
-            color: #444;
             font-size: 1.1rem;
         }
 
@@ -446,7 +445,7 @@
 
             .product-detail-modern-container {
                 flex-direction: column;
-                padding-top: 64px;
+                padding-top: 0px;
                 padding-left: 0px;
                 padding-right: 0px;
                 padding-bottom: 0px;
@@ -473,6 +472,21 @@
                 gap: 8px;
                 padding: 8px 0;
                 margin-bottom: 0px
+            }
+
+            .product-detail-title {
+                font-size: 24px;
+                margin-bottom: 0px;
+            }
+
+            .product-detail-price {
+                font-size: 20px;
+                margin-bottom: 0px;
+            }
+
+            .product-detail-desc {
+                margin-top: 0px;
+                font-size: 16px;
             }
 
             .product-detail-modern-center {
