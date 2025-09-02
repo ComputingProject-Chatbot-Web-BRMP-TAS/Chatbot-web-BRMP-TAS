@@ -23,6 +23,14 @@ class PlantTypeSeeder extends Seeder
                 'comodity' => 'Tanaman Serat',
             ],
             [
+                'plant_type_name' => 'Kapuk',
+                'comodity' => 'Tanaman Serat',
+            ],
+            [
+                'plant_type_name' => 'Sisal',
+                'comodity' => 'Tanaman Serat',
+            ],
+            [
                 'plant_type_name' => 'Wijen',
                 'comodity' => 'Tanaman Minyak Industri',
             ],
@@ -39,7 +47,19 @@ class PlantTypeSeeder extends Seeder
                 'comodity' => 'Tanaman Minyak Industri',
             ],
             [
+                'plant_type_name' => 'Bunga Matahari',
+                'comodity' => 'Tanaman Minyak Industri',
+            ],
+            [
                 'plant_type_name' => 'Tebu',
+                'comodity' => 'Tanaman Pemanis',
+            ],
+            [
+                'plant_type_name' => 'Bit Gula',
+                'comodity' => 'Tanaman Pemanis',
+            ],
+            [
+                'plant_type_name' => 'Stevia',
                 'comodity' => 'Tanaman Pemanis',
             ],
             [

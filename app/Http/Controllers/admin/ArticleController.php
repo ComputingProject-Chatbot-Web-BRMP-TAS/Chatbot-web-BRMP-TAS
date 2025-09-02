@@ -14,7 +14,7 @@ class ArticleController extends Controller
     public function index()
     {
         $articles = \App\Models\Article::latest()->paginate(10);
-        return view('admin.articles', compact('articles'));
+        return view('admin.articles.index', compact('articles'));
     }
 
     /**
@@ -50,7 +50,7 @@ class ArticleController extends Controller
     public function show(string $id)
     {
         $article = \App\Models\Article::findOrFail($id);
-        return view('admin.articles', compact('article'));
+        return view('admin.articles.index', compact('article'));
     }
 
     /**
