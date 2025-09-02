@@ -499,6 +499,20 @@
             opacity: 1;
         }
 
+        .kuitansi-btn {
+            border: 2px solid #16a34a;
+            color: #16a34a;
+            background: #fff;
+            transition: all 0.3s;
+        }
+
+        .kuitansi-btn:hover {
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: #fff !important;
+            border-color: #16a34a;
+            box-shadow: 0 2px 8px rgba(22,163,74,0.15);
+        }
+
         @media (max-width: 768px) {
             .transaksi-detail-container {
                 padding: 24px 16px;
@@ -692,12 +706,12 @@
         
         <div class="d-flex justify-content-end gap-2 my-3">
             <a href="{{ route('transaksi.invoice.view', $transaction->transaction_id) }}" 
-            class="btn btn-outline-success" style="border-radius:8px;font-weight:600;">
+            class="btn btn-outline-success kuitansi-btn" style="border-radius:8px;font-weight:600;">
                 <i class="fas fa-file-invoice"></i> Lihat Kuitansi
             </a>
             <a href="{{ route('transaksi.invoice.download', $transaction->transaction_id) }}" 
-            class="btn btn-success" style="border-radius:8px;font-weight:600;">
-                <i class="fas fa-download"></i> Unduh Kuitansi
+                class="btn btn-outline-success kuitansi-btn" style="border-radius:8px;font-weight:600;">
+                    <i class="fas fa-download"></i> Unduh Kuitansi
             </a>
         </div>
 

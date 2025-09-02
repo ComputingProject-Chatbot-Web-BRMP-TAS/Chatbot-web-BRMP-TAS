@@ -26,34 +26,49 @@
 </head>
 <body>
     <div class="container">
+        <div class="company-header" style="margin-bottom: 24px;">
+            @if(isset($isPdf) && $isPdf)
+                <img src="{{ public_path('images/LOGO-UPBS.png') }}" alt="Logo UPBS" style="max-height:60px; margin-bottom:8px;">
+            @else
+                <img src="{{ asset('images/LOGO-UPBS.png') }}" alt="Logo UPBS" style="max-height:60px; margin-bottom:8px;">
+            @endif
+            <div class="company-info">
+                Jalan Raya Karangploso No.Km.04<br>
+                Kel. Turi Rejo, Kepuharjo, Kec. Karang Ploso<br>
+                Malang - Jawa Timur<br>
+                Indonesia<br>
+                65152<br>
+                brmp@pertanian.go.id &nbsp; (021) 780 6202<br>
+            </div>
+        </div>
         <div class="header">
-            {{-- <img src="{{ public_path('logo.png') }}" alt="Logo"> --}}
             <div class="title">TANDA TERIMA / KUITANSI</div>
-            <div class="subtitle">No: #{{ $transaction->transaction_id }}</div>
         </div>
 
         <table class="info-table">
+            <tr>
+                <td class="info-label"><b>Nomor Resi</b></td>
+                <td>: {{ $transaction->no_resi ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="info-label"><b>ID Transaksi</b></td>
+                <td>: #{{ $transaction->transaction_id }}</td>
+            </tr>
             <tr>
                 <td class="info-label"><b>Tanggal</b></td>
                 <td>: {{ \Carbon\Carbon::parse($transaction->order_date)->format('d M Y H:i') }}</td>
             </tr>
             <tr>
                 <td class="info-label"><b>Nama Penerima</b></td>
-                <td>: {{ $transaction->recipient_name ?? '-' }}</td>
+                <td>: {{ $transaction->shippingAddress->recipient_name ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="info-label"><b>Nomor Telepon</b></td>
+                <td>: {{ $transaction->shippingAddress->recipient_phone ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="info-label"><b>Alamat Pengiriman</b></td>
-                <td>: {{ $transaction->shippingAddress->full_address ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="info-label"><b>Status Pembayaran</b></td>
-                <td>: 
-                    @php
-                        $status = $transaction->payments->first()->status ?? '-';
-                        $color = $status === 'APPROVED' ? '#219653' : ($status === 'PENDING' ? '#f2c94c' : '#eb5757');
-                    @endphp
-                    <span style="color: {{ $color }}; font-weight:600;">{{ $status }}</span>
-                </td>
+                <td>: {{ $transaction->shippingAddress->address ?? '-' }}</td>
             </tr>
         </table>
 
@@ -75,8 +90,8 @@
                         <td>{{ $i+1 }}</td>
                         <td>{{ $item->product->product_name ?? '-' }}</td>
                         <td>{{ $item->quantity }} {{ $item->product->unit ?? '' }}</td>
-                        <td class="right">Rp{{ number_format($item->price,0,',','.') }}</td>
-                        <td class="right">Rp{{ number_format($item->price * $item->quantity,0,',','.') }}</td>
+                        <td class="right">Rp{{ number_format($item->unit_price,0,',','.') }}</td>
+                        <td class="right">Rp{{ number_format($item->subtotal,0,',','.') }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -87,11 +102,13 @@
                     </tr>
                     <tr>
                         <th colspan="4" class="right">Ongkir</th>
-                        <th class="right">Rp{{ number_format($transaction->shipping_cost,0,',','.') }}</th>
+                        <th class="right">Rp{{ number_format($transaction->total_ongkir ?? 0,0,',','.') }}</th>
                     </tr>
                     <tr class="total-row">
                         <th colspan="4" class="right">Total Pembayaran</th>
-                        <th class="right">Rp{{ number_format($transaction->total_price + $transaction->shipping_cost,0,',','.') }}</th>
+                        <th class="right">
+                            Rp{{ number_format($transaction->total_price + ($transaction->total_ongkir ?? 0),0,',','.') }}
+                        </th>
                     </tr>
                 </tfoot>
             </table>
@@ -99,12 +116,6 @@
 
         <div class="footer">
             Dicetak pada: {{ now()->format('d M Y H:i') }}
-        </div>
-
-        <div class="signature">
-            <div class="label">Hormat Kami,</div>
-            <br><br><br>
-            <div><b>{{ config('app.name', 'Benih BRMP') }}</b></div>
         </div>
     </div>
 </body>

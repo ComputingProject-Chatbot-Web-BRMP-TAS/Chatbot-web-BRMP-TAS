@@ -1,6 +1,21 @@
 @extends('layouts.admin')
-
 @section('content')
+    <style>
+        .kuitansi-btn {
+            border: 2px solid #16a34a;
+            color: #16a34a;
+            background: #fff;
+            transition: all 0.3s;
+        }
+
+        .kuitansi-btn:hover {
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: #fff !important;
+            border-color: #16a34a;
+            box-shadow: 0 2px 8px rgba(22,163,74,0.15);
+        }
+    </style>
+
     <div style="padding-top: 80px;">
         <div class="container">
             <div class="row">
@@ -489,10 +504,10 @@
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center mb-4">
                                             <div>
-                                                <a href="{{ route('admin.transactions.invoice.view', $transaction->transaction_id) }}" class="btn btn-outline-success me-2" style="border-radius:8px;font-weight:600;">
+                                                <a href="{{ route('admin.transactions.invoice.view', $transaction->transaction_id) }}" class="btn kuitansi-btn me-2" style="border-radius:8px;font-weight:600;">
                                                     <i class="fas fa-file-invoice"></i> Lihat Kuitansi
                                                 </a>
-                                                <a href="{{ route('admin.transactions.invoice.download', $transaction->transaction_id) }}" class="btn btn-success me-2" style="border-radius:8px;font-weight:600;">
+                                                <a href="{{ route('admin.transactions.invoice.download', $transaction->transaction_id) }}" class="btn kuitansi-btn" style="border-radius:8px;font-weight:600;">
                                                     <i class="fas fa-download"></i> Unduh Kuitansi
                                                 </a>
                                             </div>

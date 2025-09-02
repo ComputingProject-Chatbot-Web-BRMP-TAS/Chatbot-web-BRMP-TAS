@@ -208,7 +208,10 @@ class AdminTransactionController extends Controller
             ->where('transaction_id', $id)
             ->firstOrFail();
 
-        return view('admin.transactions.invoice_pdf', compact('transaction'));
+        return view('admin.transactions.invoice_pdf', [
+            'transaction' => $transaction,
+            'isPdf' => false
+        ]);
     }
 
     public function downloadInvoice($id)
@@ -217,7 +220,10 @@ class AdminTransactionController extends Controller
             ->where('transaction_id', $id)
             ->firstOrFail();
 
-        $pdf = Pdf::loadView('admin.transactions.invoice_pdf', compact('transaction'));
+        $pdf = Pdf::loadView('admin.invoice_pdf', [
+            'transaction' => $transaction,
+            'isPdf' => true
+        ]);
         return $pdf->download('kuitansi_'.$transaction->transaction_id.'.pdf');
     }
 }
