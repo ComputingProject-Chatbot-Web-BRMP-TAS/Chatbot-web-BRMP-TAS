@@ -12,7 +12,7 @@
             background: linear-gradient(135deg, #16a34a, #22c55e);
             color: #fff !important;
             border-color: #16a34a;
-            box-shadow: 0 2px 8px rgba(22,163,74,0.15);
+            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.15);
         }
     </style>
 
@@ -227,7 +227,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Payment Flow Status -->
                             <div class="card mb-4">
                                 @php
@@ -427,26 +427,29 @@
                                     <h5 class="mb-0">Update Status</h5>
                                 </div>
                                 <div class="card-body">
-                                    @if($transaction->order_status == 'menunggu_kode_billing')
-                                    <form method="POST" action="{{ route('admin.transactions.billing.store', $transaction->transaction_id) }}"
-                                        enctype="multipart/form-data">
-                                        @csrf
-                                        <div class="mb-3">
-                                            <label for="billing_code_file" class="form-label">File Kode Billing</label>
-                                            <input type="file" class="form-control" name="billing_code_file" id="billing_code_file"
-                                                accept=".jpg,.jpeg,.png" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="no_rek_ongkir" class="form-label">No Rekening Ongkir</label>
-                                            <input type="file" class="form-control" name="no_rek_ongkir" id="no_rek_ongkir"
-                                                accept=".jpg,.jpeg,.png" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="total_ongkir" class="form-label">Total Ongkir</label>
-                                            <input type="number" class="form-control" name="total_ongkir" id="total_ongkir" required>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary w-100">Simpan</button>
-                                    </form>
+                                    @if ($transaction->order_status == 'menunggu_kode_billing')
+                                        <form method="POST"
+                                            action="{{ route('admin.transactions.billing.store', $transaction->transaction_id) }}"
+                                            enctype="multipart/form-data">
+                                            @csrf
+                                            <div class="mb-3">
+                                                <label for="billing_code_file" class="form-label">File Kode
+                                                    Billing</label>
+                                                <input type="file" class="form-control" name="billing_code_file"
+                                                    id="billing_code_file" accept=".jpg,.jpeg,.png" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="no_rek_ongkir" class="form-label">No Rekening Ongkir</label>
+                                                <input type="file" class="form-control" name="no_rek_ongkir"
+                                                    id="no_rek_ongkir" accept=".jpg,.jpeg,.png" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="total_ongkir" class="form-label">Total Ongkir</label>
+                                                <input type="number" class="form-control" name="total_ongkir"
+                                                    id="total_ongkir" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary w-100">Simpan</button>
+                                        </form>
                                     @elseif($transaction->order_status == 'menunggu_pembayaran')
                                         <div>
                                             Menunggu pelanggan melakukan pembayaran.
@@ -475,13 +478,14 @@
                                             </div>
                                         </div>
                                     @elseif($transaction->order_status == 'diproses')
-                                        <form method="POST" action="{{ route('admin.transactions.resi.update', $transaction->transaction_id) }}">
+                                        <form method="POST"
+                                            action="{{ route('admin.transactions.resi.update', $transaction->transaction_id) }}">
                                             @csrf
                                             @method('PUT')
                                             <div class="mb-3">
                                                 <label for="no_resi" class="form-label">Nomor Resi</label>
-                                                <input type="text" class="form-control" name="no_resi" id="no_resi" required
-                                                    value="{{ $transaction->no_resi }}">
+                                                <input type="text" class="form-control" name="no_resi" id="no_resi"
+                                                    required value="{{ $transaction->no_resi }}">
                                             </div>
                                             <button type="submit" class="btn btn-primary w-100">Simpan</button>
                                         </form>
@@ -492,11 +496,11 @@
                                     @endif
                                 </div>
                             </div>
-                            
+
                             @php
                                 $payment = $transaction->payments->first();
                             @endphp
-                            @if($payment && $payment->payment_status == 'approved')
+                            @if ($payment && $payment->payment_status == 'approved')
                                 <div class="card mb-4">
                                     <div class="card-header">
                                         <h5 class="mb-0">Kuitansi Pembayaran</h5>
@@ -504,10 +508,13 @@
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center mb-4">
                                             <div>
-                                                <a href="{{ route('admin.transactions.invoice.view', $transaction->transaction_id) }}" class="btn kuitansi-btn me-2" style="border-radius:8px;font-weight:600;">
+                                                <a href="{{ route('admin.transactions.invoice.view', $transaction->transaction_id) }}"
+                                                    class="btn kuitansi-btn me-2"
+                                                    style="border-radius:8px;font-weight:600;">
                                                     <i class="fas fa-file-invoice"></i> Lihat Kuitansi
                                                 </a>
-                                                <a href="{{ route('admin.transactions.invoice.download', $transaction->transaction_id) }}" class="btn kuitansi-btn" style="border-radius:8px;font-weight:600;">
+                                                <a href="{{ route('admin.transactions.invoice.download', $transaction->transaction_id) }}"
+                                                    class="btn kuitansi-btn" style="border-radius:8px;font-weight:600;">
                                                     <i class="fas fa-download"></i> Unduh Kuitansi
                                                 </a>
                                             </div>
@@ -515,7 +522,7 @@
                                     </div>
                                 </div>
                             @endif
- 
+
                             <!-- Informasi Pembayaran -->
                             <div class="card mb-4">
                                 <div class="card-header">
@@ -586,7 +593,7 @@
                                         @if ($payment->rejection_reason)
                                             <div class="alert alert-danger mt-2">
                                                 <strong>Alasan Penolakan:</strong><br>
-                                                {{ $payment->rejection_reason }}
+                                                {!! nl2br($payment->rejection_reason) !!}
                                             </div>
                                         @endif
 

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -11,54 +10,67 @@ class CancelExpiredTransactions extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+    *
      * @var string
-     */
+    */
     protected $signature = 'transactions:cancel-expired';
 
     /**
      * The console command description.
-     *
-     * @var string
-     */
+    *
+    * @var string
+    */
     protected $description = 'Cancel transactions that have expired payment deadline';
-
+    
     /**
      * Execute the console command.
-     */
+    */
     public function handle()
     {
+        Log::info('Carbon now subDay', ['value' => Carbon::now()->subDay()->toDateTimeString()]);
         try {
             $this->info('Starting to check for expired transactions...');
             
-            // Get transactions that are waiting for payment and have expired (24 hours after order)
+            // Get transactions that are waiting for payment and have expired (1 week after order)
             $expiredTransactions = Transaction::where('order_status', 'menunggu_pembayaran')
-                ->where('order_date', '<=', Carbon::now()->subDay())
-                ->get();
+            ->where('order_date', '<=', Carbon::now()->subWeek())
+            ->get();
             
             $cancelledCount = 0;
-            
             foreach ($expiredTransactions as $transaction) {
-                // Check if there are any non-rejected payments
-                $hasNonRejectedPayment = $transaction->payments()
-                    ->where('payment_status', '!=', 'rejected')
+                // Debug: tampilkan semua payment pada transaksi
+                Log::info('Payments for transaction', [
+                    'transaction_id' => $transaction->transaction_id,
+                    'payments' => $transaction->payments()->get()->toArray()
+                ]);
+
+                // Batalkan hanya jika ada payment dan status payment-nya 'no_payment'
+                $hasNoPaymentStatus = $transaction->payments()
+                    ->where('payment_status', 'no_payment')
                     ->exists();
-                
-                // Only cancel if no valid payment exists
-                if (!$hasNonRejectedPayment) {
+
+                if ($hasNoPaymentStatus) {
                     $transaction->update([
                         'order_status' => 'dibatalkan'
                     ]);
-                    
+
+                    // Update payment status dan rejection_reason
+                    $transaction->payments()
+                        ->where('payment_status', 'no_payment')
+                        ->update([
+                            'payment_status' => 'rejected',
+                            'rejection_reason' => "Mohon maaf, transaksi Anda dengan nomor transaksi #{$transaction->transaction_id} telah dibatalkan secara otomatis karena sudah melewati batas waktu pembayaran.\n\nAnda dapat membuat pesanan baru untuk melanjutkan pembelian.\n\nTerima kasih."
+                        ]);
+
                     $cancelledCount++;
-                    
-                    Log::info('Transaction cancelled due to expired payment', [
+
+                    Log::info('Transaction cancelled due to expired payment (payment status: no_payment)', [
                         'transaction_id' => $transaction->transaction_id,
                         'user_id' => $transaction->user_id,
                         'order_date' => $transaction->order_date,
                         'cancelled_at' => Carbon::now()
                     ]);
-                    
+
                     $this->line("Cancelled transaction #{$transaction->transaction_id} for user {$transaction->user->name}");
                 }
             }

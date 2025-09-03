@@ -12,11 +12,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
         
-        // Cancel expired transactions daily at 2 AM
+        // Cancel expired transactions daily
         $schedule->command('transactions:cancel-expired')
-                 ->dailyAt('02:00')
+                 ->daily()
                  ->appendOutputTo(storage_path('logs/expired-transactions.log'));
     }
 

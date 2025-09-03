@@ -534,12 +534,17 @@
         </div>
 
         @php
-            function formatDeliveryMethod($method) {
-                switch(strtolower($method)) {
-                    case 'reguler': return 'Reguler';
-                    case 'kargo': return 'Kargo';
-                    case 'pickup': return 'Pickup di Tempat';
-                    default: return ucfirst($method);
+            function formatDeliveryMethod($method)
+            {
+                switch (strtolower($method)) {
+                    case 'reguler':
+                        return 'Reguler';
+                    case 'kargo':
+                        return 'Kargo';
+                    case 'pickup':
+                        return 'Pickup di Tempat';
+                    default:
+                        return ucfirst($method);
                 }
             }
         @endphp
@@ -659,6 +664,7 @@
                 $payments = $transaction->payments;
                 $hasPayments = $payments && $payments->count() > 0;
                 $latestPayment = $hasPayments ? $payments->last() : null;
+                $rejectedPayments = $latestPayment && $latestPayment->payment_status == 'rejected';
                 $hasKodeBilling = $latestPayment && $latestPayment->billing_code_file != null;
                 $hasBillingProof = $latestPayment && $latestPayment->photo_proof_payment_billing != null;
                 $hasOngkirProof = $latestPayment && $latestPayment->photo_proof_payment_ongkir != null;
@@ -666,7 +672,7 @@
                 $showOngkirForm = !$hasOngkirProof && $transaction->order_status === 'menunggu_pembayaran';
             @endphp
 
-            @if ($hasBillingProof && $hasOngkirProof)
+            @if ($hasBillingProof || $hasOngkirProof)
                 <div class="payment-info">
                     <div class="payment-item">
                         <div class="label">📅 Tanggal Pembayaran</div>
@@ -687,16 +693,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="payment-proof">
-                    <span class="proof-label">📸 Bukti Pembayaran Billing:</span>
-                    <br>
-                    <a href="{{ asset('storage/bukti_pembayaran/' . $latestPayment->photo_proof_payment_billing) }}"
-                        target="_blank">
-                        <img src="{{ asset('storage/bukti_pembayaran/' . $latestPayment->photo_proof_payment_billing) }}"
-                            alt="Bukti Pembayaran Billing">
-                    </a>
-                </div>
-                @if ($latestPayment->photo_proof_payment_ongkir)
+                @if ($hasBillingProof)
+                    <div class="payment-proof">
+                        <span class="proof-label">📸 Bukti Pembayaran Billing:</span>
+                        <br>
+                        <a href="{{ asset('storage/bukti_pembayaran/' . $latestPayment->photo_proof_payment_billing) }}"
+                            target="_blank">
+                            <img src="{{ asset('storage/bukti_pembayaran/' . $latestPayment->photo_proof_payment_billing) }}"
+                                alt="Bukti Pembayaran Billing">
+                        </a>
+                    </div>
+                @endif
+                @if ($hasOngkirProof)
                     <div class="payment-proof">
                         <span class="proof-label">📸 Bukti Pembayaran Ongkir:</span>
                         <br>
@@ -710,6 +718,11 @@
             @elseif(!$hasPayments && !$hasKodeBilling)
                 <div class="no-payment">
                     ⚠️ Belum ada pembayaran untuk transaksi ini. Silakan tunggu kode billing dari admin.
+                </div>
+            @elseif($rejectedPayments)
+                <div class="no-payment">
+                    <strong>Alasan Penolakan:</strong><br>
+                    {!! nl2br($latestPayment->rejection_reason) !!}
                 </div>
             @endif
             @if ($showBillingForm || $showOngkirForm)
