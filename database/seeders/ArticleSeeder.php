@@ -12,7 +12,8 @@ class ArticleSeeder extends Seeder
         DB::table('articles')->insert([
             [
                 'headline' => 'Panduan Cerdas Budidaya Tebu untuk Hasil Gula Terbaik',
-                'image' => 'articles/U1zOelOODGaJfD1ykIfDlUNbHRPnvE4wFN8R0WoN.jpg',
+                'image' => 'Budidaya-Tebu.png',
+                'image2' => 'Tebu.png',
                 'body' => <<<HTML
 <b>Tebu (<i>Saccharum officinarum</i>)</b> adalah tanaman penting sebagai sumber utama sukrosa atau gula. Budidaya tebu yang sukses tidak hanya berfokus pada kuantitas panen, tetapi juga pada kualitas rendemen (kandungan gula) yang tinggi.<br><br>
 Berikut adalah panduan singkat untuk budidaya tebu secara optimal.<br>
@@ -43,7 +44,8 @@ HTML,
             ],
             [
                 'headline' => 'Cara Sukses Menanam Tembakau Lokal',
-                'image' => 'articles/oJXSTy91TYB2ZciCp8Ji63htr4cdwGO6NxowLvXw.jpg',
+                'image' => 'Cara-Menanam-Tembakau.png',
+                'image2' => 'Tembakau.png',
                 'body' => <<<HTML
 <b>Tembakau</b> adalah komoditas pertanian strategis yang membutuhkan perawatan intensif dan metode budidaya yang tepat untuk menghasilkan kualitas terbaik. Keberhasilan panen tembakau sangat dipengaruhi oleh setiap tahapan, mulai dari persiapan lahan hingga proses pascapanen.<br>
 Berikut adalah panduan singkat cara sukses menanam tembakau.<br>
@@ -87,7 +89,8 @@ HTML,
             ],
             [
                 'headline' => 'Budidaya Stevia: Tanaman Pemanis Alami Bebas Kalori',
-                'image' => null,
+                'image' => 'Budidaya-Stevia.png',
+                'image2' => 'Stevia.png',
                 'body' => <<<HTML
 <b>Stevia (<i>Stevia rebaudiana</i>)</b> adalah tanaman yang daunnya dikenal sebagai pemanis alami dan sehat, menjadi alternatif pengganti gula tanpa kalori. Budidaya stevia semakin diminati seiring dengan meningkatnya kesadaran akan gaya hidup sehat.<br><br>
 Berikut adalah panduan singkat cara sukses menanam stevia.<br>
@@ -122,7 +125,8 @@ HTML,
             ],
             [
                 'headline' => 'Panduan Singkat Budidaya Biji Wijen',
-                'image' => null,
+                'image' => 'Budidaya-Wijen.png',
+                'image2' => 'Biji Wijen.png',
                 'body' => <<<HTML
 <b>Wijen</b> adalah tanaman penghasil minyak yang membutuhkan teknik budidaya khusus. Keberhasilan panen wijen sangat ditentukan oleh manajemen yang cermat dari awal hingga akhir.<br><br>
 <b>1. Persiapan Tanam:</b><br>

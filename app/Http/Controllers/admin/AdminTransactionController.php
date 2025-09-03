@@ -94,6 +94,12 @@ class AdminTransactionController extends Controller
             
             // Update transaction status to diproses
             $transaction->order_status = 'diproses';
+
+            // Jika done_date belum diisi, isi dengan waktu sekarang
+            if (is_null($transaction->done_date)) {
+                $transaction->done_date = now();
+            }
+
             $transaction->save();
             
             return redirect()->back()->with('success', 'Pembayaran berhasil dikonfirmasi dan pesanan akan diproses');

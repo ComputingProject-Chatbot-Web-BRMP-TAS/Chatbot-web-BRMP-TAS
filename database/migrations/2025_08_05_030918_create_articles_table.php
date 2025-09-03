@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('headline');
             $table->string('image')->nullable(); // path gambar artikel
+            $table->string('image2')->nullable(); // path gambar artikel
             $table->text('body'); // isi artikel (boleh HTML)
             $table->timestamps();
         });

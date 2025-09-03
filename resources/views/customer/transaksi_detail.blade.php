@@ -533,10 +533,21 @@
             @endif
         </div>
 
+        @php
+            function formatDeliveryMethod($method) {
+                switch(strtolower($method)) {
+                    case 'reguler': return 'Reguler';
+                    case 'kargo': return 'Kargo';
+                    case 'pickup': return 'Pickup di Tempat';
+                    default: return ucfirst($method);
+                }
+            }
+        @endphp
+
         <div class="delivery-info">
             <div class="info-item">
                 <span class="info-label"><b>Metode Pengiriman:</b></span>
-                <span class="info-value">{{ $transaction->delivery_method }}</span>
+                <span class="info-value">{{ formatDeliveryMethod($transaction->delivery_method) }}</span>
             </div>
             @if ($transaction->estimated_delivery_date)
                 <div class="info-item">

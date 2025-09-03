@@ -70,8 +70,7 @@
                 <a href="{{ route('articles.show', $article->id) }}" style="text-decoration:none;color:inherit;">
                     <div class="article-card">
                         @if ($article->image)
-                            <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->headline }}"
-                                class="article-image">
+                            <img src="{{ asset('images/' . $article->image) }}" alt="{{ $article->headline }}">
                         @else
                             <div class="article-image"
                                 style="display:flex;align-items:center;justify-content:center;color:#aaa;font-size:2rem;">
