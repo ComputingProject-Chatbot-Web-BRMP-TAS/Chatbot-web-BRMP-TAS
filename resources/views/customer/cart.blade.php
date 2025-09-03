@@ -394,8 +394,13 @@
                                 {{ $isOutOfStock || $isQuantityBelowMin ? 'disabled' : '' }}>
 
                             @if ($item->product->image1)
-                                <img src="{{ asset('storage/products/' . $item->product->image1) }}"
-                                    alt="{{ $item->product->product_name }}" class="cart-item-image">
+                                @php
+                                    $imagePath = Str::startsWith($item->product->image1, 'products/')
+                                        ? $item->product->image1
+                                        : 'products/' . $item->product->image1;
+                                @endphp
+                                <img src="{{ asset('storage/' . $imagePath) }}" alt="{{ $item->product->product_name }}"
+                                    class="cart-item-image">
                             @else
                                 <div class="cart-item-image">
                                     <i class="fas fa-seedling"></i>

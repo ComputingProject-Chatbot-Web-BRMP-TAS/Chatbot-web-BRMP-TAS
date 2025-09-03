@@ -5,10 +5,23 @@
     <div class="product-detail-modern-bg">
         <div class="product-detail-modern-container">
             <div class="product-detail-modern-left">
+                @php
+                    $image1Path = Str::startsWith($productHistory->image1, 'products/')
+                        ? $productHistory->image1
+                        : 'products/' . $productHistory->image1;
+
+                    $image2Path = Str::startsWith($productHistory->image2, 'products/')
+                        ? $productHistory->image2
+                        : 'products/' . $productHistory->image2;
+
+                    $imageCertificatePath = Str::startsWith($productHistory->image_certificate, 'certificates/')
+                        ? $productHistory->image_certificate
+                        : 'certificates/' . $productHistory->image_certificate;
+                @endphp
                 <div class="product-detail-main-image-wrapper">
                     @if ($productHistory->image1)
-                        <img src="{{ asset('storage/products/' . $productHistory->image1) }}"
-                            alt="{{ $productHistory->product_name }}" class="product-detail-main-image" id="mainImage">
+                        <img src="{{ asset('storage/' . $image1Path) }}" alt="{{ $productHistory->product_name }}"
+                            class="product-detail-main-image" id="mainImage">
                     @else
                         <div class="product-detail-default-image" id="mainImage">
                             <i class="fas fa-seedling"></i>
@@ -17,22 +30,20 @@
                 </div>
                 <div class="product-detail-thumbs">
                     @if ($productHistory->image1)
-                        <img src="{{ asset('storage/products/' . $productHistory->image1) }}" alt="thumb1"
-                            class="selected"
-                            onclick="changeImage(this, '{{ asset('storage/products/' . $productHistory->image1) }}')">
+                        <img src="{{ asset('storage/' . $image1Path) }}" alt="thumb1" class="selected"
+                            onclick="changeImage(this, '{{ asset('storage/' . $image1Path) }}')">
                     @else
                         <div class="product-detail-thumb-default selected" onclick="changeImage(this, 'default')">
                             <i class="fas fa-seedling"></i>
                         </div>
                     @endif
                     @if ($productHistory->image2)
-                        <img src="{{ asset('storage/products/' . $productHistory->image2) }}" alt="thumb2"
-                            onclick="changeImage(this, '{{ asset('storage/products/' . $productHistory->image2) }}')">
+                        <img src="{{ asset('storage/' . $image2Path) }}" alt="thumb2"
+                            onclick="changeImage(this, '{{ asset('storage/' . $image2Path) }}')">
                     @endif
                     @if ($productHistory->image_certificate)
-                        <img src="{{ asset('storage/certificates/' . $productHistory->image_certificate) }}"
-                            alt="certificate"
-                            onclick="changeImage(this, '{{ asset('storage/certificates/' . $productHistory->image_certificate) }}')">
+                        <img src="{{ asset('storage/' . $imageCertificatePath) }}" alt="certificate"
+                            onclick="changeImage(this, '{{ asset('storage/' . $imageCertificatePath) }}')">
                     @endif
                 </div>
             </div>
@@ -156,20 +167,20 @@
                         <div class="carousel-inner">
                             @if ($productHistory->image1)
                                 <div class="carousel-item active">
-                                    <img src="{{ asset('storage/products/' . $productHistory->image1) }}"
-                                        class="d-block w-100" alt="{{ $productHistory->product_name }}">
+                                    <img src="{{ asset('storage/' . $image1Path) }}" class="d-block w-100"
+                                        alt="{{ $productHistory->product_name }}">
                                 </div>
                             @endif
                             @if ($productHistory->image2)
                                 <div class="carousel-item">
-                                    <img src="{{ asset('storage/products/' . $productHistory->image2) }}"
-                                        class="d-block w-100" alt="{{ $productHistory->product_name }}">
+                                    <img src="{{ asset('storage/' . $image2Path) }}" class="d-block w-100"
+                                        alt="{{ $productHistory->product_name }}">
                                 </div>
                             @endif
                             @if ($productHistory->image_certificate)
                                 <div class="carousel-item">
-                                    <img src="{{ asset('storage/certificates/' . $productHistory->image_certificate) }}"
-                                        class="d-block w-100" alt="{{ $productHistory->product_name }}">
+                                    <img src="{{ asset('storage/' . $imageCertificatePath) }}" class="d-block w-100"
+                                        alt="{{ $productHistory->product_name }}">
                                 </div>
                             @endif
                         </div>
@@ -457,13 +468,13 @@
         (function() {
             const galleryImages = [
                 @if ($productHistory->image1)
-                    '{{ asset('storage/products/' . $productHistory->image1) }}',
+                    '{{ asset('storage/' . $image1Path) }}',
                 @endif
                 @if ($productHistory->image2)
-                    '{{ asset('storage/products/' . $productHistory->image2) }}',
+                    '{{ asset('storage/' . $image2Path) }}',
                 @endif
                 @if ($productHistory->image_certificate)
-                    '{{ asset('storage/certificates/' . $productHistory->image_certificate) }}',
+                    '{{ asset('storage/' . $imageCertificatePath) }}',
                 @endif
             ];
 

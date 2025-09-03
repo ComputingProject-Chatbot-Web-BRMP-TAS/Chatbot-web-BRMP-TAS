@@ -19,8 +19,11 @@
             <i class="fas fa-times-circle" style="margin-right:2px;"></i>Stok Habis
         </div>
     @endif
+    @php
+        $imagePath = Str::startsWith($product->image1, 'products/') ? $product->image1 : 'products/' . $product->image1;
+    @endphp
     @if ($product->image1)
-        <img src="{{ asset('storage/products/' . $product->image1) }}" alt="{{ $product->product_name }}">
+        <img src="{{ asset('storage/' . $imagePath) }}" alt="{{ $product->product_name }}">
     @else
         <div
             style="width:100%;height:120px;background:#f0f0f0;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:center;color:#999;">
