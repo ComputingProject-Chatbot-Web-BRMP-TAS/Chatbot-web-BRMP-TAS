@@ -417,10 +417,13 @@
                                 @php
                                     $firstItem = $trx->transactionItems->first();
                                     $itemCount = $trx->transactionItems->count();
+                                    $imagePath = Str::startsWith($firstItem->product->image1, 'products/')
+                                        ? $firstItem->product->image1
+                                        : 'products/' . $firstItem->product->image1;
                                 @endphp
                                 @if ($firstItem)
                                     @if ($firstItem->product->image1)
-                                        <img src="{{ asset('storage/products/' . $firstItem->product->image1) }}"
+                                        <img src="{{ asset('storage/' . $imagePath) }}"
                                             alt="{{ $firstItem->product->product_name }}" class="transaksi-item-image">
                                     @else
                                         <div class="transaksi-item-image">

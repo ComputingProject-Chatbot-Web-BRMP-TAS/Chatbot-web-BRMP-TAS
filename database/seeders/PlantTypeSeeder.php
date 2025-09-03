@@ -31,16 +31,24 @@ class PlantTypeSeeder extends Seeder
                 'comodity' => 'Tanaman Serat',
             ],
             [
-                'plant_type_name' => 'Wijen',
-                'comodity' => 'Tanaman Minyak Industri',
-            ],
-            [
                 'plant_type_name' => 'Rosela Herbal',
                 'comodity' => 'Tanaman Serat',
             ],
             [
                 'plant_type_name' => 'Kenaf',
                 'comodity' => 'Tanaman Serat',
+            ],
+            [
+                'plant_type_name' => 'Abaka',
+                'comodity' => 'Tanaman Serat',
+            ],
+            [
+                'plant_type_name' => 'Rami',
+                'comodity' => 'Tanaman Serat',
+            ],
+            [
+                'plant_type_name' => 'Wijen',
+                'comodity' => 'Tanaman Minyak Industri',
             ],
             [
                 'plant_type_name' => 'Jarak Kepyar',
@@ -61,14 +69,6 @@ class PlantTypeSeeder extends Seeder
             [
                 'plant_type_name' => 'Stevia',
                 'comodity' => 'Tanaman Pemanis',
-            ],
-            [
-                'plant_type_name' => 'Abaka',
-                'comodity' => 'Tanaman Serat',
-            ],
-            [
-                'plant_type_name' => 'Rami',
-                'comodity' => 'Tanaman Serat',
             ],
         ];
 

@@ -290,7 +290,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'product_name' => 'Wijen SBR 1 (Dasar)',
-                'plant_type_id' => 3, 
+                'plant_type_id' => 9, 
                 'description' => 'Wijen SBR 1 (Dasar) adalah varietas wijen unggul yang menghasilkan biji wijen berkualitas tinggi dengan kandungan minyak melimpah. Benih wijen ini sangat unggul untuk perkebunan. Tanaman ini memiliki biji yang besar, berwarna putih bersih, dan rasanya yang gurih. Wijen ini ideal untuk produksi minyak wijen, bahan baku makanan, maupun pakan ternak. Pertumbuhannya cepat dan produktivitasnya tinggi, menjadikannya pilihan yang sangat menguntungkan bagi petani.',
                 'minimum_stock' => 3,
                 'stock' => 40,
@@ -303,7 +303,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'product_name' => 'Wijen SBR 1 (Pokok)',
-                'plant_type_id' => 3, 
+                'plant_type_id' => 9, 
                 'description' => 'Wijen SBR 1 (Pokok) merupakan varietas wijen pokok yang stabil dan andal. Benih wijen ini sangat unggul dan cocok untuk perkebunan di berbagai daerah. Tanaman ini menghasilkan biji wijen dengan kualitas premium dan tahan lama. Biji wijen ini memiliki kandungan minyak yang tinggi dan rasa yang sangat lezat, ideal untuk diolah menjadi minyak wijen atau ditambahkan ke hidangan. Selain itu, tanaman ini memiliki daya tahan yang baik terhadap hama dan penyakit.',
                 'minimum_stock' => 3,
                 'stock' => 40,
@@ -316,7 +316,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'product_name' => 'Wijen SBR 4 (Pokok)',
-                'plant_type_id' => 3, 
+                'plant_type_id' => 9, 
                 'description' => 'Wijen SBR 4 (Pokok) adalah varietas wijen unggul yang dikenal karena kemampuan adaptasinya yang luas. Benih wijen ini sangat unggul untuk perkebunan. Tanaman ini menghasilkan biji wijen yang besar dan berkualitas. Wijen ini dapat tumbuh subur di berbagai jenis tanah, termasuk lahan kering. Biji wijen ini memiliki kandungan minyak yang tinggi, menjadikannya ideal untuk industri minyak dan makanan. Produksi wijen SBR 4 (Pokok) juga stabil dan memberikan hasil yang memuaskan.',
                 'minimum_stock' => 3,
                 'stock' => 40,
@@ -329,7 +329,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'product_name' => 'Wijen WINAS 1 (Pokok)',
-                'plant_type_id' => 3, 
+                'plant_type_id' => 9, 
                 'description' => 'Wijen WINAS 1 (Pokok) adalah varietas wijen lokal yang dikembangkan untuk menghasilkan biji wijen dengan kualitas premium. Benih wijen ini sangat unggul untuk perkebunan. Biji wijen yang dihasilkan sangat besar dan memiliki warna cerah, cocok untuk ekspor. Kandungan minyak wijen ini juga sangat tinggi, sehingga sangat ideal untuk industri makanan. Tanaman ini tumbuh dengan cepat dan memiliki ketahanan yang baik terhadap hama dan penyakit, menjadikan pilihan yang sangat menguntungkan bagi petani.',
                 'minimum_stock' => 3,
                 'stock' => 40,
@@ -342,7 +342,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'product_name' => 'Wijen WINAS 2 (Pokok)',
-                'plant_type_id' => 3, 
+                'plant_type_id' => 9, 
                 'description' => 'Wijen WINAS 2 (Pokok) dikenal dengan produktivitasnya yang sangat tinggi, cocok untuk petani yang ingin memaksimalkan hasil panen. Benih wijen ini sangat unggul untuk perkebunan. Biji wijen yang dihasilkan memiliki kualitas standar industri yang baik, menjadikannya ideal untuk berbagai kebutuhan. Tanaman ini memiliki masa panen yang lebih cepat dibandingkan varietas wijen lainnya, sehingga dapat memberikan keuntungan lebih bagi petani. Wijen ini juga memiliki ketahanan yang baik terhadap hama.',
                 'minimum_stock' => 3,
                 'stock' => 40,
@@ -355,7 +355,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'product_name' => 'Wijen SBR 3 (Dasar)',
-                'plant_type_id' => 3, 
+                'plant_type_id' => 9, 
                 'description' => 'Benih wijen ini dikenal karena daya tahannya yang baik terhadap penyakit layu dan adaptasinya yang luas terhadap berbagai kondisi iklim. Biji wijen yang dihasilkan memiliki kualitas tinggi dengan kandungan minyak yang melimpah, menjadikannya pilihan ideal untuk produksi minyak wijen dan kebutuhan kuliner. Pertumbuhannya yang kuat dan hasil panen yang konsisten membuatnya menjadi pilihan populer di kalangan petani.',
                 'minimum_stock' => 3,
                 'stock' => 40,
@@ -368,7 +368,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'product_name' => 'Rosela Herbal Roselindo 1 (Pokok)',
-                'plant_type_id' => 2, 
+                'plant_type_id' => 5, 
                 'description' => 'Benih rosela ini dikenal karena menghasilkan kelopak bunga berwarna merah cerah dengan kandungan vitamin C dan antioksidan yang sangat tinggi. Sangat cocok untuk diolah menjadi teh herbal, sirup, atau selai. Tanaman ini tumbuh dengan cepat dan memiliki ketahanan yang baik terhadap hama, serta mudah dibudidayakan di berbagai jenis tanah.',
                 'minimum_stock' => 3,
                 'stock' => 40,
@@ -381,7 +381,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'product_name' => 'Rosela Herbal Roselindo 2 (Dasar)',
-                'plant_type_id' => 2, 
+                'plant_type_id' => 5, 
                 'description' => 'Benih rosela ini unggul karena menghasilkan kelopak bunga dengan warna merah yang pekat dan rasa asam yang seimbang. Ideal untuk industri makanan dan minuman, serta produk kesehatan. Tanaman ini tumbuh dengan kokoh dan memiliki produktivitas tinggi, memberikan hasil panen yang melimpah. Selain itu, varietas ini dikenal karena ketahanannya terhadap penyakit tertentu.',
                 'minimum_stock' => 3,
                 'stock' => 40,
@@ -394,7 +394,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'product_name' => 'Rosela Herbal Roselindo 3 (Dasar)',
-                'plant_type_id' => 2, 
+                'plant_type_id' => 5, 
                 'description' => 'Benih rosela ini dikenal karena menghasilkan kelopak bunga yang besar dan tebal, dengan kandungan nutrisi yang sangat baik. Sangat cocok untuk diolah menjadi minuman kesehatan atau suplemen. Tanaman ini memiliki pertumbuhan yang cepat dan adaptasi yang baik di berbagai jenis iklim. Varietas ini juga memiliki ketahanan yang baik terhadap hama dan penyakit.',
                 'minimum_stock' => 3,
                 'stock' => 40,
@@ -407,7 +407,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'product_name' => 'Rosela Herbal Roselindo 4 (Dasar)',
-                'plant_type_id' => 2, 
+                'plant_type_id' => 5, 
                 'description' => 'Rosela Herbal Roselindo 4 (Dasar) adalah varietas rosela unggulan yang dikenal karena kandungan antioksidan alaminya yang sangat tinggi. Benih rosela ini sangat unggul untuk perkebunan. Kelopak bunga yang dihasilkan memiliki warna merah gelap dan rasa yang tajam, sangat cocok untuk produk-produk kesehatan. Tanaman ini tumbuh dengan subur di lahan tropis dan memiliki produktivitas yang stabil. Varietas ini sangat diminati oleh industri farmasi dan makanan kesehatan.',
                 'minimum_stock' => 3,
                 'stock' => 40,
@@ -420,7 +420,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'product_name' => 'Kenaf KR 6 (Dasar)',
-                'plant_type_id' => 4, 
+                'plant_type_id' => 6, 
                 'description' => 'Benih kenaf ini unggul karena menghasilkan serat yang sangat kuat dan panjang, ideal untuk industri kertas, tali, dan tekstil. Tanaman ini tumbuh dengan cepat dan memiliki batang yang kokoh, serta ketahanan yang baik terhadap penyakit. Kenaf KR 6 (Dasar) juga dikenal karena kemudahannya dalam budidaya dan adaptasi yang baik di berbagai jenis tanah.',
                 'minimum_stock' => 3,
                 'stock' => 40,
@@ -433,7 +433,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'product_name' => 'Kenaf KR 9 (Dasar)',
-                'plant_type_id' => 4, 
+                'plant_type_id' => 6, 
                 'description' => 'Kenaf KR 9 (Dasar) adalah varietas kenaf yang dikenal karena produktivitasnya yang sangat tinggi. Benih kenaf ini sangat unggul untuk perkebunan. Tanaman ini menghasilkan serat yang tebal dan kuat, ideal untuk bahan baku pembuatan kertas dan bahan bangunan. Kenaf KR 9 (Dasar) tumbuh cepat, mudah dibudidayakan, dan memiliki ketahanan yang baik terhadap hama. Varietas ini sangat menguntungkan bagi petani.',
                 'minimum_stock' => 3,
                 'stock' => 40,
@@ -446,7 +446,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'product_name' => 'Kenaf KR 14 (Dasar)',
-                'plant_type_id' => 4, 
+                'plant_type_id' => 6, 
                 'description' => 'Benih kenaf ini dikenal karena menghasilkan serat dengan kualitas premium dan daya tahan yang luar biasa. Sangat cocok untuk industri tekstil dan bahan komposit. Tanaman ini tumbuh dengan kokoh dan memiliki produktivitas yang stabil. Selain itu, varietas ini memiliki ketahanan yang baik terhadap penyakit, menjadikannya pilihan yang andal untuk petani.',
                 'minimum_stock' => 3,
                 'stock' => 40,
@@ -459,7 +459,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'product_name' => 'Jarak Kepyar ASB 175 Agribun (Dasar)',
-                'plant_type_id' => 5, 
+                'plant_type_id' => 10, 
                 'description' => 'Benih jarak ini dikenal karena menghasilkan biji dengan kandungan minyak yang sangat tinggi, ideal untuk industri biodiesel, pelumas, dan produk kosmetik. Tanaman ini tumbuh dengan cepat, memiliki daya tahan yang baik terhadap kekeringan, dan dapat tumbuh optimal di lahan kering. Produktivitasnya yang tinggi menjadikannya pilihan yang sangat menguntungkan bagi petani.',
                 'minimum_stock' => 3,
                 'stock' => 40,

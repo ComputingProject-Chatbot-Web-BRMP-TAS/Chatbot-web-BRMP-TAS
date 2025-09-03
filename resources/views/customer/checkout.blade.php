@@ -263,9 +263,14 @@
                         @foreach ($cart as $item)
                             <div class="checkout-mobile-product">
                                 <div class="checkout-mobile-product-img">
+                                    @php
+                                        $imagePath =
+                                            isset($item['image']) && Str::startsWith($item['image'], 'products/')
+                                                ? $item['image']
+                                                : 'products/' . $item['image'];
+                                    @endphp
                                     @if ($item['image'])
-                                        <img src="{{ asset('storage/products/' . $item['image']) }}"
-                                            alt="{{ $item['name'] }}">
+                                        <img src="{{ asset('storage/' . $imagePath) }}" alt="{{ $item['name'] }}">
                                     @else
                                         <div
                                             style="width:48px;height:48px;background:#333;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#999;">
@@ -379,9 +384,14 @@
                         @foreach ($cart as $item)
                             <div class="order-item-row">
                                 <div class="order-item-img">
+                                    @php
+                                        $imagePath =
+                                            isset($item['image']) && Str::startsWith($item['image'], 'products/')
+                                                ? $item['image']
+                                                : 'products/' . $item['image'];
+                                    @endphp
                                     @if ($item['image'])
-                                        <img src="{{ asset('storage/products/' . $item['image']) }}"
-                                            alt="{{ $item['name'] }}">
+                                        <img src="{{ asset('storage/' . $imagePath) }}" alt="{{ $item['name'] }}">
                                     @else
                                         <div
                                             style="width:48px;height:48px;background:#f0f0f0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#999;">

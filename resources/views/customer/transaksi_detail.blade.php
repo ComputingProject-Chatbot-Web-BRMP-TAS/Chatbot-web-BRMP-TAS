@@ -595,9 +595,14 @@
                     onclick="window.location.href='{{ $productHistory ? route('produk.history.detail', $productHistory->history_id) : route('produk.detail', $item->product->product_id) }}'">
                     <div class="product-left-column">
                         <div class="product-image-placeholder">
+
                             @if ($item->product->image1)
-                                <img src="{{ asset('storage/products/' . $item->product->image1) }}"
-                                    alt="{{ $item->product->product_name }}"
+                                @php
+                                    $imagePath = Str::startsWith($item->product->image1, 'products/')
+                                        ? $item->product->image1
+                                        : 'products/' . $item->product->image1;
+                                @endphp
+                                <img src="{{ asset('storage/' . $imagePath) }}" alt="{{ $item->product->product_name }}"
                                     style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
                             @else
                                 <i class="fas fa-seedling" style="font-size:24px;"></i>
