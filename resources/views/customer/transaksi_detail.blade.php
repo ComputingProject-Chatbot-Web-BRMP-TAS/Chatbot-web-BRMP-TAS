@@ -523,7 +523,10 @@
 
         <div class="transaksi-detail-info">
             <div class="date-info">
-                <span><b>Tanggal:</b> {{ $transaction->order_date->format('d M Y H:i') }}</span>
+                @php
+                    $orderDate = $transaction->order_date ?? $transaction->created_at;
+                @endphp
+                <span><b>Tanggal:</b> {{ ($orderDate && method_exists($orderDate, 'format')) ? $orderDate->format('d M Y H:i') : '-' }}</span>
             </div>
             <span class="transaksi-detail-status">{{ $transaction->display_status }}</span>
             @if ($transaction->order_status == 'selesai' && $transaction->no_resi)
@@ -676,7 +679,9 @@
                 <div class="payment-info">
                     <div class="payment-item">
                         <div class="label">📅 Tanggal Pembayaran</div>
-                        <div class="value">{{ $latestPayment->payment_date->format('d M Y H:i') }}</div>
+                        <div class="value">
+                            {{ ($latestPayment && $latestPayment->payment_date) ? \Carbon\Carbon::parse($latestPayment->payment_date)->format('d M Y H:i') : '-' }}
+                        </div>
                     </div>
                     <div class="payment-item">
                         <div class="label">💰 Total Pembelian</div>
