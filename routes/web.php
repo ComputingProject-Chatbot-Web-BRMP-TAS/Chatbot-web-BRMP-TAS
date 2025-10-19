@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\customer\DebugController;
 use App\Http\Controllers\customer\ArticleController;
 use App\Http\Controllers\customer\ProductController;
+use App\Http\Controllers\ChatbotController;
 
 // =====================
 // INCLUDE ROLE-BASED ROUTES
@@ -14,16 +15,6 @@ use App\Http\Controllers\customer\ProductController;
 require __DIR__.'/guest.php';
 require __DIR__.'/customer.php';
 require __DIR__.'/admin.php';
-
-// =====================
-// API ROUTES
-// =====================
-Route::get('/api/wilayah/cities/{provinceId}', function ($provinceId) {
-    $cities = \App\Models\RegRegencies::where('province_id', $provinceId)
-        ->orderBy('name')
-        ->get(['id', 'name']);
-    return response()->json($cities);
-});
 
 // =====================
 // DEBUG & DEV TOOLS (Development Only)

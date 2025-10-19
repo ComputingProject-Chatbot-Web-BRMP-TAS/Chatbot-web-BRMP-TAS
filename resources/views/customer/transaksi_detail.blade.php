@@ -526,7 +526,8 @@
                 @php
                     $orderDate = $transaction->order_date ?? $transaction->created_at;
                 @endphp
-                <span><b>Tanggal:</b> {{ ($orderDate && method_exists($orderDate, 'format')) ? $orderDate->format('d M Y H:i') : '-' }}</span>
+                <span><b>Tanggal:</b>
+                    {{ $orderDate && method_exists($orderDate, 'format') ? $orderDate->format('d M Y H:i') : '-' }}</span>
             </div>
             <span class="transaksi-detail-status">{{ $transaction->display_status }}</span>
             @if ($transaction->order_status == 'selesai' && $transaction->no_resi)
@@ -600,7 +601,7 @@
                         ->first();
                 @endphp
                 <div class="product-item" style="cursor: pointer;"
-                    onclick="window.location.href='{{ $productHistory ? route('produk.history.detail', $productHistory->history_id) : route('produk.detail', $item->product->product_id) }}'">
+                    onclick="window.location.href='{{ $productHistory ? route('produk.history.detail', $productHistory->history_id) : '#' }}'">
                     <div class="product-left-column">
                         <div class="product-image-placeholder">
 
@@ -617,8 +618,8 @@
                             @endif
                         </div>
                         <div class="product-actions">
-                            <button href="{{ route('produk.detail', $item->product->product_id) }}"
-                                class="btn-green w-100 py-1" onclick="event.stopPropagation();">
+                            <button type="button" class="btn-green w-100 py-1"
+                                onclick="event.stopPropagation(); window.location.href='{{ route('produk.detail', $item->product->product_id) }}';">
                                 Beli Lagi
                             </button>
                         </div>
@@ -680,7 +681,7 @@
                     <div class="payment-item">
                         <div class="label">📅 Tanggal Pembayaran</div>
                         <div class="value">
-                            {{ ($latestPayment && $latestPayment->payment_date) ? \Carbon\Carbon::parse($latestPayment->payment_date)->format('d M Y H:i') : '-' }}
+                            {{ $latestPayment && $latestPayment->payment_date ? \Carbon\Carbon::parse($latestPayment->payment_date)->format('d M Y H:i') : '-' }}
                         </div>
                     </div>
                     <div class="payment-item">

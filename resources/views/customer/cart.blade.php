@@ -376,7 +376,7 @@
                         <div class="cart-empty-content">
                             <h5>Wah, keranjang belanjamu kosong</h5>
                             <p>Yuk, isi dengan barang-barang impianmu!</p>
-                            <a href="/" class="btn-green">Mulai Belanja</a>
+                            <button onclick="location.href='/'" class="btn-green px-3">Mulai Belanja</button>
                         </div>
                     </div>
                     <!-- Desktop Cart Items -->

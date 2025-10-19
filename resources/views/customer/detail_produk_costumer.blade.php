@@ -1,6 +1,356 @@
 @extends('layouts.app')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 @section('content')
+    <style>
+        .product-detail-modern-bg {
+            min-height: 100vh;
+            background: #f8f9fa;
+            padding-top: 100px;
+            /* dinaikkan agar tidak tenggelam appbar */
+            padding-bottom: 40px;
+        }
+
+        .product-detail-modern-container {
+            display: flex;
+            gap: 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            padding: 40px 32px;
+        }
+
+        .product-detail-modern-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .product-detail-main-image {
+            width: 340px;
+            height: 340px;
+            object-fit: contain;
+            border-radius: 16px;
+            background: #f3f3f3;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .product-detail-main-image-wrapper {
+            width: 340px;
+            height: 340px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f3f3f3;
+            border-radius: 16px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .product-detail-default-image {
+            width: 340px;
+            height: 340px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f0f0f0;
+            border-radius: 16px;
+            color: #999;
+        }
+
+        .product-detail-default-image i {
+            font-size: 80px;
+        }
+
+        .product-detail-main-image,
+        .product-detail-default-image {
+            cursor: zoom-in;
+        }
+
+        .product-detail-thumbs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .product-detail-thumbs img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+        }
+
+        .product-detail-thumbs img.selected {
+            border: 2px solid #4CAF50;
+        }
+
+        .product-detail-thumb-default {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f0f0f0;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .product-detail-thumb-default.selected {
+            border: 2px solid #4CAF50;
+        }
+
+        .product-detail-thumb-default i {
+            font-size: 20px;
+        }
+
+        .product-detail-modern-center {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding-top: 10px;
+        }
+
+        .product-detail-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .product-detail-price {
+            color: #388E3C;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .product-detail-stock {
+            color: #888;
+            font-size: 1rem;
+            margin-bottom: 18px;
+        }
+
+        .product-detail-desc {
+            margin-top: 18px;
+            font-size: 1.1rem;
+        }
+
+        .certificate-info {
+            margin-top: 20px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+        }
+
+        .product-detail-card {
+            width: 320px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            padding: 24px 20px 18px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            margin-top: 0;
+        }
+
+        .product-detail-card-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+
+        .product-detail-card-qty {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .product-detail-card-subtotal {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 18px;
+            margin-top: 8px;
+        }
+
+        .bar-pesan {
+            display: none !important;
+        }
+
+        @media (max-width: 1023px) {
+
+            .mobile-search-container,
+            .mobile-menu-toggle {
+                display: none !important;
+            }
+
+            .mobile-back-btn {
+                display: flex !important;
+            }
+
+            .modal-backdrop.show {
+                pointer-events: none !important;
+                z-index: 1040 !important;
+            }
+
+            .product-detail-modern-bg {
+                padding-top: 0px;
+                padding-bottom: 0px
+            }
+
+            .product-detail-modern-container {
+                flex-direction: column;
+                padding-top: 0px;
+                padding-left: 0px;
+                padding-right: 0px;
+                padding-bottom: 0px;
+                gap: 0px;
+            }
+
+            .product-detail-main-image-wrapper {
+                width: 100%;
+                height: auto;
+                border-radius: 0;
+                margin-bottom: 0px;
+            }
+
+            .product-detail-main-image {
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+                margin-bottom: 0px
+            }
+
+            .product-detail-thumbs {
+                flex-wrap: nowrap;
+                justify-content: center;
+                gap: 8px;
+                padding: 8px 0;
+                margin-bottom: 0px
+            }
+
+            .product-detail-title {
+                font-size: 24px;
+                margin-bottom: 0px;
+            }
+
+            .product-detail-price {
+                font-size: 20px;
+                margin-bottom: 0px;
+            }
+
+            .product-detail-desc {
+                margin-top: 0px;
+                font-size: 16px;
+            }
+
+            .product-detail-modern-center {
+                flex: 1;
+                padding-top: 8px;
+                padding-inline: 20px;
+                padding-bottom: 80px;
+            }
+
+            .product-detail-modern-right {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                z-index: 1050;
+            }
+
+            .product-detail-card {
+                display: none !important;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                width: 100vw;
+                max-width: 100vw;
+                border-radius: 16px 16px 0 0;
+                box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.10);
+                padding-bottom: env(safe-area-inset-bottom, 16px);
+                background: #fff;
+                margin: 0;
+            }
+
+            .bar-pesan {
+                display: flex !important;
+                justify-content: space-between;
+                align-items: center;
+                background: #fff;
+                bottom: 0;
+                height: 80px;
+                left: 0;
+                right: 0;
+                padding: 16px;
+            }
+
+            .modal-bottom-sheet {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: 0;
+                max-width: 100vw;
+                width: 100vw;
+                z-index: 1060;
+            }
+
+            .product-detail-card-modal-content {
+                border-radius: 16px 16px 0 0;
+                box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.10);
+                background: #fff;
+                margin: 0;
+                animation: slideUpSheet 0.3s cubic-bezier(.4, 0, .2, 1);
+            }
+
+            @keyframes slideUpSheet {
+                from {
+                    transform: translateY(100%);
+                }
+
+                to {
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes slideDownSheet {
+                from {
+                    transform: translateY(0);
+                }
+
+                to {
+                    transform: translateY(100%);
+                }
+            }
+
+        }
+
+        .slide-down-animation {
+            animation: slideDownSheet 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* Gallery modal visuals */
+        .gallery-modal .modal-body img {
+            max-height: 80vh;
+            object-fit: contain;
+            background: #000;
+        }
+
+        .gallery-modal .modal-content {
+            background: rgba(0, 0, 0, 0.06);
+        }
+    </style>
+
     <div class="product-detail-modern-bg">
         <div class="product-detail-modern-container">
             @php
@@ -261,506 +611,162 @@
             </div>
         </div>
     </div>
-@endsection
 
-@push('styles')
-    <style>
-        .product-detail-modern-bg {
-            min-height: 100vh;
-            background: #f8f9fa;
-            padding-top: 100px;
-            /* dinaikkan agar tidak tenggelam appbar */
-            padding-bottom: 40px;
-        }
+    <script>
+        function changeImage(thumbElement, imageSrc) {
+            const mainImageContainer = document.getElementById('mainImage');
 
-        .product-detail-modern-container {
-            display: flex;
-            gap: 32px;
-            max-width: 1200px;
-            margin: 0 auto;
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-            padding: 40px 32px;
-        }
-
-        .product-detail-modern-left {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .product-detail-main-image {
-            width: 340px;
-            height: 340px;
-            object-fit: contain;
-            border-radius: 16px;
-            background: #f3f3f3;
-            margin-bottom: 18px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        .product-detail-main-image-wrapper {
-            width: 340px;
-            height: 340px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #f3f3f3;
-            border-radius: 16px;
-            margin-bottom: 18px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        .product-detail-default-image {
-            width: 340px;
-            height: 340px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #f0f0f0;
-            border-radius: 16px;
-            color: #999;
-        }
-
-        .product-detail-default-image i {
-            font-size: 80px;
-        }
-
-        .product-detail-main-image,
-        .product-detail-default-image {
-            cursor: zoom-in;
-        }
-
-        .product-detail-thumbs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 18px;
-        }
-
-        .product-detail-thumbs img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 2px solid #e0e0e0;
-            cursor: pointer;
-        }
-
-        .product-detail-thumbs img.selected {
-            border: 2px solid #4CAF50;
-        }
-
-        .product-detail-thumb-default {
-            width: 60px;
-            height: 60px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #f0f0f0;
-            border-radius: 8px;
-            border: 2px solid #e0e0e0;
-            cursor: pointer;
-            color: #999;
-        }
-
-        .product-detail-thumb-default.selected {
-            border: 2px solid #4CAF50;
-        }
-
-        .product-detail-thumb-default i {
-            font-size: 20px;
-        }
-
-        .product-detail-modern-center {
-            flex: 1.5;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            padding-top: 10px;
-        }
-
-        .product-detail-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .product-detail-price {
-            color: #388E3C;
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .product-detail-stock {
-            color: #888;
-            font-size: 1rem;
-            margin-bottom: 18px;
-        }
-
-        .product-detail-desc {
-            margin-top: 18px;
-            font-size: 1.1rem;
-        }
-
-        .certificate-info {
-            margin-top: 20px;
-            padding: 16px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            border: 1px solid #e9ecef;
-        }
-
-        .product-detail-card {
-            width: 320px;
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            padding: 24px 20px 18px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            margin-top: 0;
-        }
-
-        .product-detail-card-title {
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 16px;
-        }
-
-        .product-detail-card-qty {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .product-detail-card-subtotal {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.1rem;
-            font-weight: 500;
-            margin-bottom: 18px;
-            margin-top: 8px;
-        }
-
-        .bar-pesan {
-            display: none !important;
-        }
-
-        @media (max-width: 1023px) {
-            .modal-backdrop.show {
-                pointer-events: none !important;
-                z-index: 1040 !important;
+            if (imageSrc === 'default') {
+                mainImageContainer.src =
+                    '{{ asset('path/to/default/image.jpg') }}'; // Ganti dengan path gambar default jika ada
+                mainImageContainer.className = 'product-detail-default-image';
+            } else {
+                mainImageContainer.src = imageSrc;
+                mainImageContainer.className = 'product-detail-main-image';
             }
 
-            .product-detail-modern-bg {
-                padding-top: 0px;
-                padding-bottom: 0px
-            }
-
-            .product-detail-modern-container {
-                flex-direction: column;
-                padding-top: 0px;
-                padding-left: 0px;
-                padding-right: 0px;
-                padding-bottom: 0px;
-                gap: 0px;
-            }
-
-            .product-detail-main-image-wrapper {
-                width: 100%;
-                height: auto;
-                border-radius: 0;
-                margin-bottom: 0px;
-            }
-
-            .product-detail-main-image {
-                width: 100%;
-                height: 100%;
-                border-radius: 0;
-                margin-bottom: 0px
-            }
-
-            .product-detail-thumbs {
-                flex-wrap: nowrap;
-                justify-content: center;
-                gap: 8px;
-                padding: 8px 0;
-                margin-bottom: 0px
-            }
-
-            .product-detail-title {
-                font-size: 24px;
-                margin-bottom: 0px;
-            }
-
-            .product-detail-price {
-                font-size: 20px;
-                margin-bottom: 0px;
-            }
-
-            .product-detail-desc {
-                margin-top: 0px;
-                font-size: 16px;
-            }
-
-            .product-detail-modern-center {
-                flex: 1;
-                padding-top: 8px;
-                padding-inline: 20px;
-                padding-bottom: 80px;
-            }
-
-            .product-detail-modern-right {
-                position: fixed;
-                bottom: 0;
-                width: 100%;
-                z-index: 1050;
-            }
-
-            .product-detail-card {
-                display: none !important;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                width: 100vw;
-                max-width: 100vw;
-                border-radius: 16px 16px 0 0;
-                box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.10);
-                padding-bottom: env(safe-area-inset-bottom, 16px);
-                background: #fff;
-                margin: 0;
-            }
-
-            .bar-pesan {
-                display: flex !important;
-                justify-content: space-between;
-                align-items: center;
-                background: #fff;
-                bottom: 0;
-                height: 80px;
-                left: 0;
-                right: 0;
-                padding: 16px;
-            }
-
-            .modal-bottom-sheet {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                margin: 0;
-                max-width: 100vw;
-                width: 100vw;
-                z-index: 1060;
-            }
-
-            .product-detail-card-modal-content {
-                border-radius: 16px 16px 0 0;
-                box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.10);
-                background: #fff;
-                margin: 0;
-                animation: slideUpSheet 0.3s cubic-bezier(.4, 0, .2, 1);
-            }
-
-            @keyframes slideUpSheet {
-                from {
-                    transform: translateY(100%);
-                }
-
-                to {
-                    transform: translateY(0);
-                }
-            }
-
-            @keyframes slideDownSheet {
-                from {
-                    transform: translateY(0);
-                }
-
-                to {
-                    transform: translateY(100%);
-                }
-            }
-
+            document.querySelectorAll('.product-detail-thumbs img, .product-detail-thumbs .product-detail-thumb-default')
+                .forEach(thumb => {
+                    thumb.classList.remove('selected');
+                });
+            thumbElement.classList.add('selected');
         }
 
-        .slide-down-animation {
-            animation: slideDownSheet 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        /* Gallery modal visuals */
-        .gallery-modal .modal-body img {
-            max-height: 80vh;
-            object-fit: contain;
-            background: #000;
-        }
-
-        .gallery-modal .modal-content {
-            background: rgba(0, 0, 0, 0.06);
-        }
-    </style>
-@endpush
-@push('scripts')
-    @push('scripts')
-        <script>
-            function changeImage(thumbElement, imageSrc) {
-                const mainImageContainer = document.getElementById('mainImage');
-
-                if (imageSrc === 'default') {
-                    mainImageContainer.src =
-                        '{{ asset('path/to/default/image.jpg') }}'; // Ganti dengan path gambar default jika ada
-                    mainImageContainer.className = 'product-detail-default-image';
-                } else {
-                    mainImageContainer.src = imageSrc;
-                    mainImageContainer.className = 'product-detail-main-image';
-                }
-
-                document.querySelectorAll('.product-detail-thumbs img, .product-detail-thumbs .product-detail-thumb-default')
-                    .forEach(thumb => {
-                        thumb.classList.remove('selected');
+        // --- Logika untuk Form Tambah ke Keranjang ---
+        @if (!$isOutOfStock)
+            document.addEventListener('DOMContentLoaded', function() {
+                const forms = document.querySelectorAll('.addToCartForm');
+                forms.forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        const isUserLoggedIn = @json(Auth::check());
+                        if (!isUserLoggedIn) {
+                            e.preventDefault();
+                            window.location.href = '{{ route('login') }}';
+                        }
                     });
-                thumbElement.classList.add('selected');
-            }
+                });
+                const unitProduk = @json($product->unit);
+                const minimumPurchase = {{ $product->minimum_purchase }};
+                const availableStock = {{ $availableStock }};
 
-            // --- Logika untuk Form Tambah ke Keranjang ---
-            @if (!$isOutOfStock)
-                document.addEventListener('DOMContentLoaded', function() {
-                    const forms = document.querySelectorAll('.addToCartForm');
-                    forms.forEach(button => {
-                        button.addEventListener('click', function(e) {
-                            const isUserLoggedIn = @json(Auth::check());
-                            if (!isUserLoggedIn) {
-                                e.preventDefault();
-                                window.location.href = '{{ route('login') }}';
+                forms.forEach(form => {
+                    const qtyInput = form.querySelector('.qtyInput');
+                    const subtotalSpan = form.querySelector('.subtotal');
+                    const addToCartBtn = form.querySelector('.addToCartBtn');
+                    const stockWarning = form.querySelector('.stockWarning');
+                    const minPurchaseWarning = form.querySelector('.minPurchaseWarning');
+
+                    const updateSubtotal = () => {
+                        let qty = parseFloat(qtyInput.value.replace(',', '.')) || 0;
+                        let harga = {{ $product->price_per_unit }};
+
+                        // Reset warnings
+                        if (stockWarning) stockWarning.style.display = 'none';
+                        if (minPurchaseWarning) minPurchaseWarning.style.display = 'none';
+
+                        if (qty === 0 || qtyInput.value.trim() === '') {
+                            subtotalSpan.innerText = 'Rp0';
+                            if (addToCartBtn) {
+                                addToCartBtn.disabled = true;
+                                addToCartBtn.style.opacity = '0.6';
+                                addToCartBtn.style.cursor = 'not-allowed';
+                                addToCartBtn.style.background = '#ccc';
+                                addToCartBtn.style.color = '#666';
                             }
-                        });
-                    });
-                    const unitProduk = @json($product->unit);
-                    const minimumPurchase = {{ $product->minimum_purchase }};
-                    const availableStock = {{ $availableStock }};
+                            return;
+                        }
 
-                    forms.forEach(form => {
-                        const qtyInput = form.querySelector('.qtyInput');
-                        const subtotalSpan = form.querySelector('.subtotal');
-                        const addToCartBtn = form.querySelector('.addToCartBtn');
-                        const stockWarning = form.querySelector('.stockWarning');
-                        const minPurchaseWarning = form.querySelector('.minPurchaseWarning');
+                        let isValid = true;
 
-                        const updateSubtotal = () => {
+                        if (qty < minimumPurchase) {
+                            if (minPurchaseWarning) minPurchaseWarning.style.display = 'block';
+                            isValid = false;
+                        }
+
+                        if (qty > availableStock) {
+                            if (stockWarning) stockWarning.style.display = 'block';
+                            isValid = false;
+                        }
+
+                        subtotalSpan.innerText = 'Rp' + (harga * qty).toLocaleString('id-ID');
+
+                        if (addToCartBtn) {
+                            addToCartBtn.disabled = !isValid;
+                            addToCartBtn.style.opacity = isValid ? '1' : '0.6';
+                            addToCartBtn.style.cursor = isValid ? 'pointer' : 'not-allowed';
+                            addToCartBtn.style.background = isValid ? '#388e3c' : '#ccc';
+                            addToCartBtn.style.color = isValid ? '#fff' : '#666';
+                        }
+                    };
+
+                    if (qtyInput) {
+                        qtyInput.addEventListener('input', updateSubtotal);
+                        qtyInput.addEventListener('blur', updateSubtotal);
+                    }
+
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
                             let qty = parseFloat(qtyInput.value.replace(',', '.')) || 0;
-                            let harga = {{ $product->price_per_unit }};
-
-                            // Reset warnings
-                            if (stockWarning) stockWarning.style.display = 'none';
-                            if (minPurchaseWarning) minPurchaseWarning.style.display = 'none';
 
                             if (qty === 0 || qtyInput.value.trim() === '') {
-                                subtotalSpan.innerText = 'Rp0';
-                                if (addToCartBtn) {
-                                    addToCartBtn.disabled = true;
-                                    addToCartBtn.style.opacity = '0.6';
-                                    addToCartBtn.style.cursor = 'not-allowed';
-                                    addToCartBtn.style.background = '#ccc';
-                                    addToCartBtn.style.color = '#666';
-                                }
-                                return;
+                                e.preventDefault();
+                                alert('Silakan masukkan jumlah yang ingin dibeli');
+                                return false;
                             }
 
-                            let isValid = true;
-
                             if (qty < minimumPurchase) {
-                                if (minPurchaseWarning) minPurchaseWarning.style.display = 'block';
-                                isValid = false;
+                                e.preventDefault();
+                                alert('Minimal pembelian: ' + minimumPurchase + ' ' + unitProduk);
+                                return false;
                             }
 
                             if (qty > availableStock) {
-                                if (stockWarning) stockWarning.style.display = 'block';
-                                isValid = false;
+                                e.preventDefault();
+                                alert('Stok tidak mencukupi. Maksimal: ' + availableStock + ' ' +
+                                    unitProduk);
+                                return false;
                             }
-
-                            subtotalSpan.innerText = 'Rp' + (harga * qty).toLocaleString('id-ID');
-
-                            if (addToCartBtn) {
-                                addToCartBtn.disabled = !isValid;
-                                addToCartBtn.style.opacity = isValid ? '1' : '0.6';
-                                addToCartBtn.style.cursor = isValid ? 'pointer' : 'not-allowed';
-                                addToCartBtn.style.background = isValid ? '#388e3c' : '#ccc';
-                                addToCartBtn.style.color = isValid ? '#fff' : '#666';
-                            }
-                        };
-
-                        if (qtyInput) {
-                            qtyInput.addEventListener('input', updateSubtotal);
-                            qtyInput.addEventListener('blur', updateSubtotal);
-                        }
-
-                        if (form) {
-                            form.addEventListener('submit', function(e) {
-                                let qty = parseFloat(qtyInput.value.replace(',', '.')) || 0;
-
-                                if (qty === 0 || qtyInput.value.trim() === '') {
-                                    e.preventDefault();
-                                    alert('Silakan masukkan jumlah yang ingin dibeli');
-                                    return false;
-                                }
-
-                                if (qty < minimumPurchase) {
-                                    e.preventDefault();
-                                    alert('Minimal pembelian: ' + minimumPurchase + ' ' + unitProduk);
-                                    return false;
-                                }
-
-                                if (qty > availableStock) {
-                                    e.preventDefault();
-                                    alert('Stok tidak mencukupi. Maksimal: ' + availableStock + ' ' +
-                                        unitProduk);
-                                    return false;
-                                }
-                            });
-                        }
-
-                        // Panggil saat halaman dimuat
-                        updateSubtotal();
-                    });
-                });
-            @endif
-
-            // --- Logika untuk Modal ---
-            const openDetailCardBtn = document.getElementById('openDetailCardBtn');
-            const productDetailCardModal = document.getElementById('productDetailCardModal');
-
-            if (openDetailCardBtn && productDetailCardModal) {
-                openDetailCardBtn.addEventListener('click', function() {
-                    const isUserLoggedIn = @json(Auth::check());
-                    if (isUserLoggedIn) {
-                        const modal = new bootstrap.Modal(productDetailCardModal);
-                        modal.show();
-                    } else {
-                        window.location.href = '{{ route('login') }}';
+                        });
                     }
-                });
 
-                productDetailCardModal.addEventListener('hide.bs.modal', function(event) {
-                    const modalContent = productDetailCardModal.querySelector('.modal-content');
-                    if (modalContent) {
-                        modalContent.classList.add('slide-down-animation');
-                    }
+                    // Panggil saat halaman dimuat
+                    updateSubtotal();
                 });
+            });
+        @endif
 
-                productDetailCardModal.addEventListener('hidden.bs.modal', function(event) {
-                    const modalContent = productDetailCardModal.querySelector('.modal-content');
-                    if (modalContent) {
-                        modalContent.classList.remove('slide-down-animation');
-                    }
-                });
-            }
-        </script>
-    @endpush
-    @section('after_content')
-        @include('customer.partials.mitra_footer')
-    @endsection
+        // --- Logika untuk Modal ---
+        const openDetailCardBtn = document.getElementById('openDetailCardBtn');
+        const productDetailCardModal = document.getElementById('productDetailCardModal');
+
+        if (openDetailCardBtn && productDetailCardModal) {
+            openDetailCardBtn.addEventListener('click', function() {
+                const isUserLoggedIn = @json(Auth::check());
+                if (isUserLoggedIn) {
+                    const modal = new bootstrap.Modal(productDetailCardModal);
+                    modal.show();
+                } else {
+                    window.location.href = '{{ route('login') }}';
+                }
+            });
+
+            productDetailCardModal.addEventListener('hide.bs.modal', function(event) {
+                const modalContent = productDetailCardModal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.classList.add('slide-down-animation');
+                }
+            });
+
+            productDetailCardModal.addEventListener('hidden.bs.modal', function(event) {
+                const modalContent = productDetailCardModal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.classList.remove('slide-down-animation');
+                }
+            });
+        }
+    </script>
+@endsection
+
+@section('after_content')
+    @include('customer.partials.mitra_footer')
+@endsection

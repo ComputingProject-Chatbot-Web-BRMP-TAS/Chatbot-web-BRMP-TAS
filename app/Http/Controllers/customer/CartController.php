@@ -3,165 +3,105 @@
 namespace App\Http\Controllers\customer;
 
 use Illuminate\Http\Request;
-use App\Models\Cart;
-use App\Models\CartItem;
 use App\Models\Product;
+use App\Models\Address;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Models\Address;
+use App\Services\CartService;
+use App\Services\AddressService;
 
 class CartController extends Controller
 {
+    protected $cartService;
+    protected $addressService;
+
+    public function __construct(CartService $cartService, AddressService $addressService)
+    {
+        $this->cartService = $cartService;
+        $this->addressService = $addressService;
+    }
+
     public function show()
     {
         if (!Auth::check()) return redirect()->route('login');
+        
         $user = Auth::user();
-        $cart = Cart::where('user_id', $user->user_id)->first();
-        $items = $cart ? $cart->cartItems()->with('product')->get() : collect();
-        $total = $items->sum(function($item) { return $item->quantity * $item->price_per_unit; });
-        $hasAddress = Address::where('user_id', $user->user_id)->exists();
-        return view('customer.cart', compact('items', 'total', 'hasAddress'));
+        $cartData = $this->cartService->getCartForCheckout($user);
+        $addresses = $this->addressService->getUserAddresses($user);
+        
+        return view('customer.cart', [
+            'items' => $cartData['items'],
+            'total' => $cartData['total'],
+            'hasAddress' => !$addresses->isEmpty()
+        ]);
     }
 
     public function addToCart(Request $request, $productId)
     {
-        $user = Auth::user();
-        $product = Product::findOrFail($productId);
-        
-        // Cek stok tersedia
-        $availableStock = $product->stock - $product->minimum_stock;
-        if ($availableStock <= 0) {
-            return redirect()->back()->with('error', 'Maaf, stok produk ini telah habis.');
-        }
-        
-        // Validasi input quantity
-        $inputQty = $request->input('quantity', '');
-        
-        // Validasi quantity tidak kosong
-        if (empty($inputQty) || $inputQty == 0) {
-            return redirect()->back()->with('error', 'Silakan masukkan jumlah yang ingin dibeli');
-        }
-        
-        // Validasi minimal pembelian
-        if ($inputQty < $product->minimum_purchase) {
-            return redirect()->back()->with('error', 'Minimal pembelian: ' . number_format($product->minimum_purchase, 0, ',', '') . ' ' . $product->unit);
-        }
-        
-        if (in_array($product->unit, ['Mata', 'Tanaman', 'Rizome'])) {
-            $qty = max($product->minimum_purchase, (int) $inputQty);
-        } else {
-            $qty = max($product->minimum_purchase, (float) $inputQty);
-        }
-        
-        // Validasi quantity tidak melebihi stok tersedia
-        if ($qty > $availableStock) {
-            return redirect()->back()->with('error', 'Maaf, stok tidak mencukupi. Maksimal: ' . $availableStock . ' ' . $product->unit);
-        }
-
-        // Cari cart aktif user, jika belum ada buat baru
-        $cart = Cart::firstOrCreate([
-            'user_id' => $user->user_id
-        ]);
-
-        // Cek apakah produk sudah ada di cart_items
-        $cartItem = CartItem::where('cart_id', $cart->cart_id)
-            ->where('product_id', $product->product_id)
-            ->first();
-
-        if ($cartItem) {
-            // Cek total quantity setelah ditambah tidak melebihi stok
-            $totalQuantity = $cartItem->quantity + $qty;
-            if ($totalQuantity > $availableStock) {
-                return redirect()->back()->with('error', 'Maaf, stok tidak mencukupi untuk menambahkan ke keranjang.');
+        try {
+            if (!Auth::check()) {
+                return redirect()->route('login');
             }
-            
-            // Update quantity
-            $cartItem->quantity = $totalQuantity;
-            $cartItem->save();
-            $newCartItemId = $cartItem->cart_item_id;
 
-        } else {
-            // Tambah item baru
-            $newItem = CartItem::create([
-                'cart_id' => $cart->cart_id,
-                'product_id' => $product->product_id,
-                'quantity' => $qty,
-                'price_per_unit' => $product->price_per_unit,
+            $user = Auth::user();
+            $product = Product::findOrFail($productId);
+            $quantity = $request->input('quantity', 1);
+
+            $newCartItemId = $this->cartService->addItem($user, $product, $quantity);
+
+            return redirect()->route('cart')->with([
+                'success' => 'Produk berhasil ditambahkan ke keranjang!',
+                'new_cart_item_id' => $newCartItemId
             ]);
-            $newCartItemId = $newItem->cart_item_id;
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
-        return redirect()->route('cart')->with([
-            'success' => 'Produk berhasil ditambahkan ke keranjang!',
-            'new_cart_item_id' => $newCartItemId
-        ]);
     }
 
-   public function deleteItem($cart_item)
-{
-    try {
-        $item = CartItem::findOrFail($cart_item);
-        $item->delete();
-        // Kembalikan respons JSON sukses
-        return response()->json(['success' => true]);
-    } catch (\Exception $e) {
-        // Tangani jika item tidak ditemukan atau ada error lain
-        return response()->json(['success' => false, 'message' => 'Gagal menghapus item.'], 500);
+    public function deleteItem($cartItemId)
+    {
+        try {
+            if (!Auth::check()) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+            }
+
+            $user = Auth::user();
+            $this->cartService->removeItem($user, $cartItemId);
+            
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false, 
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateQuantity(Request $request, $cartItemId)
+    {
+        try {
+            if (!Auth::check()) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+            }
+
+            $user = Auth::user();
+            $quantity = $request->input('quantity');
+
+            $result = $this->cartService->updateQuantity($user, $cartItemId, $quantity);
+
+            return response()->json([
+                'success' => true,
+                'quantity' => $result['quantity'],
+                'subtotal' => number_format($result['subtotal'], 0, ',', '.')
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }
-
-    public function updateQuantity(Request $request, $cart_item)
-    {
-        $item = CartItem::findOrFail($cart_item);
-        $product = $item->product;
-        $minimalPembelian = $product->minimum_purchase ?? 1;
-        $satuan = strtolower($product->unit ?? '');
-        $inputQty = $request->input('quantity', $minimalPembelian);
-        
-        // Cek stok tersedia
-        $availableStock = $product->stock - $product->minimum_stock;
-        if ($availableStock <= 0) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Maaf, stok produk ini telah habis.'
-            ]);
-        }
-        
-        // Validasi quantity tidak kosong
-        if (empty($inputQty) || $inputQty == 0) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Silakan masukkan jumlah yang ingin dibeli'
-            ]);
-        }
-        
-        // Validasi minimal pembelian
-        if ($inputQty < $minimalPembelian) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Minimal pembelian: ' . number_format($minimalPembelian, 0, ',', '') . ' ' . $product->unit
-            ]);
-        }
-        
-        if (in_array($satuan, ['mata', 'tanaman', 'rizome'])) {
-            $qty = max($minimalPembelian, (int) $inputQty);
-        } else {
-            $qty = max($minimalPembelian, (float) $inputQty);
-        }
-        
-        // Validasi quantity tidak melebihi stok tersedia
-        if ($qty > $availableStock) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Maaf, stok tidak mencukupi. Maksimal: ' . $availableStock . ' ' . $product->unit
-            ]);
-        }
-        
-        $item->quantity = $qty;
-        $item->save();
-        return response()->json([
-            'success' => true,
-            'quantity' => $item->quantity,
-            'subtotal' => number_format($item->price_per_unit * $item->quantity, 0, ',', '.')
-        ]);
-    }
-} 

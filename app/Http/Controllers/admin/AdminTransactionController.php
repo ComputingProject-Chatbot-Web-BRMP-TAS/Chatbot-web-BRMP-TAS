@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Models\Transaction;
+use App\Services\AdminTransactionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -12,25 +13,27 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminTransactionController extends Controller
 {
+    protected $adminTransactionService;
+
+    public function __construct(AdminTransactionService $adminTransactionService)
+    {
+        $this->adminTransactionService = $adminTransactionService;
+    }
 
     public function index(Request $request)
     {
         $query = Transaction::with(['user', 'transactionItems.product', 'payments']);
         
         // Filter by order status
-        if ($request->filled('status')) {
-            $query->where('order_status', $request->status);
+        if ($request->filled('order_status')) {
+            $query->where('order_status', $request->order_status);
         }
         
         // Filter by payment status
         if ($request->filled('payment_status')) {
-            if ($request->payment_status == 'no_payment') {
-                $query->whereDoesntHave('payments');
-            } else {
-                $query->whereHas('payments', function($q) use ($request) {
-                    $q->where('payment_status', $request->payment_status);
-                });
-            }
+            $query->whereHas('payments', function($q) use ($request) {
+                $q->where('payment_status', $request->payment_status);
+            });
         }
         
         // Filter by date range
@@ -54,66 +57,45 @@ class AdminTransactionController extends Controller
         return view('admin.transactions.show', compact('transaction'));
     }
 
-     
-    public function updateTransactionStatus(Request $request, $id)
-    {
-        $trx = Transaction::findOrFail($id);
-        $newStatus = $request->input('status');
-
-        // Jika status berubah ke selesai dan sebelumnya belum selesai, isi done_date
-        if ($newStatus === 'selesai' && $trx->order_status !== 'selesai') {
-            $trx->done_date = now();
-        }
-        // Jika status berubah ke selain selesai, kosongkan done_date
-        elseif ($newStatus !== 'selesai') {
-            $trx->done_date = null;
-        }
-
-        $trx->order_status = $newStatus;
-        $trx->save();
-        
-        return redirect()->back()->with('success', 'Status transaksi berhasil diperbarui');
-    }
     /**
-     * Approve payment
+     * Update transaction status using service
+     */
+    public function updateStatus(Request $request, $id)
+    {
+        try {
+            $transaction = Transaction::findOrFail($id);
+            $newStatus = $request->input('status');
+            $reason = $request->input('reason');
+
+            $this->adminTransactionService->updateTransactionStatus($transaction, $newStatus, $reason);
+            
+            return redirect()->back()->with('success', 'Status transaksi berhasil diperbarui');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * Approve payment using service
      */
     public function approvePayment(Request $request, $paymentId)
     {
         try {
             $payment = Payment::findOrFail($paymentId);
-            $transaction = $payment->transaction;
+            $reason = $request->input('reason');
             
-            // Validate that payment is in pending status
-            if ($payment->payment_status !== 'pending') {
-                return redirect()->back()->with('error', 'Pembayaran tidak dapat dikonfirmasi karena status tidak valid.');
-            }
-            
-            // Update payment status
-            $payment->payment_status = 'approved';
-            $payment->save();
-            
-            // Update transaction status to diproses
-            $transaction->order_status = 'diproses';
-
-            // Jika done_date belum diisi, isi dengan waktu sekarang
-            if (is_null($transaction->done_date)) {
-                $transaction->done_date = now();
-            }
-
-            $transaction->save();
+            $this->adminTransactionService->approvePayment($payment, $reason);
             
             return redirect()->back()->with('success', 'Pembayaran berhasil dikonfirmasi dan pesanan akan diproses');
+
         } catch (\Exception $e) {
-            Log::error('Error approving payment', [
-                'payment_id' => $paymentId,
-                'error' => $e->getMessage()
-            ]);
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengkonfirmasi pembayaran.');
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
     
     /**
-     * Reject payment
+     * Reject payment using service
      */
     public function rejectPayment(Request $request, $paymentId)
     {
@@ -123,113 +105,85 @@ class AdminTransactionController extends Controller
         
         try {
             $payment = Payment::findOrFail($paymentId);
-            $transaction = $payment->transaction;
+            $reason = $request->rejection_reason;
             
-            // Validate that payment is in pending status
-            if ($payment->payment_status !== 'pending') {
-                return redirect()->back()->with('error', 'Pembayaran tidak dapat ditolak karena status tidak valid.');
-            }
+            $this->adminTransactionService->rejectPayment($payment, $reason);
             
-            // Update payment status
-            $payment->payment_status = 'rejected';
-            $payment->rejection_reason = $request->rejection_reason;
-            $payment->save();
+            return redirect()->back()->with('success', 'Pembayaran berhasil ditolak.');
 
-            // Update transaction status to dibatalkan
-            $transaction->order_status = 'dibatalkan';
-            $transaction->save();
-            
-            return redirect()->back()->with('success', 'Pembayaran ditolak.');
         } catch (\Exception $e) {
-            Log::error('Error rejecting payment', [
-                'payment_id' => $paymentId,
-                'error' => $e->getMessage()
-            ]);
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menolak pembayaran.');
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
-    
-    
-    /**
-     * Show billing form
-     */
-    public function showBillingForm($transaction_id)
-    {
-        $transaction = Transaction::findOrFail($transaction_id);
-        return view('admin.transactions.billing', compact('transaction'));
-    }
 
     /**
-     * Store billing information
+     * Dashboard statistics
      */
-    public function storeBilling(Request $request, $transaction_id)
+    public function dashboard(Request $request)
     {
-        $request->validate([
-            'billing_code_file' => 'required|file|mimes:jpg,jpeg,png|max:10240',
-            'no_rek_ongkir'     => 'required|file|mimes:jpg,jpeg,png|max:10240',
-            'total_ongkir'      => 'required|numeric',
-        ]);
+        $filters = [
+            'date_from' => $request->date_from,
+            'date_to' => $request->date_to
+        ];
 
-        $transaction = Transaction::findOrFail($transaction_id);
+        $statistics = $this->adminTransactionService->getTransactionStatistics($filters);
+        $pendingTransactions = $this->adminTransactionService->getTransactionsNeedingAttention();
 
-        // Simpan file billing
-        $billingFile = $request->file('billing_code_file')->store('billing_codes', 'public');
-        // Simpan file no_rek_ongkir
-        $rekOngkirFile = $request->file('no_rek_ongkir')->store('rek_ongkir_files', 'public');
-
-        // Buat payment baru
-        Payment::create([
-            'transaction_id'    => $transaction->transaction_id,
-            'billing_code_file' => $billingFile,
-            'no_rek_ongkir'     => $rekOngkirFile,
-            'payment_status'    => 'no_payment',
-        ]);
-
-        // Update total_ongkir di transaksi
-        $transaction->total_ongkir = $request->total_ongkir;
-        $transaction->order_status = 'menunggu_pembayaran';
-        $transaction->save();
-
-        return redirect()->route('admin.transactions.show', $transaction->transaction_id)->with('success', 'Billing dan ongkir berhasil disimpan.');
-    }
-    
-    public function updateResi(Request $request, $id)
-    {
-        $request->validate([
-            'no_resi' => 'required|string|max:255',
-        ]);
-
-        $transaction = Transaction::findOrFail($id);
-        $transaction->no_resi = $request->no_resi;
-        $transaction->order_status = 'selesai';
-        $transaction->save();
-
-        return redirect()->route('admin.transactions.show', $transaction->transaction_id)
-            ->with('success', 'Nomor resi berhasil disimpan dan status transaksi diubah menjadi selesai.');
+        return view('admin.dashboard', compact('statistics', 'pendingTransactions'));
     }
 
-    public function viewInvoice($id)
+    /**
+     * Export transactions to PDF
+     */
+    public function exportPdf(Request $request)
     {
-        $transaction = Transaction::with(['transactionItems.product', 'payments', 'shippingAddress'])
-            ->where('transaction_id', $id)
-            ->firstOrFail();
+        try {
+            $query = Transaction::with(['user', 'transactionItems.product', 'payments']);
+            
+            // Apply filters
+            if ($request->filled('order_status')) {
+                $query->where('order_status', $request->order_status);
+            }
+            
+            if ($request->filled('start_date')) {
+                $query->whereDate('order_date', '>=', $request->start_date);
+            }
+            
+            if ($request->filled('end_date')) {
+                $query->whereDate('order_date', '<=', $request->end_date);
+            }
+            
+            $transactions = $query->orderBy('order_date', 'desc')->get();
+            
+            $pdf = Pdf::loadView('admin.transactions.export-pdf', compact('transactions'));
+            
+            return $pdf->download('transactions_export_' . now()->format('Y_m_d') . '.pdf');
 
-        return view('admin.transactions.invoice_pdf', [
-            'transaction' => $transaction,
-            'isPdf' => false
-        ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal export data: ' . $e->getMessage());
+        }
     }
 
-    public function downloadInvoice($id)
+    /**
+     * Get transaction details for modal/ajax
+     */
+    public function getTransactionDetails($id)
     {
-        $transaction = Transaction::with(['transactionItems.product', 'payments', 'shippingAddress'])
-            ->where('transaction_id', $id)
-            ->firstOrFail();
+        try {
+            $transaction = Transaction::with(['user', 'transactionItems.product', 'payments'])
+                ->where('transaction_id', $id)
+                ->firstOrFail();
 
-        $pdf = Pdf::loadView('admin.invoice_pdf', [
-            'transaction' => $transaction,
-            'isPdf' => true
-        ]);
-        return $pdf->download('kuitansi_'.$transaction->transaction_id.'.pdf');
+            return response()->json([
+                'success' => true,
+                'data' => $transaction
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 404);
+        }
     }
 }

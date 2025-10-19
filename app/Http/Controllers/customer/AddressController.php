@@ -6,14 +6,25 @@ use Illuminate\Http\Request;
 use App\Models\Address;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Services\AddressService;
 
 class AddressController extends Controller
 {
+    protected $addressService;
+
+    public function __construct(AddressService $addressService)
+    {
+        $this->addressService = $addressService;
+    }
     // Tampilkan semua alamat milik user
     public function index()
     {
-        $addresses = Auth::user()->addresses()->get();
-        return view('customer.addresses', compact('addresses'));
+        try {
+            $addresses = $this->addressService->getUserAddresses(Auth::user());
+            return view('customer.addresses', compact('addresses'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal mengambil data alamat.');
+        }
     }
 
     // Simpan alamat baru
@@ -29,28 +40,29 @@ class AddressController extends Controller
             'recipient_phone' => 'required|string|max:20',
         ]);
 
-         // ** Tambahkan Logika Pengecekan Nomor Telepon di sini **
-        $phone = $request->input('recipient_phone');
+        try {
+            // Normalisasi nomor telepon
+            $phone = $request->input('recipient_phone');
             if (str_starts_with($phone, '08')) {
-            $phone = '628' . substr($phone, 2);
-        }
-        // Setel kembali nilai recipient_phone di request
-        $request->merge(['recipient_phone' => $phone]);
+                $phone = '628' . substr($phone, 2);
+            }
 
-        $isFirst = Auth::user()->addresses()->count() === 0;
-        $address = Auth::user()->addresses()->create([
-            'label' => $request->label,
-            'address' => $request->address,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'is_primary' => $isFirst,
-            'note' => $request->note,
-            'recipient_name' => $request->recipient_name,
-            'recipient_phone' => $request->recipient_phone,
-        ]);
-        // Redirect berdasarkan field redirect_to atau default ke addresses
-        $redirectTo = $request->input('redirect_to', route('addresses'));
-        return redirect($redirectTo);
+            $data = $request->only([
+                'label', 'address', 'latitude', 'longitude', 
+                'note', 'recipient_name'
+            ]);
+            $data['recipient_phone'] = $phone;
+
+            $this->addressService->createAddress(Auth::user(), $data);
+
+            $redirectTo = $request->input('redirect_to', route('addresses'));
+            return redirect($redirectTo)->with('success', 'Alamat berhasil ditambahkan!');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Gagal menambahkan alamat: ' . $e->getMessage());
+        }
     }
 
     // Hapus alamat
@@ -59,8 +71,13 @@ class AddressController extends Controller
         if ($address->user_id !== Auth::id()) {
             abort(403);
         }
-        $address->delete();
-        return redirect()->route('addresses')->with('success', 'Alamat berhasil dihapus!');
+
+        try {
+            $this->addressService->deleteAddress($address);
+            return redirect()->route('addresses')->with('success', 'Alamat berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menghapus alamat: ' . $e->getMessage());
+        }
     }
 
     // Set alamat utama
@@ -69,10 +86,13 @@ class AddressController extends Controller
         if ($address->user_id !== Auth::id()) {
             abort(403);
         }
-        Auth::user()->addresses()->update(['is_primary' => false]);
-        $address->is_primary = true;
-        $address->save();
-        return redirect()->route('addresses')->with('success', 'Alamat utama berhasil diubah!');
+
+        try {
+            $this->addressService->setPrimaryAddress($address);
+            return redirect()->route('addresses')->with('success', 'Alamat utama berhasil diubah!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal mengubah alamat utama: ' . $e->getMessage());
+        }
     }
 
     // Update alamat
@@ -81,6 +101,7 @@ class AddressController extends Controller
         if ($address->user_id !== Auth::id()) {
             abort(403);
         }
+
         $request->validate([
             'label' => 'nullable|string|max:255',
             'address' => 'required|string',
@@ -90,17 +111,29 @@ class AddressController extends Controller
             'recipient_name' => 'required|string|max:255',
             'recipient_phone' => 'required|string|max:20',
         ]);
-        $address->update([
-            'label' => $request->label,
-            'address' => $request->address,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'note' => $request->note,
-            'recipient_name' => $request->recipient_name,
-            'recipient_phone' => $request->recipient_phone,
-        ]);
-        // Redirect berdasarkan field redirect_to atau default ke addresses
-        $redirectTo = $request->input('redirect_to', route('addresses'));
-        return redirect($redirectTo);
+
+        try {
+            // Normalisasi nomor telepon
+            $phone = $request->input('recipient_phone');
+            if (str_starts_with($phone, '08')) {
+                $phone = '628' . substr($phone, 2);
+            }
+
+            $data = $request->only([
+                'label', 'address', 'latitude', 'longitude', 
+                'note', 'recipient_name'
+            ]);
+            $data['recipient_phone'] = $phone;
+
+            $this->addressService->updateAddress($address, $data);
+
+            $redirectTo = $request->input('redirect_to', route('addresses'));
+            return redirect($redirectTo)->with('success', 'Alamat berhasil diperbarui!');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Gagal memperbarui alamat: ' . $e->getMessage());
+        }
     }
 } 

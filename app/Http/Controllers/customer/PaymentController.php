@@ -9,9 +9,16 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
+use App\Services\PaymentService;
 
 class PaymentController extends Controller
 {
+    protected $paymentService;
+
+    public function __construct(PaymentService $paymentService)
+    {
+        $this->paymentService = $paymentService;
+    }
     /**
      * Handle upload bukti pembayaran untuk billing atau ongkir.
      * Status transaksi hanya akan berubah setelah kedua file diunggah.
@@ -43,54 +50,23 @@ class PaymentController extends Controller
             if (!$transaction || $transaction->user_id !== Auth::id()) {
                 return redirect()->route('transaksi')->with('error', 'Anda tidak memiliki akses ke transaksi ini.');
             }
+            
             if ($transaction->order_status !== 'menunggu_pembayaran') {
-                return redirect()->route('transaksi.detail', $transaction->transaction_id)->with('error', 'Transaksi tidak dapat menerima pembayaran karena status tidak valid.');
+                return redirect()->route('transaksi.detail', $transaction->transaction_id)
+                    ->with('error', 'Transaksi tidak dapat menerima pembayaran karena status tidak valid.');
             }
 
-            // Cari record pembayaran yang sudah ada untuk transaksi ini
-            $payment = Payment::firstOrCreate(
-                ['transaction_id' => $transaction->transaction_id]
-            );
-            
-            // Simpan file dan perbarui record pembayaran
-            $filename = 'bukti_' . time() . '_' . $transaction->transaction_id . '_' . $columnName . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/bukti_pembayaran', $filename);
-            
-            $payment->update([
-                $columnName => $filename,
-            ]);
+            // Validasi file menggunakan service
+            $this->paymentService->validatePaymentProof($file, $columnName);
 
-            // Periksa apakah kedua bukti pembayaran sudah diunggah
-            $areBothProofsUploaded = $payment->photo_proof_payment_billing !== null && $payment->photo_proof_payment_ongkir !== null;
-            
-            $successMessage = 'Bukti pembayaran berhasil diunggah!';
-            
-            if ($areBothProofsUploaded) {
-                // Jika kedua bukti sudah diunggah, perbarui status transaksi
-                $transaction->update(['order_status' => 'menunggu_konfirmasi_pembayaran']);
-                $payment->update(['payment_date' => now('Asia/Jakarta'), 'payment_status' => 'pending']);
-                session()->forget(['checkout_cart', 'checkout_total', 'checkout_shipping_method', 'current_transaction_id']);
-                $successMessage = 'Kedua bukti pembayaran berhasil diunggah! Status order berubah menjadi "Menunggu Konfirmasi Pembayaran".';
-            }
+            // Upload bukti pembayaran menggunakan service
+            $result = $this->paymentService->uploadPaymentProof($transaction, $file, $columnName);
 
-            Log::info('Payment proof uploaded', [
-                'payment_id' => $payment->id,
-                'transaction_id' => $transaction->transaction_id,
-                'user_id' => Auth::id(),
-                'filename' => $filename,
-                'column' => $columnName,
-                'status_updated' => $areBothProofsUploaded
-            ]);
-            
-            return redirect()->route('transaksi.detail', $transaction->transaction_id)->with('success', $successMessage);
+            return redirect()->route('transaksi.detail', $transaction->transaction_id)
+                ->with('success', $result['message']);
 
         } catch (\Exception $e) {
-            Log::error('Error uploading payment proof', [
-                'transaction_id' => $request->input('transaction_id'),
-                'user_id' => Auth::id(),
-                'error' => $e->getMessage()
-            ]);
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupload bukti pembayaran. Silakan coba lagi.');
+            return redirect()->back()->with('error', 'Gagal upload bukti pembayaran: ' . $e->getMessage());
         }
     }
 }

@@ -170,17 +170,6 @@
             margin-bottom: 10px;
         }
 
-        .checkout-mobile-product-img {
-            width: 56px;
-            height: 56px;
-            border-radius: 8px;
-            background: #333;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
         .checkout-mobile-product-info {
             flex: 1;
         }
@@ -222,6 +211,10 @@
             .checkout-summary {
                 display: none !important;
             }
+
+            .checkout-title {
+                margin-top: 0;
+            }
         }
 
         @media (min-width: 1023px) {
@@ -262,7 +255,7 @@
                         <div class="card-title">Barang Dipesan</div>
                         @foreach ($cart as $item)
                             <div class="checkout-mobile-product">
-                                <div class="checkout-mobile-product-img">
+                                <div class="order-item-img">
                                     @php
                                         $imagePath =
                                             isset($item['image']) && Str::startsWith($item['image'], 'products/')

@@ -292,7 +292,7 @@
             }
 
             .transaksi-status {
-                font-size: 12px;
+                font-size: 9px;
                 padding: 6px;
             }
 

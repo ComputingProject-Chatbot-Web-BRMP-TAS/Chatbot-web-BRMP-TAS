@@ -11,23 +11,43 @@ use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Services\CartService;
+use App\Services\TransactionService;
+use App\Services\AddressService;
 use Carbon\Carbon;
 
 class CheckoutController extends Controller
 {
+    protected $cartService;
+    protected $transactionService;
+    protected $addressService;
+
+    public function __construct(
+        CartService $cartService, 
+        TransactionService $transactionService,
+        AddressService $addressService
+    ) {
+        $this->cartService = $cartService;
+        $this->transactionService = $transactionService;
+        $this->addressService = $addressService;
+    }
     public function show(Request $request)
     {
         $user = Auth::user();
         $selectedId = session('checkout_address_id');
+        
         if ($selectedId) {
             $address = Address::where('user_id', $user->user_id)->where('address_id', $selectedId)->first();
         } else {
-            $address = Address::where('user_id', $user->user_id)->where('is_primary', true)->first();
+            $address = $this->addressService->getPrimaryAddress($user);
         }
-        $addresses = Address::where('user_id', $user->user_id)->get();
+        
+        $addresses = $this->addressService->getUserAddresses($user);
+        
         // Ambil data cart dari session jika ada
         $cart = session('checkout_cart', []);
         $total = session('checkout_total', 0);
+        
         return view('customer.checkout', compact('address', 'addresses', 'cart', 'total'));
     }
 
@@ -41,9 +61,9 @@ class CheckoutController extends Controller
 
         // Cek apakah user sudah punya alamat
         $user = Auth::user();
-        $hasAddress = Address::where('user_id', $user->user_id)->exists();
-        if (!$hasAddress) {
-            // Jangan redirect ke addresses, cukup return error agar frontend bisa handle (tampilkan modal)
+        $addresses = $this->addressService->getUserAddresses($user);
+        
+        if ($addresses->isEmpty()) {
             return back()->with('error', 'Silakan tambahkan alamat pengiriman terlebih dahulu sebelum checkout.');
         }
 
@@ -108,135 +128,67 @@ class CheckoutController extends Controller
 
     public function next(Request $request)
     {
-        $user = Auth::user();
-        $cart = session('checkout_cart', []);
-        $total = session('checkout_total', 0);
-        $shipping_method = $request->input('shipping_method', 'reguler');
+        try {
+            $user = Auth::user();
+            $cart = session('checkout_cart', []);
+            $total = session('checkout_total', 0);
+            $shipping_method = $request->input('shipping_method', 'reguler');
 
-        // Validasi data checkout
-        if (empty($cart) || empty($total)) {
-            return redirect()->route('cart')->with('error', 'Silakan checkout ulang dari keranjang.');
-        }
-
-        // Validasi stok dan minimal pembelian lagi sebelum membuat transaksi
-        foreach ($cart as $item) {
-            $product = Product::find($item['product_id']);
-            if (!$product) {
-                return redirect()->route('cart')->with('error', 'Produk tidak ditemukan.');
+            // Validation
+            if (empty($cart) || empty($total)) {
+                return redirect()->route('cart')->with('error', 'Silakan checkout ulang dari keranjang.');
             }
-            
-            $availableStock = $product->stock - $product->minimum_stock;
-            $minimalPembelian = $product->minimum_purchase ?? 1;
-            
-            if ($availableStock <= 0) {
-                return redirect()->route('cart')->with('error', 'Produk "' . $product->product_name . '" stoknya telah habis. Silakan hapus dari keranjang.');
+
+            if (empty($shipping_method)) {
+                return redirect()->back()->with('error', 'Silakan pilih metode pengiriman.');
             }
-            
-            if ($item['quantity'] < $minimalPembelian) {
-                return redirect()->route('cart')->with('error', 'Produk "' . $product->product_name . '" minimal pembelian: ' . number_format($minimalPembelian, 0, ',', '') . ' ' . $product->unit);
+
+            // Validate form data
+            $purchase_purpose = $request->input('purchase_purpose');
+            $province = $request->input('province');
+            $city = $request->input('city');
+
+            if (empty($purchase_purpose) || empty($province) || empty($city)) {
+                return redirect()->back()->with('error', 'Tolong lengkapi data terlebih dahulu.');
             }
-            
-            if ($item['quantity'] > $availableStock) {
-                return redirect()->route('cart')->with('error', 'Produk "' . $product->product_name . '" stoknya tidak mencukupi. Maksimal: ' . $availableStock . ' ' . $product->unit);
+
+            // Get shipping address
+            $selectedId = session('checkout_address_id');
+            if ($selectedId) {
+                $address = Address::where('user_id', $user->user_id)->where('address_id', $selectedId)->first();
+            } else {
+                $address = $this->addressService->getPrimaryAddress($user);
             }
-        }
 
-        // Validasi shipping method
-        if (empty($shipping_method)) {
-            return redirect()->back()->with('error', 'Silakan pilih metode pengiriman.');
-        }
-
-        // Validasi form kepentingan
-        $purchase_purpose = $request->input('purchase_purpose');
-        $province = $request->input('province');
-        $city = $request->input('city');
-
-        if (empty($purchase_purpose) || empty($province) || empty($city)) {
-            return redirect()->back()->with('error', 'Tolong lengkapi data terlebih dahulu.');
-        }
-
-        // Cek apakah user sudah punya alamat
-        $selectedId = session('checkout_address_id');
-        if ($selectedId) {
-            $address = Address::where('user_id', $user->user_id)->where('address_id', $selectedId)->first();
-        } else {
-            $address = Address::where('user_id', $user->user_id)->where('is_primary', true)->first();
-        }
-
-        if (!$address) {
-            return redirect()->route('addresses')->with('error', 'Silakan pilih alamat pengiriman terlebih dahulu.');
-        }
-
-        // Hitung ongkir dan asuransi (untuk sementara 0)
-        $ongkir = 0;
-        $asuransi = 0;
-        $order_date = Carbon::now('Asia/Jakarta');
-
-        // Tentukan estimasi tanggal pengiriman berdasarkan metode pengiriman
-        $estimated_delivery_date = null;
-        switch ($shipping_method) {
-            case 'reguler':
-                $estimated_delivery_date = $order_date->copy()->addDays(5);
-                break;
-            case 'kargo':
-                $estimated_delivery_date = $order_date->copy()->addDays(7);
-                break;
-            case 'pickup':
-                $estimated_delivery_date = $order_date;
-                break;
-        }
-
-        // Buat transaksi baru dengan status 'menunggu_kode_billing'
-        $transaction = Transaction::create([
-            'user_id' => $user->user_id,
-            'shipping_address_id' => $address->address_id,
-            'recipient_name' => $address->recipient_name,
-            'shipping_address' => $address->address,
-            'recipient_phone' => $address->recipient_phone,
-            'shipping_note' => $address->note,
-            'purchase_purpose' => $purchase_purpose,
-            'province_id' => $province,
-            'regency_id' => $city,
-            'order_date' => $order_date,
-            'total_price' => $total + $ongkir + $asuransi,
-            'order_status' => 'menunggu_kode_billing',
-            'delivery_method' => $shipping_method ?? 'reguler', // Pastikan tidak null
-            'estimated_delivery_date' => $estimated_delivery_date,
-        ]);
-
-        // Buat detail item transaksi dan kurangi stok
-        foreach ($cart as $item) {
-            TransactionItem::create([
-                'transaction_id' => $transaction->transaction_id,
-                'product_id' => $item['product_id'],
-                'quantity' => $item['quantity'],
-                'unit_price' => $item['price'],
-                'subtotal' => $item['subtotal'],
-            ]);
-            
-            // Kurangi stok produk dengan validasi
-            $product = Product::find($item['product_id']);
-            if ($product) {
-                // Validasi stok lagi sebelum mengurangi
-                if ($product->stock < $item['quantity']) {
-                    // Rollback transaksi jika stok tidak mencukupi
-                    $transaction->delete();
-                    return redirect()->route('cart')->with('error', 'Produk "' . $product->product_name . '" stoknya tidak mencukupi. Silakan coba lagi.');
-                }
-                $product->stock -= $item['quantity'];
-                $product->save();
+            if (!$address) {
+                return redirect()->route('addresses')->with('error', 'Silakan pilih alamat pengiriman terlebih dahulu.');
             }
+
+            // Prepare additional data for transaction
+            $additionalData = [
+                'shipping_method' => $shipping_method,
+                'purchase_purpose' => $purchase_purpose,
+                'province' => $province,
+                'city' => $city,
+                'insurance' => 0, // For now set to 0
+                'cart_item_ids' => collect($cart)->pluck('cart_item_id')->toArray()
+            ];
+
+            // Create transaction using service
+            $transaction = $this->transactionService->createFromCartItems($user, $address, $cart, $additionalData);
+
+            // Clear checkout session data
+            session()->forget(['checkout_cart', 'checkout_total', 'checkout_address_id']);
+            
+            // Set session data for payment page
+            session(['checkout_shipping_method' => $shipping_method]);
+            session(['current_transaction_id' => $transaction->transaction_id]);
+
+            return redirect()->route('transaksi.detail', ['id' => $transaction->transaction_id])
+                ->with('success', 'Transaksi berhasil dibuat! Silakan menunggu kode billing.');
+
+        } catch (\Exception $e) {
+            return redirect()->route('cart')->with('error', $e->getMessage());
         }
-
-        // Hapus item dari cart setelah transaksi dibuat
-        $cartItemIds = collect($cart)->pluck('cart_item_id')->toArray();
-        CartItem::whereIn('cart_item_id', $cartItemIds)->delete();
-
-        // Simpan data ke session untuk halaman payment
-        session(['checkout_shipping_method' => $shipping_method]);
-        session(['current_transaction_id' => $transaction->transaction_id]);
-
-        // Redirect ke halaman detail transaksi
-        return redirect()->route('transaksi.detail', ['id' => $transaction->transaction_id])->with('success', 'Transaksi berhasil dibuat! Silakan menunggu kode billing.');
     }
 }

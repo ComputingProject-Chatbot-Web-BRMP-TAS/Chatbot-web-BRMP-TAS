@@ -317,6 +317,7 @@
                 flex-direction: column;
                 padding: 10px;
                 background: none;
+                justify-content: flex-start;
             }
 
             .filter-form {

@@ -5,16 +5,27 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Article;
+use App\Services\ArticleService;
 
 class ArticleController extends Controller
 {
+    protected $articleService;
+
+    public function __construct(ArticleService $articleService)
+    {
+        $this->articleService = $articleService;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $articles = \App\Models\Article::latest()->paginate(10);
-        return view('admin.articles.index', compact('articles'));
+        try {
+            $articles = $this->articleService->getAllArticles(10);
+            return view('admin.articles.index', compact('articles'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal memuat artikel: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -36,12 +47,14 @@ class ArticleController extends Controller
             'body' => 'required',
         ]);
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('articles', 'public');
+        try {
+            $this->articleService->createArticle($validated, $request->file('image'));
+            return redirect()->route('admin.articles.index')->with('success', 'Artikel berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Gagal menambahkan artikel: ' . $e->getMessage());
         }
-
-        Article::create($validated);
-        return redirect()->route('admin.articles.index')->with('success', 'Artikel berhasil ditambahkan.');
     }
 
     /**
@@ -72,12 +85,14 @@ class ArticleController extends Controller
             'body' => 'required',
         ]);
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('articles', 'public');
+        try {
+            $this->articleService->updateArticle($article, $validated, $request->file('image'));
+            return redirect()->route('admin.articles.index')->with('success', 'Artikel berhasil diupdate.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Gagal mengupdate artikel: ' . $e->getMessage());
         }
-
-        $article->update($validated);
-        return redirect()->route('admin.articles.index')->with('success', 'Artikel berhasil diupdate.');
     }
 
     /**
@@ -85,7 +100,11 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
-        $article->delete();
-        return redirect()->route('admin.articles.index')->with('success', 'Artikel berhasil dihapus.');
+        try {
+            $this->articleService->deleteArticle($article);
+            return redirect()->route('admin.articles.index')->with('success', 'Artikel berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menghapus artikel: ' . $e->getMessage());
+        }
     }
 }

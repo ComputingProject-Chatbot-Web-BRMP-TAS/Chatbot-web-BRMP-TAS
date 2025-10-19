@@ -6,9 +6,16 @@ use Illuminate\Http\Request;
 use App\Models\Complaint;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Services\ComplaintService;
 
 class ComplaintController extends Controller
 {
+    protected $complaintService;
+
+    public function __construct(ComplaintService $complaintService)
+    {
+        $this->complaintService = $complaintService;
+    }
     public function create()
     {
         $transactions = \App\Models\Transaction::where('user_id', Auth::id())->orderByDesc('created_at')->get();
@@ -26,18 +33,29 @@ class ComplaintController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'complaint_types' => 'required|string',
             'transaction_id' => 'required|exists:transactions,transaction_id',
             'nomor_kantong' => 'required|numeric',
             'description' => 'required|string|max:1000',
             'photo_proof' => 'required|image|mimes:jpg,jpeg,png|max:10240',
         ]);
 
-        $validated['photo_proof'] = $request->file('photo_proof')->store('bukti_komplain', 'public');
-        $validated['user_id'] = Auth::id();
+        try {
+            // Validate data using service
+            $this->complaintService->validateComplaintData($validated);
 
-        Complaint::create($validated);
+            // Create complaint using service
+            $this->complaintService->createComplaint(
+                Auth::user(), 
+                $validated, 
+                $request->file('photo_proof')
+            );
 
-        return redirect('/')->with('success', 'Komplain berhasil dikirim! Tim kami akan menghubungi Anda melalui WhatsApp untuk menangani masalah ini.');
+            return redirect('/')->with('success', 'Komplain berhasil dikirim! Tim kami akan menghubungi Anda melalui WhatsApp untuk menangani masalah ini.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Gagal mengirim komplain: ' . $e->getMessage());
+        }
     }
 } 
