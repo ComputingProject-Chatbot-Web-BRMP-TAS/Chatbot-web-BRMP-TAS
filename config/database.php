@@ -112,6 +112,21 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        // RAG Database (Vector embeddings & documents - separate from credentials)
+        'pgsql_rag' => [
+            'driver' => 'pgsql',
+            'url' => env('DB_URL_RAG'),
+            'host' => env('DB_HOST_RAG', env('DB_HOST', '127.0.0.1')),
+            'port' => env('DB_PORT_RAG', env('DB_PORT', '5432')),
+            'database' => env('DB_DATABASE_RAG', 'web_brmp_benih_rag'),
+            'username' => env('DB_USERNAME_RAG', env('DB_USERNAME', 'postgres')),
+            'password' => env('DB_PASSWORD_RAG', env('DB_PASSWORD', '')),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
     ],
 
     /*
