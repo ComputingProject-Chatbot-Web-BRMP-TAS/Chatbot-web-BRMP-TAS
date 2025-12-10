@@ -349,6 +349,32 @@
         .gallery-modal .modal-content {
             background: rgba(0, 0, 0, 0.06);
         }
+
+        /* Zoom lens styles */
+        .img-zoom-lens {
+            position: absolute;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            background-repeat: no-repeat;
+            background-size: cover;
+            pointer-events: none;
+            display: none;
+            z-index: 2000;
+        }
+
+        /* For small screens disable hover zoom (use modal instead) */
+        @media (max-width: 768px) {
+            .img-zoom-lens {
+                display: none !important;
+            }
+
+            .product-detail-main-image {
+                cursor: zoom-in;
+            }
+        }
     </style>
 
     <div class="product-detail-modern-bg">
@@ -383,6 +409,18 @@
                         </div>
                     @endif
                 </div>
+
+                <!-- Image Zoom Modal (click to open larger view) -->
+                <div class="modal fade" id="imageZoomModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content bg-transparent border-0">
+                            <div class="modal-body text-center p-0">
+                                <img src="" id="zoomModalImage" alt="Zoomed Image"
+                                    style="max-width:100%;max-height:90vh;object-fit:contain;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="product-detail-thumbs">
                     @if ($product->image1)
                         <img src="{{ asset('storage/' . $image1Path) }}" alt="thumb1" class="selected"
@@ -416,7 +454,88 @@
                         <span style="color: #d32f2f; font-weight: 500;">(Stok Habis)</span>
                     @endif
                 </div>
-                <div class="product-detail-desc">{{ $product->description }}</div>
+                @php
+                    /**
+                     * Render a simple markdown-like description stored with literal "\\n" sequences,
+                     * double-asterisk bold `**bold**`, and list items that start with `- `.
+                     * This helper performs escaping, bold, lists and paragraphs.
+                     */
+                    function renderProductDescription($text)
+                    {
+                        if (is_null($text) || $text === '') {
+                            return '';
+                        }
+
+                        // Convert literal backslash-n sequences to actual newlines
+                        $text = str_replace('\\\\n', "\\n", $text);
+
+                        // Normalize CRLF to LF
+                        $text = str_replace("\\r\\n", "\\n", $text);
+
+                        // Escape HTML to prevent XSS
+                        $text = e($text);
+
+                        // Convert bold syntax **text** to <strong>
+                        $text = preg_replace('/\\*\\*(.+?)\\*\\*/s', '<strong>$1</strong>', $text);
+
+                        $lines = explode("\\n", $text);
+                        $html = '';
+                        $inList = false;
+                        $paraBuffer = [];
+
+                        $flushParagraph = function () use (&$paraBuffer, &$html) {
+                            if (count($paraBuffer) > 0) {
+                                $p = implode(' ', $paraBuffer);
+                                $html .= '<p>' . $p . '</p>';
+                                $paraBuffer = [];
+                            }
+                        };
+
+                        foreach ($lines as $rawLine) {
+                            $line = trim($rawLine);
+
+                            if ($line === '') {
+                                // blank line: close paragraph or list
+                                if ($inList) {
+                                    $html .= '</ul>';
+                                    $inList = false;
+                                }
+                                $flushParagraph();
+                                continue;
+                            }
+
+                            // list item
+                            if (preg_match('/^[\-\\*]\s+(.*)$/', $line, $m)) {
+                                // close paragraph buffer first
+                                $flushParagraph();
+                                if (!$inList) {
+                                    $html .= '<ul>';
+                                    $inList = true;
+                                }
+                                $item = $m[1];
+                                $html .= '<li>' . $item . '</li>';
+                                continue;
+                            }
+
+                            // Normal text goes into paragraph buffer
+                            if ($inList) {
+                                $html .= '</ul>';
+                                $inList = false;
+                            }
+                            $paraBuffer[] = $line;
+                        }
+
+                        // flush any remaining open structures
+                        if ($inList) {
+                            $html .= '</ul>';
+                        }
+                        $flushParagraph();
+
+                        return $html;
+                    }
+                @endphp
+
+                <div class="product-detail-desc">{!! renderProductDescription($product->description) !!}</div>
 
                 <!-- Informasi Sertifikat -->
                 @if ($product->certificate_number)
@@ -502,7 +621,8 @@
                                                 max="{{ $availableStock }}"
                                                 style="width:60px;text-align:center;background:#fff;">
                                             <span style="margin-left:8px;">{{ $product->unit }}</span>
-                                            <span style="margin-left:8px;color:#d32f2f;font-size:0.9rem;">*Minimal Pembelian
+                                            <span style="margin-left:8px;color:#d32f2f;font-size:0.9rem;">*Minimal
+                                                Pembelian
                                                 {{ number_format($product->minimum_purchase, 0, ',', '') }}{{ $product->unit }}</span>
                                         </div>
                                         <div class="stockWarning"
@@ -630,6 +750,8 @@
                     thumb.classList.remove('selected');
                 });
             thumbElement.classList.add('selected');
+            // Reinitialize zoom because the main image src changed
+            setTimeout(reinitZoomAfterImageChange, 50);
         }
 
         // --- Logika untuk Form Tambah ke Keranjang ---
@@ -764,6 +886,121 @@
                 }
             });
         }
+
+        // --- Image zoom logic ---
+        // Initialize zoom lens element
+        const zoomLens = document.createElement('div');
+        zoomLens.className = 'img-zoom-lens';
+        document.body.appendChild(zoomLens);
+
+        function isTouchDevice() {
+            return (('ontouchstart' in window) || navigator.maxTouchPoints > 0);
+        }
+
+        function initImageZoom() {
+            const mainImage = document.getElementById('mainImage');
+            if (!mainImage) return;
+
+            // Only enable hover magnifier on non-touch and wide screens
+            if (isTouchDevice() || window.innerWidth <= 768) {
+                // Enable click to open modal only
+                if (mainImage instanceof HTMLImageElement) {
+                    mainImage.style.cursor = 'zoom-in';
+                    mainImage.addEventListener('click', openZoomModal);
+                }
+                return;
+            }
+
+            if (mainImage instanceof HTMLImageElement) {
+                mainImage.addEventListener('mousemove', moveLens);
+                mainImage.addEventListener('mouseenter', showLens);
+                mainImage.addEventListener('mouseleave', hideLens);
+                mainImage.addEventListener('click', openZoomModal);
+            }
+        }
+
+        function showLens(e) {
+            const img = e.currentTarget;
+            if (!(img instanceof HTMLImageElement)) return;
+            const rect = img.getBoundingClientRect();
+            zoomLens.style.display = 'block';
+            zoomLens.style.backgroundImage = `url('${img.src}')`;
+            // Increase background size to create zoom effect
+            zoomLens.style.backgroundSize = `${rect.width * 2.2}px ${rect.height * 2.2}px`;
+        }
+
+        function hideLens() {
+            zoomLens.style.display = 'none';
+        }
+
+        function moveLens(e) {
+            const img = e.currentTarget;
+            if (!(img instanceof HTMLImageElement)) return;
+            const rect = img.getBoundingClientRect();
+            const lensWidth = zoomLens.offsetWidth || 120;
+            const lensHeight = zoomLens.offsetHeight || 120;
+
+            // Calculate cursor position relative to image
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Position lens centered on cursor
+            let left = e.clientX - lensWidth / 2;
+            let top = e.clientY - lensHeight / 2;
+
+            // Keep lens inside viewport boundaries
+            const maxLeft = rect.right - lensWidth / 2;
+            const minLeft = rect.left + lensWidth / 2;
+            const maxTop = rect.bottom - lensHeight / 2;
+            const minTop = rect.top + lensHeight / 2;
+
+            if (e.clientX > maxLeft) left = maxLeft - lensWidth / 2;
+            if (e.clientX < minLeft) left = minLeft - lensWidth / 2;
+            if (e.clientY > maxTop) top = maxTop - lensHeight / 2;
+            if (e.clientY < minTop) top = minTop - lensHeight / 2;
+
+            zoomLens.style.left = `${left}px`;
+            zoomLens.style.top = `${top}px`;
+
+            // Calculate background position
+            const bgX = -((x * 2.2) - lensWidth / 2);
+            const bgY = -((y * 2.2) - lensHeight / 2);
+            zoomLens.style.backgroundPosition = `${bgX}px ${bgY}px`;
+        }
+
+        function openZoomModal(e) {
+            const mainImage = document.getElementById('mainImage');
+            const modalImg = document.getElementById('zoomModalImage');
+            if (!mainImage || !(mainImage instanceof HTMLImageElement)) return;
+            modalImg.src = mainImage.src;
+            const modal = new bootstrap.Modal(document.getElementById('imageZoomModal'));
+            modal.show();
+        }
+
+        // Re-init zoom on image change
+        function reinitZoomAfterImageChange() {
+            const mainImage = document.getElementById('mainImage');
+            if (!mainImage) return;
+            // Remove previous listeners to avoid duplicates
+            try {
+                mainImage.removeEventListener('mousemove', moveLens);
+                mainImage.removeEventListener('mouseenter', showLens);
+                mainImage.removeEventListener('mouseleave', hideLens);
+                mainImage.removeEventListener('click', openZoomModal);
+            } catch (e) {
+                // ignore
+            }
+            initImageZoom();
+        }
+
+        // Initialize on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initImageZoom();
+            // Also re-init on window resize to toggle behavior between mobile/desktop
+            window.addEventListener('resize', function() {
+                reinitZoomAfterImageChange();
+            });
+        });
     </script>
 @endsection
 
