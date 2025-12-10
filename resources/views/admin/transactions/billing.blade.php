@@ -5,6 +5,23 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <h3>Input Billing & Ongkir</h3>
+                @if (session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+
+                @if (session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
+
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $err)
+                                <li>{{ $err }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <form method="POST" action="{{ route('admin.transactions.billing.store', $transaction->transaction_id) }}"
                     enctype="multipart/form-data">
                     @csrf

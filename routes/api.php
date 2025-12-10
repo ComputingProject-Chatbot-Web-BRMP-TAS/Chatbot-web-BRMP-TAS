@@ -6,7 +6,7 @@ use App\Http\Controllers\ChatbotController;
 // =====================
 // CHATBOT API
 // =====================
-Route::post('/chatbot', [ChatbotController::class, 'ask']);
+
 
 // =====================
 // WILAYAH API

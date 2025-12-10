@@ -12,7 +12,6 @@ use App\Services\AddressService;
 use App\Services\PaymentService;
 use App\Services\ArticleService;
 use App\Services\ComplaintService;
-use App\Services\OllamaService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -56,10 +55,6 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(ComplaintService::class, function ($app) {
             return new ComplaintService();
-        });
-
-        $this->app->singleton(OllamaService::class, function ($app) {
-            return new OllamaService();
         });
     }
 

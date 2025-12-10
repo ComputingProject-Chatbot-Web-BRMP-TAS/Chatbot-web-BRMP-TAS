@@ -26,6 +26,8 @@ Route::group(['prefix' => 'ADMIN-BRMP-TAS'], function () {
         
         // Admin menu routes
         Route::get('/products', [App\Http\Controllers\admin\ProductController::class, 'index'])->name('admin.products.index');
+        // Export products to Excel
+        Route::get('/products/export', [App\Http\Controllers\admin\ProductController::class, 'export'])->name('admin.products.export');
         Route::get('/products/create', [App\Http\Controllers\admin\ProductController::class, 'create'])->name('admin.products.create');
         Route::post('/products', [App\Http\Controllers\admin\ProductController::class, 'store'])->name('admin.products.store');
         Route::get('/products/{id}', [App\Http\Controllers\admin\ProductController::class, 'show'])->name('admin.products.show');

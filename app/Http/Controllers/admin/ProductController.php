@@ -260,12 +260,12 @@ class ProductController extends Controller
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
 
-            // Headers
+            // Export only the requested columns:
+            // Nama Produk, Jenis Tanaman, Harga per Unit, Satuan, Stok,
+            // Nomor Sertifikat, Kelas Sertifikat, Tanggal Dibuat
             $headers = [
-                'ID', 'Nama Produk', 'Jenis Tanaman', 'Deskripsi', 
-                'Harga per Unit', 'Satuan', 'Stok', 'Stok Minimum', 
-                'Pembelian Minimum', 'Nomor Sertifikat', 'Kelas Sertifikat',
-                'Tanggal Dibuat'
+                'ID','Nama Produk', 'Jenis Tanaman', 'Harga per Unit', 'Satuan', 'Stok',
+                'Nomor Sertifikat', 'Kelas Sertifikat', 'Tanggal Dibuat', 'Update Terakhir'
             ];
 
             $sheet->fromArray($headers, null, 'A1');
@@ -277,22 +277,20 @@ class ProductController extends Controller
                     $product->product_id,
                     $product->product_name,
                     $product->plantType->plant_type_name ?? '',
-                    $product->description,
                     $product->price_per_unit,
                     $product->unit,
                     $product->stock,
-                    $product->minimum_stock,
-                    $product->minimum_purchase,
                     $product->certificate_number ?? '',
                     $product->certificate_class ?? '',
-                    $product->created_at->format('Y-m-d H:i:s')
+                    $product->created_at ? $product->created_at->format('Y-m-d H:i:s') : '',
+                    $product->updated_at ? $product->updated_at->format('Y-m-d H:i:s') : '',
                 ];
                 $sheet->fromArray($data, null, 'A' . $row);
                 $row++;
             }
 
             $writer = new Xlsx($spreadsheet);
-            $filename = 'products_export_' . now()->format('Y_m_d_H_i_s') . '.xlsx';
+            $filename = 'Laporan_stok_produk_' . now()->format('Y_m_d_H_i_s') . '.xlsx';
             $tempFile = tempnam(sys_get_temp_dir(), $filename);
             $writer->save($tempFile);
 

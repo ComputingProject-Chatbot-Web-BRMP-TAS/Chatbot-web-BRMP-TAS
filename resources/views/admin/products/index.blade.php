@@ -525,7 +525,7 @@
                             if (currentNumber !== expectedNumber) {
                                 console.log(
                                     `Initial fix: Row ${index + 1}: ${currentNumber} -> ${expectedNumber}`
-                                    );
+                                );
                                 firstCell.textContent = expectedNumber;
                             }
                         }
@@ -545,7 +545,7 @@
                         if (currentNumber !== expectedNumber) {
                             console.log(
                                 `Initial numbering fix: Row ${index + 1}: ${currentNumber} -> ${expectedNumber}`
-                                );
+                            );
                             firstCell.textContent = expectedNumber;
                         }
                     }
@@ -593,15 +593,27 @@
             window.location.href = '{{ route('admin.products.index') }}';
         }
 
-        // Export data function
+        // Export data function — navigate to dedicated export route with current filters
         function exportData() {
-            const currentUrl = new URL(window.location.href);
-            currentUrl.searchParams.set('export', 'excel');
-            window.location.href = currentUrl.toString();
+            try {
+                // Base export URL (route defined in routes/admin.php)
+                const exportBase = '{{ route('admin.products.export') }}';
+
+                // Preserve current query params (filters) and append to export URL
+                const currentParams = new URLSearchParams(window.location.search);
+                const exportUrl = exportBase + (currentParams.toString() ? ('?' + currentParams.toString()) : '');
+
+                // Navigate to export URL to trigger download
+                window.location.href = exportUrl;
+            } catch (e) {
+                console.error('Export failed:', e);
+                alert('Gagal memulai export. Cek console untuk detail.');
+            }
         }
 
         // Load more functionality
-        let currentPage = 1;
+        // Initialize current page from server so incremental loads continue from correct page
+        let currentPage = {{ $products->currentPage() }};
         let isLoading = false;
 
         // Debug function to check if loadMore is available
@@ -651,69 +663,91 @@
                 .then(html => {
                     console.log('HTML received, length:', html.length);
                     console.log('HTML preview:', html.substring(0, 200));
+
                     const currentTableBody = document.querySelector('tbody');
+                    const totalCount = {{ $products->total() }};
 
-                    if (currentTableBody && html.trim() !== '') {
-                        // Append new rows to current table
-                        currentTableBody.insertAdjacentHTML('beforeend', html);
+                    if (!currentTableBody) {
+                        throw new Error('Tbody not found in current document');
+                    }
 
-                        // Fix numbering for all rows to ensure sequential numbering
-                        const allRows = currentTableBody.querySelectorAll('tr');
-                        allRows.forEach((row, index) => {
-                            const firstCell = row.querySelector('td:first-child');
-                            if (firstCell) {
-                                const expectedNumber = index + 1;
-                                const currentNumber = parseInt(firstCell.textContent);
-                                if (currentNumber !== expectedNumber) {
-                                    console.log(
-                                        `Load more fix: Row ${index + 1}: ${currentNumber} -> ${expectedNumber}`
-                                        );
-                                    firstCell.textContent = expectedNumber;
-                                }
-                            }
-                        });
+                    // Parse returned HTML and extract the rows from the table body only
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
 
-                        // Update the counter
-                        const currentCount = currentTableBody.querySelectorAll('tr').length;
-                        const totalCount = {{ $products->total() }};
-
-                        // Update the info text
-                        const infoElement = document.querySelector('.load-more-info small');
-                        if (infoElement) {
-                            infoElement.textContent = `Menampilkan ${currentCount} dari ${totalCount} produk`;
-                        }
-
-                        // Update progress bar
-                        const progressBar = document.querySelector('.progress-bar');
-                        if (progressBar) {
-                            const progress = (currentCount / totalCount) * 100;
-                            progressBar.style.width = progress + '%';
-                            progressBar.setAttribute('aria-valuenow', currentCount);
-                        }
-
-                        // Check if we've loaded all products
-                        if (currentCount >= totalCount) {
-                            loadMoreBtn.style.display = 'none';
-                            const loadMoreContainer = document.querySelector('.load-more-container');
-                            if (loadMoreContainer) {
-                                loadMoreContainer.innerHTML = `
-                            <div class="alert alert-info">
-                                <i class="fas fa-check-circle"></i> Semua produk telah ditampilkan
-                            </div>
-                        `;
-                            }
-                        }
+                    // Try to find a table tbody in the returned HTML (controller should return partial),
+                    // otherwise assume the returned HTML may already be just the rows.
+                    let newRows = [];
+                    const returnedTbody = doc.querySelector('table.table tbody');
+                    if (returnedTbody) {
+                        newRows = Array.from(returnedTbody.querySelectorAll('tr'));
                     } else {
-                        // No more data to load
-                        loadMoreBtn.style.display = 'none';
+                        // Fallback: look for any tr elements in the returned HTML
+                        newRows = Array.from(doc.querySelectorAll('tr'));
+                    }
+
+                    if (newRows.length === 0) {
+                        // No rows returned -> we've reached the end
                         const loadMoreContainer = document.querySelector('.load-more-container');
                         if (loadMoreContainer) {
                             loadMoreContainer.innerHTML = `
-                        <div class="alert alert-info">
-                            <i class="fas fa-check-circle"></i> Semua produk telah ditampilkan
-                        </div>
-                    `;
+                                <div class="alert alert-info">
+                                    <i class="fas fa-check-circle"></i> Semua produk telah ditampilkan
+                                </div>
+                            `;
                         }
+                        loadMoreBtn.style.display = 'none';
+                        return;
+                    }
+
+                    // Remove any "no products" placeholder row on first append
+                    const emptyRow = currentTableBody.querySelector('td[colspan]');
+                    if (emptyRow) {
+                        emptyRow.parentElement.remove();
+                    }
+
+                    // Append new rows one by one
+                    newRows.forEach(row => {
+                        currentTableBody.appendChild(row);
+                    });
+
+                    // Renumber rows sequentially
+                    const allRows = currentTableBody.querySelectorAll('tr');
+                    allRows.forEach((row, index) => {
+                        const firstCell = row.querySelector('td:first-child');
+                        if (firstCell) {
+                            firstCell.textContent = index + 1;
+                        }
+                    });
+
+                    // Update counts and progress
+                    const currentCount = currentTableBody.querySelectorAll('tr').length;
+
+                    // Update the info text
+                    const infoElement = document.querySelector('.load-more-info small');
+                    if (infoElement) {
+                        infoElement.textContent = `Menampilkan ${currentCount} dari ${totalCount} produk`;
+                    }
+
+                    // Update progress bar
+                    const progressBar = document.querySelector('.progress-bar');
+                    if (progressBar) {
+                        const progress = (currentCount / totalCount) * 100;
+                        progressBar.style.width = progress + '%';
+                        progressBar.setAttribute('aria-valuenow', currentCount);
+                    }
+
+                    // If we've loaded all, replace button with info
+                    if (currentCount >= totalCount) {
+                        const loadMoreContainer = document.querySelector('.load-more-container');
+                        if (loadMoreContainer) {
+                            loadMoreContainer.innerHTML = `
+                                <div class="alert alert-info">
+                                    <i class="fas fa-check-circle"></i> Semua produk telah ditampilkan
+                                </div>
+                            `;
+                        }
+                        loadMoreBtn.style.display = 'none';
                     }
                 })
                 .catch(error => {

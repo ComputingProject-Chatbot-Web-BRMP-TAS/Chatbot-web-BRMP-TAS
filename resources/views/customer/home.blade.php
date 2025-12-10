@@ -301,6 +301,7 @@
             @endif
         </div>
     </div>
+
 @endsection
 
 @section('after_content')
@@ -382,105 +383,3 @@
         });
     </script>
 @endsection
-
-<!-- Bubble Customer Service Button (Dropdown) -->
-<style>
-    .cs-bubble {
-        position: fixed;
-        bottom: 24px;
-        right: 24px;
-        z-index: 9999;
-        background: #388E3C;
-        color: white;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-        cursor: pointer;
-        transition: box-shadow 0.2s, transform 0.2s;
-        font-size: 32px;
-    }
-
-    .cs-bubble:hover {
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
-        transform: scale(1.08);
-        background: #2e7d32;
-    }
-
-    .cs-dropdown {
-        position: fixed;
-        bottom: 90px;
-        right: 24px;
-        z-index: 10000;
-        display: none;
-        flex-direction: column;
-        gap: 12px;
-        animation: csDropdownUp 0.2s;
-    }
-
-    @keyframes csDropdownUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .cs-dropdown-btn {
-        background: #fff;
-        color: #388E3C;
-        border: none;
-        border-radius: 12px;
-        padding: 12px 20px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        cursor: pointer;
-        transition: background 0.2s, color 0.2s;
-        min-width: 170px;
-    }
-
-    .cs-dropdown-btn:hover {
-        background: #388E3C;
-        color: #fff;
-    }
-</style>
-<div class="cs-bubble" id="csBubbleBtn" title="Customer Service">
-    <i class="fas fa-headset"></i>
-</div>
-<div class="cs-dropdown" id="csDropdownMenu">
-    <a href="https://wa.me/6281331162878?text=Halo%2C%20saya%20punya%20keluhan%20atau%20pertanyaan%20yang%20ingin%20saya%20sampaikan."
-        target="_blank" class="cs-dropdown-btn" style="text-decoration:none;">
-        <i class="fab fa-whatsapp"></i> WhatsApp
-    </a>
-    <a href="/komplain" class="cs-dropdown-btn" style="text-decoration:none;">
-        <i class="fas fa-exclamation-circle"></i> Komplain
-    </a>
-</div>
-<script>
-    const csBubbleBtn = document.getElementById('csBubbleBtn');
-    const csDropdownMenu = document.getElementById('csDropdownMenu');
-    let csDropdownOpen = false;
-    csBubbleBtn.addEventListener('click', function(e) {
-        csDropdownOpen = !csDropdownOpen;
-        csDropdownMenu.style.display = csDropdownOpen ? 'flex' : 'none';
-    });
-    // Close dropdown if click outside
-    document.addEventListener('click', function(e) {
-        if (!csBubbleBtn.contains(e.target) && !csDropdownMenu.contains(e.target)) {
-            csDropdownMenu.style.display = 'none';
-            csDropdownOpen = false;
-        }
-    });
-</script>
-<!-- END Bubble Customer Service Button -->
